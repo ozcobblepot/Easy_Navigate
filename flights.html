@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flights - Easy Navigate</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<script src="service-search-suggestions.js"></script>
+
+<body class="service-page service-flights">
+
+    <!-- ══ HEADER ══ -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="top-nav">
+                <a class="logo" href="index.html">
+                    <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+                </a>
+                <div class="top-right">
+                    <button class="currency-btn">
+                        PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon">
+                    </button>
+                    <button class="support-btn">
+                        Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                    </button>
+                    <div class="relative">
+                        <button class="support-btn" onclick="toggleDropdown('findBookingsMenu', event)">
+                            Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                        </button>
+                        <div class="dropdown-menu" id="findBookingsMenu">
+                            <div class="dropdown-item" onclick="selectFindBooking('hotel')">
+                                <i class="fas fa-bed fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Hotel &amp; Homes</span>
+                                    <span class="fb-desc">Book hotels, rooms, and homes for your stay.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('car')">
+                                <i class="fas fa-car fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Car Rental</span>
+                                    <span class="fb-desc">Find and reserve cars for flexible local travel.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('flights')">
+                                <i class="fas fa-plane fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Flights</span>
+                                    <span class="fb-desc">Search flights and manage your air bookings fast.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('attractions')">
+                                <i class="fas fa-ticket-alt fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Attraction &amp; Tours</span>
+                                    <span class="fb-desc">Discover tickets, tours, and activities in one place.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('taxi')">
+                                <i class="fas fa-taxi fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Airport Taxis</span>
+                                    <span class="fb-desc">Pre-book airport transfers and private taxi rides.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══ HERO + SEARCH ══ -->
+    <section class="hero">
+        <div class="hero-container">
+            
+            <h1>Flights</h1>
+            <p>Search deals on flights worldwide...</p>
+            <div class="search-card">
+                <div class="search-panel active" id="panel-flights">
+                    <div class="search-row">
+                        <div class="fl-origin-box">
+                            <div class="fl-half">
+                                <span class="field-label">From</span>
+                                <input type="text" id="fl-from" placeholder="City or airport">
+                            </div>
+                            <div class="fl-divider">
+                                <button class="fl-plane-btn" onclick="swapFlight()" title="Swap">
+                                    <i class="fas fa-plane"></i>
+                                </button>
+                            </div>
+                            <div class="fl-half">
+                                <span class="field-label">To</span>
+                                <input type="text" id="fl-to" placeholder="City or airport">
+                            </div>
+                        </div>
+
+                        <div class="fl-date-box">
+                            <div class="fl-date-half">
+                                <span class="field-label">Depart</span>
+                                <input type="date" class="date-picker">
+                            </div>
+                            <div class="fl-date-line"></div>
+                            <div class="fl-date-half">
+                                <span class="field-label">Return</span>
+                                <input type="date" class="date-picker">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="extras-row">
+                        <div class="extras-left">
+                            <div class="taxi-passenger-note">
+                                <i class="fas fa-circle-info"></i>
+                                <span>Observe all safety instructions</span>
+                            </div>
+                        </div>
+                        <div class="extras-right">
+                            <!-- Passengers -->
+                            <div class="relative">
+                                <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('passengerPicker', event)">
+                                    <i class="fas fa-user" style="font-size:12px;"></i>
+                                    <span id="passengerLabel">1 Adult</span>
+                                    <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                                </button>
+                                <div class="dropdown-menu passenger-dropdown" id="passengerPicker">
+                                    <p class="passenger-note">Please select the exact number of passengers to view the best price</p>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Adults</span>
+                                            <span class="passenger-age">12+ years old</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn" id="paxAdultsMinus" onclick="updatePax('adults', -1)"><i class="fas fa-minus-circle"></i></button>
+                                            <span class="pax-value" id="paxAdults">1</span>
+                                            <button class="pax-btn" onclick="updatePax('adults', 1)"><i class="fas fa-plus-circle"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Children</span>
+                                            <span class="passenger-age">2–11 years old</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn" id="paxChildrenMinus" onclick="updatePax('children', -1)"><i class="fas fa-minus-circle"></i></button>
+                                            <span class="pax-value" id="paxChildren">0</span>
+                                            <button class="pax-btn" onclick="updatePax('children', 1)"><i class="fas fa-plus-circle"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Infants on lap</span>
+                                            <span class="passenger-age">Under 2 years old</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn" id="paxInfantsMinus" onclick="updatePax('infants', -1)"><i class="fas fa-minus-circle"></i></button>
+                                            <span class="pax-value" id="paxInfants">0</span>
+                                            <button class="pax-btn" onclick="updatePax('infants', 1)"><i class="fas fa-plus-circle"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cabin class -->
+                            <div class="relative">
+                                <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('cabinPicker', event)">
+                                    <i class="fas fa-chair" style="font-size:12px;"></i>
+                                    <span id="cabinLabel">Economy</span>
+                                    <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                                </button>
+                                <div class="dropdown-menu passenger-dropdown" id="cabinPicker">
+                                    <p class="passenger-note">Please select your preferred cabin class to see the corresponding fare results</p>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Economy</span>
+                                            <span class="passenger-age">Standard seat • Best value fare</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn cabin-option-btn active" data-cabin="Economy" onclick="selectCabin('Economy', event)"><i class="fas fa-check-circle"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Premium Economy</span>
+                                            <span class="passenger-age">Extra legroom • Added comfort</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn cabin-option-btn" data-cabin="Premium Economy" onclick="selectCabin('Premium Economy', event)"><i class="fas fa-check-circle"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Business</span>
+                                            <span class="passenger-age">Priority service • Wider seating</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn cabin-option-btn" data-cabin="Business" onclick="selectCabin('Business', event)"><i class="fas fa-check-circle"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">First</span>
+                                            <span class="passenger-age">Top-tier comfort • Premium perks</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn cabin-option-btn" data-cabin="First" onclick="selectCabin('First', event)"><i class="fas fa-check-circle"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="search-btn"><i class="fas fa-search"></i> Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ FLIGHT RESULTS ══ -->
+    <section class="flight-results-section">
+        <div class="flight-results-container">
+
+            <!-- Filter Sidebar -->
+            <aside class="hotel-filter-sidebar">
+                <div class="filter-header">
+                    <div class="filter-title">Filter Results</div>
+                    <button class="filter-clear-all" onclick="clearFlightFilters()">Clear all</button>
+                </div>
+                <div class="filter-body">
+                    <div class="filter-group">
+                        <span class="filter-group-label">Price range</span>
+                        <div class="filter-price-buttons">
+                            <button class="filter-price-btn" data-min="0"     data-max="1500">PHP 0 – PHP 1,500</button>
+                            <button class="filter-price-btn" data-min="1500"  data-max="3000">PHP 1,500 – PHP 3,000</button>
+                            <button class="filter-price-btn" data-min="3000"  data-max="5000">PHP 3,000 – PHP 5,000</button>
+                            <button class="filter-price-btn" data-min="5000"  data-max="10000">PHP 5,000 – PHP 10,000</button>
+                            <button class="filter-price-btn" data-min="10000" data-max="">&gt; PHP 10,000</button>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-group-label">Deal labels</span>
+                        <div id="flightAirlineFilters"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Results -->
+            <div style="flex:1;min-width:0;">
+                <h2 style="font-size:1.5rem;font-weight:800;color:#1a2140;margin-bottom:10px;">Available Flights</h2>
+                <div id="flightResultsList" class="flight-results-list"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══ BENEFITS ══ -->
+    <section class="benefits">
+        <div class="benefits-container">
+            <h2>Why book flights with Easy Navigate?</h2>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-route"></i></div>
+                    <h3>Global airline choices</h3>
+                    <p>Compare routes across major and low-cost carriers</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-tags"></i></div>
+                    <h3>Smart fare deals</h3>
+                    <p>Find value fares and seasonal offers</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-ticket"></i></div>
+                    <h3>Simple booking flow</h3>
+                    <p>Fast checkout with clear fare breakdown</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-bell"></i></div>
+                    <h3>Real-time flight updates</h3>
+                    <p>Get alerts for delays, gate changes, and schedules</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══ ADS CAROUSEL ══ -->
+    <section class="service-ads">
+        <div class="service-ads-carousel">
+            <button class="service-ads-arrow service-ads-prev" type="button" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+            <div class="service-ads-viewport">
+                <div class="service-ads-track">
+                    <div class="service-ad-item"><img src="assets/ad1.png" alt="Ad 1" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad2.png" alt="Ad 2" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad3.png" alt="Ad 3" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad4.png" alt="Ad 4" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad5.png" alt="Ad 5" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad6.png" alt="Ad 6" class="service-ad-image"></div>
+                </div>
+            </div>
+            <button class="service-ads-arrow service-ads-next" type="button" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>Contact Us</h4>
+                        <ul>
+                            <li><a href="#">Customer Support</a></li>
+                            <li><a href="#">Service Guarantee</a></li>
+                            <li><a href="#">More Service Info</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="#">About Easy Navigate</a></li>
+                            <li><a href="#">News</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Terms &amp; Condition</a></li>
+                            <li><a href="#">Privacy Statement</a></li>
+                            <li><a href="#">Accessibility Statement</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Other Services</h4>
+                        <ul>
+                            <li><a href="#">Investor Relations</a></li>
+                            <li><a href="#">Affiliate Program</a></li>
+                            <li><a href="#">List Your Property</a></li>
+                            <li><a href="#">Become Supplier</a></li>
+                            <li><a href="#">Security</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-logo">
+                    <img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
+                </div>
+            </div>
+            <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
+        </div>
+    </footer>
+
+    <!-- ══ SCRIPTS ══ -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="auth-header.js"></script>
+    <script src="db-search-tracker.js"></script>
+    <script src="service-panels.js"></script>
+    <script src="service-ads-carousel.js"></script>
+    <script src="flight-results.js"></script>
+
+</body>
+</html>

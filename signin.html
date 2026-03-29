@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyNavigate – Sign In / Register</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="signin.css">
+</head>
+<body>
+    <main class="auth-shell" aria-label="Sign in and register">
+        <section class="auth-panel">
+            <div class="auth-inner">
+                <img class="auth-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
+
+                <div class="auth-divider" aria-hidden="true"></div>
+
+                <h1 class="auth-title">Sign in / Register</h1>
+
+                <form id="emailAuthForm" class="auth-form" novalidate>
+                    <label class="sr-only" for="emailInput">Email address</label>
+                    <input
+                        id="emailInput"
+                        name="email"
+                        type="email"
+                        class="auth-input"
+                        placeholder="Please enter an email address"
+                        autocomplete="email"
+                        required
+                    >
+                    <button id="emailContinueBtn" type="submit" class="auth-btn auth-btn-email" disabled>
+                        Continue with Email
+                    </button>
+                </form>
+
+                <div class="or-row" aria-hidden="true">
+                    <span class="or-line"></span>
+                    <span class="or-text">or</span>
+                    <span class="or-line"></span>
+                </div>
+
+                <div class="social-stack">
+                    <button id="googleBtn" type="button" class="auth-btn auth-btn-google">
+                        <span class="auth-icon google-icon"><i class="fa-brands fa-google"></i></span>
+                        <span>Continue with Google</span>
+                    </button>
+
+                    <button id="microsoftBtn" type="button" class="auth-btn auth-btn-social">
+                        <span class="auth-icon"><i class="fa-brands fa-microsoft"></i></span>
+                        <span>Continue with Microsoft</span>
+                    </button>
+
+                    <button id="facebookBtn" type="button" class="auth-btn auth-btn-social">
+                        <span class="auth-icon facebook-icon"><i class="fa-brands fa-facebook-f"></i></span>
+                        <span>Continue with Facebook</span>
+                    </button>
+                </div>
+
+                <p class="auth-terms">
+                    By signing in or registering, you are deemed to have agreed to the Easy
+                    Navigate Terms and Conditions and Privacy Statement.
+                </p>
+
+                <p id="authStatus" class="auth-status" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section class="hero-panel" aria-hidden="true">
+            <div class="hero-overlay"></div>
+            <img class="hero-logo" src="assets/easy-navigate-logo-white.png" alt="">
+        </section>
+    </main>
+
+    <script type="module" src="signin.js"></script>
+</body>
+</html>

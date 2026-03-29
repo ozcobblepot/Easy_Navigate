@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- All hotel modal & carousel styles are now in styles.css for maintainability -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stays - Booking.com</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<script>
+    // Disable old hotel suggestion functions from service-panels.js
+    window.initHotelDestinationPicker    = function () {};
+    window.renderHotelDestinationOptions = function () {};
+    window.openHotelDestinationMenu      = function () {};
+    window.closeHotelDestinationMenu     = function () {};
+    window.loadHotelCitiesFromApi        = async function () {};
+</script>
+
+<script src="service-search-suggestions.js"></script>
+
+<body class="service-page service-hotel">
+    <header class="header">
+        <div class="nav-container">
+            <div class="top-nav">
+                <a class="logo" href="index.html">
+                    <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+                </a>
+                <div class="top-right">
+                    <button class="currency-btn">
+                        PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon">
+                    </button>
+                    <button class="support-btn">
+                        Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                    </button>
+                    <div class="relative">
+                        <button class="support-btn" onclick="toggleDropdown('findBookingsMenu', event)">
+                            Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                        </button>
+                        <div class="dropdown-menu" id="findBookingsMenu">
+                            <div class="dropdown-item" onclick="selectFindBooking('hotel')">
+                                <i class="fas fa-bed fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Hotel &amp; Homes</span>
+                                    <span class="fb-desc">Book hotels, rooms, and homes for your stay.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('car')">
+                                <i class="fas fa-car fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Car Rental</span>
+                                    <span class="fb-desc">Find and reserve cars for flexible local travel.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('flights')">
+                                <i class="fas fa-plane fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Flights</span>
+                                    <span class="fb-desc">Search flights and manage your air bookings fast.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('attractions')">
+                                <i class="fas fa-ticket-alt fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Attraction &amp; Tours</span>
+                                    <span class="fb-desc">Discover tickets, tours, and activities in one place.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('taxi')">
+                                <i class="fas fa-taxi fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Airport Taxis</span>
+                                    <span class="fb-desc">Pre-book airport transfers and private taxi rides.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-container">
+            <h1>Hotel &amp; Homes</h1>
+            <p>Search deals on hotels, homes, and much more...</p>
+            <div class="search-card">
+                <div class="search-panel active" id="panel-hotel">
+                    <div class="search-row">
+                        <div class="search-field" style="flex:3;min-width:300px;">
+                            <div class="relative" style="width:100%">
+                                <span class="field-label">Destination</span>
+                                <input id="hotelDestinationInput" type="text" placeholder="Where are you going?" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="fl-date-box">
+                            <div class="fl-date-half">
+                                <span class="field-label">Check-in</span>
+                                <input type="date" class="date-picker">
+                            </div>
+                            <div class="fl-date-line"></div>
+                            <div class="fl-date-half">
+                                <span class="field-label">Check-out</span>
+                                <input type="date" class="date-picker">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extras-row">
+                        <div class="extras-left">
+                            <label class="checkbox-label" onclick="toggleCheck(this)">
+                                <span class="custom-checkbox"></span>
+                                Request a room tour after arriving
+                            </label>
+                        </div>
+                        <div class="extras-right">
+                            <div class="relative">
+                                <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('hotelGuestsPicker', event)">
+                                    <i class="fas fa-user" style="font-size:12px;"></i>
+                                    <span id="hotelGuestsLabel">2 Adults</span>
+                                    <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                                </button>
+                                <div class="dropdown-menu passenger-dropdown" id="hotelGuestsPicker">
+                                    <p class="passenger-note">Please select the number of guests to find the best stay options</p>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Adults</span>
+                                            <span class="passenger-age">18+ years old</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn" id="hotelAdultsMinus" onclick="updateHotelOccupancy('adults', -1)">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </button>
+                                            <span class="pax-value" id="hotelAdults">2</span>
+                                            <button class="pax-btn" onclick="updateHotelOccupancy('adults', 1)">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Children</span>
+                                            <span class="passenger-age">0–17 years old</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn" id="hotelChildrenMinus" onclick="updateHotelOccupancy('children', -1)">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </button>
+                                            <span class="pax-value" id="hotelChildren">0</span>
+                                            <button class="pax-btn" onclick="updateHotelOccupancy('children', 1)">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Infants</span>
+                                            <span class="passenger-age">Under 2 years old</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn" id="hotelInfantsMinus" onclick="updateHotelOccupancy('infants', -1)">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </button>
+                                            <span class="pax-value" id="hotelInfants">0</span>
+                                            <button class="pax-btn" onclick="updateHotelOccupancy('infants', 1)">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <button class="dropdown-pill-bordless selector-pill room-pill" onclick="toggleDropdown('hotelRoomsPicker', event)">
+                                    <i class="fas fa-bed" style="font-size:12px;"></i>
+                                    <span id="hotelRoomsLabel">1 Room</span>
+                                    <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                                </button>
+                                <div class="dropdown-menu passenger-dropdown" id="hotelRoomsPicker">
+                                    <p class="passenger-note">Please select the number of rooms you would like</p>
+                                    <div class="passenger-row">
+                                        <div class="passenger-label">
+                                            <span class="passenger-type">Rooms</span>
+                                            <span class="passenger-age">At least 1 room required</span>
+                                        </div>
+                                        <div class="passenger-controls">
+                                            <button class="pax-btn" id="hotelRoomsMinus" onclick="updateHotelOccupancy('rooms', -1)">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </button>
+                                            <span class="pax-value" id="hotelRooms">1</span>
+                                            <button class="pax-btn" onclick="updateHotelOccupancy('rooms', 1)">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="search-btn"><i class="fas fa-search"></i> Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hotel-results-section">
+        <div class="hotel-results-flex">
+
+            <!-- ═══════════════════════════════════════════
+                 FILTER SIDEBAR — fully rewritten
+                 No <form>, no <br>, no sliders, no inline styles
+            ════════════════════════════════════════════ -->
+            <aside class="hotel-filter-sidebar">
+
+                <!-- Header band -->
+                <div class="filter-header">
+                    <span class="filter-title">Filter Results</span>
+                    <button type="button" class="filter-clear-all" id="filterClearAll">Clear all</button>
+                </div>
+
+                <!-- Body -->
+                <div class="filter-body">
+
+                    <!-- PRICE RANGE -->
+                    <div class="filter-group">
+                        <span class="filter-group-label">Price per night</span>
+                        <div class="filter-price-buttons">
+                            <button type="button" class="filter-price-btn">PHP 0 - PHP 1,500</button>
+                            <button type="button" class="filter-price-btn">PHP 1,500 - PHP 2,000</button>
+                            <button type="button" class="filter-price-btn">PHP 2,000 - PHP 3,000</button>
+                            <button type="button" class="filter-price-btn">PHP 3,000 - PHP 5,000</button>
+                            <button type="button" class="filter-price-btn">PHP 5,000 - PHP 10,500</button>
+                            <button type="button" class="filter-price-btn">&gt; PHP 10,500</button>
+                        </div>
+                    </div>
+
+                    <!-- STAR RATING — NO <br> tags, labels are direct children of .filter-stars -->
+                    <div class="filter-group">
+                        <span class="filter-group-label">Star Rating <span class="filter-info" title="Filter by hotel star rating">&#9432;</span></span>
+                        <div class="filter-stars">
+                            <label>
+                                <input type="checkbox" name="stars" value="5">
+                                <span class="star-icons">★★★★★</span>
+                                <span>5 stars</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="stars" value="4">
+                                <span class="star-icons">★★★★☆</span>
+                                <span>4 stars</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="stars" value="3">
+                                <span class="star-icons">★★★☆☆</span>
+                                <span>3 stars</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="stars" value="2">
+                                <span class="star-icons">★★☆☆☆</span>
+                                <span>2 stars</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="stars" value="1">
+                                <span class="star-icons">★☆☆☆☆</span>
+                                <span>1 star</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- APPLY BUTTON -->
+                    <button type="button" class="filter-apply-btn">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+                            <path d="M1.5 3h13M4 8h8M6.5 13h3" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                        Apply Filters
+                    </button>
+
+                </div>
+            </aside>
+            <!-- END FILTER SIDEBAR -->
+
+            <div class="hotel-results-container">
+                <div class="hotel-results-header">
+                    <h2 id="hotelResultsTitle">Hotel &amp; Homes</h2>
+                    <p id="hotelResultsMeta">0 stays available</p>
+                </div>
+                <div class="hotel-results-list" id="hotelResultsList"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="benefits-container">
+            <h2>Why book hotels &amp; homes with Easy Navigate?</h2>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h3>Flexible cancellation options</h3>
+                    <p>Plans change? Cancel selected stays with ease</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-user-check"></i></div>
+                    <h3>Verified guest reviews</h3>
+                    <p>Real feedback from real travelers</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-hotel"></i></div>
+                    <h3>Stays for every trip</h3>
+                    <p>Hotels, homes, and apartments in top destinations</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-credit-card"></i></div>
+                    <h3>Pay-at-property options</h3>
+                    <p>Reserve now and pay later on selected properties</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="service-ads">
+        <div class="service-ads-carousel">
+            <button class="service-ads-arrow service-ads-prev" type="button" aria-label="Previous advertisements"><i class="fas fa-chevron-left"></i></button>
+            <div class="service-ads-viewport">
+                <div class="service-ads-track">
+                    <div class="service-ad-item"><img src="assets/ad1.png" alt="Advertisement 1" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad2.png" alt="Advertisement 2" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad3.png" alt="Advertisement 3" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad4.png" alt="Advertisement 4" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad5.png" alt="Advertisement 5" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad6.png" alt="Advertisement 6" class="service-ad-image"></div>
+                </div>
+            </div>
+            <button class="service-ads-arrow service-ads-next" type="button" aria-label="Next advertisements"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>Contact Us</h4>
+                        <ul>
+                            <li><a href="#">Customer Support</a></li>
+                            <li><a href="#">Service Guarantee</a></li>
+                            <li><a href="#">More Service Info</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="#">About Easy Navigate</a></li>
+                            <li><a href="#">News</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Terms &amp; Condition</a></li>
+                            <li><a href="#">Privacy Statement</a></li>
+                            <li><a href="#">Accessibility Statement</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Other Services</h4>
+                        <ul>
+                            <li><a href="#">Investor Relations</a></li>
+                            <li><a href="#">Affiliate Program</a></li>
+                            <li><a href="#">List Your Property</a></li>
+                            <li><a href="#">Become Supplier</a></li>
+                            <li><a href="#">Security</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-logo">
+                    <img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
+                </div>
+            </div>
+            <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved Site Operator: Easy Navigate Travel</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="auth-header.js"></script>
+    <script src="db-search-tracker.js"></script>
+    <script src="service-panels.js"></script>
+    <script src="hotel-results.js"></script>
+    <script src="service-ads-carousel.js"></script>
+</body>
+</html>

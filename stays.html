@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stays - Booking.com</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="top-nav">
+                <div class="logo">
+                    <img src="assets/logo.png" alt="Booking.com Logo">
+                </div>
+                <div class="top-right">
+                    <button class="btn-outline">Log in</button>
+                    <button class="btn-filled">Sign up</button>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <nav class="nav-tabs">
+                    <div class="nav-tab active"><i class="fas fa-bed"></i> Hotel &amp; Homes</div>
+                    <a href="flights.html" class="nav-tab"><i class="fas fa-plane"></i> Flights</a>
+                    <a href="car-rental.html" class="nav-tab"><i class="fas fa-car"></i> Car Rental</a>
+                    <a href="attractions.html" class="nav-tab"><i class="fas fa-camera"></i> Attractions &amp; Tours</a>
+                    <a href="airport-taxis.html" class="nav-tab"><i class="fas fa-taxi"></i> Airport Taxis</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-container">
+            <h1>Hotel &amp; Homes</h1>
+            <p>Search deals on hotels, homes, and much more...</p>
+            <div class="search-bar">
+                <div class="search-input">
+                    <i class="fas fa-bed"></i>
+                    <input type="text" placeholder="Where are you going?">
+                </div>
+                <div class="search-input">
+                    <i class="fas fa-calendar"></i>
+                    <input type="text" placeholder="Check-in date — Check-out date">
+                </div>
+                <div class="search-input">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="2 adults · 0 children · 1 room">
+                </div>
+                <button class="search-btn">Search</button>
+            </div>
+            <div class="add-flights">
+                <input type="checkbox" id="add-flights">
+                <label for="add-flights">Add flights to my search</label>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="benefits-container">
+            <h2>Why book hotels &amp; homes with Easy Navigate?</h2>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h3>Flexible cancellation options</h3>
+                    <p>Plans change? Cancel selected stays with ease</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-user-check"></i></div>
+                    <h3>Verified guest reviews</h3>
+                    <p>Real feedback from real travelers</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-hotel"></i></div>
+                    <h3>Stays for every trip</h3>
+                    <p>Hotels, homes, and apartments in top destinations</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-credit-card"></i></div>
+                    <h3>Pay-at-property options</h3>
+                    <p>Reserve now and pay later on selected properties</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="service-ads">
+        <div class="service-ads-carousel">
+            <button class="service-ads-arrow service-ads-prev" type="button" aria-label="Previous advertisements"><i class="fas fa-chevron-left"></i></button>
+            <div class="service-ads-viewport">
+                <div class="service-ads-track">
+                    <div class="service-ad-item"><img src="assets/ad1.png" alt="Advertisement 1" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad2.png" alt="Advertisement 2" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad3.png" alt="Advertisement 3" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad4.png" alt="Advertisement 4" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad5.png" alt="Advertisement 5" class="service-ad-image"></div>
+                    <div class="service-ad-item"><img src="assets/ad6.png" alt="Advertisement 6" class="service-ad-image"></div>
+                </div>
+            </div>
+            <button class="service-ads-arrow service-ads-next" type="button" aria-label="Next advertisements"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+<script src="service-ads-carousel.js"></script>
+</body>
+</html>

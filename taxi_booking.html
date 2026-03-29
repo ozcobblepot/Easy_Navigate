@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Taxi Transfer – Easy Navigate</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .header {
+            position: sticky !important;
+            top: 0 !important;
+            background: #282D9E !important;
+            box-shadow: 0 2px 20px rgba(20,24,80,0.22) !important;
+        }
+        .booking-step-bar { background: #fff; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: center; }
+        .booking-step { display: flex; align-items: center; gap: 8px; padding: 14px 40px; font-size: .82rem; font-weight: 600; color: var(--gray-500); border-bottom: 3px solid transparent; transition: all .2s; }
+        .booking-step.active { color: var(--blue); border-bottom-color: var(--blue); }
+        .booking-step.done   { color: #16a34a; }
+        .booking-step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 800; background: var(--gray-200); color: var(--gray-500); }
+        .booking-step.active .booking-step-num { background: var(--blue); color: #fff; }
+        .booking-step.done   .booking-step-num { background: #16a34a; color: #fff; }
+        .booking-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+        .bk-card { background: #fff; border-radius: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); overflow: hidden; margin-bottom: 16px; }
+        .bk-card-head { padding: 16px 22px 14px; border-bottom: 1px solid var(--gray-200); font-size: 1rem; font-weight: 700; color: var(--blue); display: flex; align-items: center; gap: 8px; }
+        .bk-card-body { padding: 20px 22px; }
+        .info-banner { background: linear-gradient(90deg,#e0f2fe,#e0e7ff); border: 1px solid #bae6fd; border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 5px; }
+        .info-row { display: flex; align-items: center; gap: 8px; font-size: .88rem; font-weight: 700; }
+        .info-row.blue   { color: #1a3a9e; }
+        .info-row.orange { color: #e65100; }
+        .vehicle-grid { display: flex; flex-direction: column; gap: 10px; }
+        .vehicle-card { border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 16px 18px; cursor: pointer; transition: border-color .18s, box-shadow .18s, background .15s; display: flex; align-items: center; gap: 16px; }
+        .vehicle-card:hover { border-color: var(--blue); }
+        .vehicle-card.selected { border-color: var(--blue); background: #f0f4ff; box-shadow: 0 0 0 3px rgba(40,45,158,.08); }
+        .vc-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray-300); flex-shrink: 0; position: relative; transition: border-color .15s; }
+        .vehicle-card.selected .vc-radio { border-color: var(--blue); }
+        .vehicle-card.selected .vc-radio::after { content:''; position:absolute; inset:3px; border-radius:50%; background:var(--blue); }
+        .vc-icon { font-size: 2.2rem; width: 52px; text-align: center; flex-shrink: 0; }
+        .vc-info { flex: 1; min-width: 0; }
+        .vc-name { font-size: 15px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .vc-badge-instant { font-size: 10px; font-weight: 700; background: #dcfce7; color: #15803d; border-radius: 20px; padding: 2px 8px; }
+        .vc-caps { font-size: 12.5px; color: var(--gray-500); margin-top: 3px; display: flex; align-items: center; gap: 14px; }
+        .vc-caps span { display: flex; align-items: center; gap: 4px; }
+        .vc-caps i { font-size: 10px; color: var(--blue); opacity: .7; }
+        .vc-desc { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+        .vc-price { font-size: 17px; font-weight: 800; color: var(--blue); flex-shrink: 0; white-space: nowrap; }
+        .form-section-sub { font-size: .82rem; color: var(--gray-500); margin-bottom: 18px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .form-row.single { grid-template-columns: 1fr; }
+        .field-group { display: flex; flex-direction: column; gap: 5px; }
+        .field-lbl { font-size: .72rem; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; }
+        .field-lbl .req { color: #e53935; }
+        .field-inp { border: 1.5px solid var(--gray-200); border-radius: 8px; padding: 10px 13px; font-family: 'Inter', sans-serif; font-size: .9rem; color: var(--text); transition: border-color .2s, box-shadow .2s; outline: none; background: #fff; width: 100%; box-sizing: border-box; }
+        .field-inp:focus  { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(40,45,158,.10); }
+        .field-inp.invalid { border-color: #e53935 !important; box-shadow: 0 0 0 3px rgba(229,57,53,.12) !important; }
+        .field-error { font-size: .72rem; color: #e53935; font-weight: 600; margin-top: 3px; display: none; }
+        .field-error.show { display: block; }
+        .email-note { font-size: .75rem; color: var(--gray-500); margin-top: 4px; }
+        .phone-row { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+        .phone-prefix { display: flex; align-items: center; gap: 6px; border: 1.5px solid var(--gray-200); border-radius: 8px; padding: 10px 13px; font-size: .88rem; background: var(--gray-50); color: var(--text); font-weight: 700; white-space: nowrap; }
+        .pay-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; }
+        .pay-option { border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+        .pay-option.selected { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(40,45,158,.08); }
+        .pay-option-head { display: flex; align-items: center; gap: 10px; }
+        .pay-radio { width: 18px; height: 18px; accent-color: var(--blue); }
+        .pay-lbl { font-weight: 700; font-size: .92rem; }
+        .card-logos { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+        .card-logo { height: 22px; border: 1px solid var(--gray-200); border-radius: 4px; padding: 1px 5px; font-size: .6rem; font-weight: 800; display: flex; align-items: center; }
+        .more-tag { background: var(--gray-100); color: var(--gray-500); border-radius: 4px; padding: 2px 6px; font-size: .72rem; font-weight: 700; }
+        .pay-fields { display: grid; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--gray-100); }
+        .pay-next-note { font-size: .78rem; color: var(--gray-500); margin-top: 8px; padding-left: 28px; display: none; }
+        .other-pay-icons { display: flex; gap: 6px; margin-left: auto; }
+        .pay-icon-pill { border: 1px solid var(--gray-200); border-radius: 4px; padding: 2px 8px; font-size: .7rem; font-weight: 800; color: var(--blue); }
+        .reserve-main-btn { width: 100%; padding: 15px; background: var(--blue); color: #fff; border: none; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: transform .15s, box-shadow .2s, background .2s; box-shadow: 0 4px 14px rgba(40,45,158,.28); margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .reserve-main-btn:hover:not(:disabled) { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(40,45,158,.38); }
+        .reserve-main-btn:active:not(:disabled) { transform: translateY(0); }
+        .reserve-main-btn:disabled { opacity: .65; cursor: not-allowed; }
+        .btn-spinner { display: none; width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+        .reserve-main-btn.loading .btn-spinner { display: block; }
+        .reserve-main-btn.loading .btn-text { opacity: .6; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .trust-row { display: flex; justify-content: center; gap: 24px; margin-top: 14px; font-size: .78rem; color: var(--gray-500); font-weight: 600; }
+        .trust-row span { display: flex; align-items: center; gap: 5px; }
+        .trust-row i { color: var(--blue); }
+        .tos-note { font-size: .75rem; color: var(--gray-500); margin-top: 10px; text-align: center; line-height: 1.5; }
+        .tos-note a { color: var(--blue); font-weight: 600; }
+        .taxi-summary-header { padding: 18px 18px 16px; border-bottom: 1px solid var(--gray-200); background: linear-gradient(135deg, #282D9E, #3b3fc7); }
+        .tsh-title  { font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -.2px; margin-bottom: 4px; }
+        .tsh-sub    { font-size: .8rem; color: rgba(255,255,255,.75); font-weight: 500; }
+        .tsh-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .tsh-badge  { display: inline-block; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 20px; padding: 3px 12px; font-size: .72rem; font-weight: 700; color: #fff; }
+        .route-block { padding: 16px 18px; border-bottom: 1px solid var(--gray-200); }
+        .rb-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+        .rb-row:last-child { margin-bottom: 0; }
+        .rb-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; margin-top: 1px; }
+        .rb-icon.blue   { background: #dbeafe; color: #1d4ed8; }
+        .rb-icon.green  { background: #dcfce7; color: #15803d; }
+        .rb-icon.orange { background: #fef3c7; color: #92400e; }
+        .rb-icon.purple { background: #f3e8ff; color: #6b21a8; }
+        .rb-text { font-size: .82rem; color: var(--gray-700); font-weight: 500; line-height: 1.4; }
+        .rb-label { font-size: .72rem; color: var(--gray-400); font-weight: 500; display: block; margin-bottom: 1px; }
+        .rb-connector { width: 1px; height: 12px; background: var(--gray-200); margin: 2px 0 2px 12px; }
+        .vehicle-summary-block { padding: 14px 18px; border-bottom: 1px solid var(--gray-200); }
+        .vsb-title { font-size: .82rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .vsb-row { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--gray-600); margin-bottom: 5px; font-weight: 500; }
+        .vsb-row i { color: var(--blue); width: 14px; text-align: center; font-size: .78rem; }
+        .price-block { padding: 16px 18px; }
+        .pr-row   { display: flex; justify-content: space-between; font-size: .85rem; margin-bottom: 8px; }
+        .pr-row.main { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+        .pr-indent { padding-left: 12px; border-left: 2px solid var(--gray-100); margin: 4px 0 10px; }
+        .pr-tax   { font-size: .82rem; color: var(--gray-500); display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .pr-free  { color: #16a34a; font-weight: 600; }
+        .pr-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; color: var(--text); padding-top: 12px; border-top: 2px solid var(--gray-200); margin-top: 8px; }
+        .includes-block { padding: 14px 18px; border-top: 1px solid var(--gray-200); }
+        .includes-title { font-size: .9rem; font-weight: 800; margin-bottom: 10px; }
+        .includes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .include-item { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: var(--gray-600); font-weight: 600; }
+        .include-item i { color: #16a34a; font-size: .72rem; }
+        .info-sec { border-top: 1px solid var(--gray-200); padding: 14px 18px; }
+        .info-sec-title { font-size: .9rem; font-weight: 800; margin-bottom: 8px; }
+        .fine-list { list-style: disc; padding-left: 16px; font-size: .78rem; color: var(--gray-500); line-height: 1.8; }
+        .success-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; }
+        .success-overlay.show { display: flex; }
+        .success-box { background: #fff; border-radius: 18px; padding: 44px 48px; text-align: center; max-width: 460px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,.25); animation: popIn .4s cubic-bezier(.34,1.56,.64,1) both; }
+        @keyframes popIn { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-icon  { font-size: 3.5rem; color: #16a34a; margin-bottom: 16px; }
+        .success-title { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .success-sub   { font-size: .9rem; color: var(--gray-500); margin-bottom: 20px; line-height: 1.6; }
+        .success-ref   { background: var(--gray-50); border-radius: 8px; padding: 12px 20px; font-size: .88rem; font-weight: 700; color: var(--blue); margin-bottom: 8px; letter-spacing: .5px; }
+        .success-detail { font-size: .8rem; color: var(--gray-500); margin-bottom: 24px; }
+        .success-cta { background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 12px 36px; font-family: 'Inter', sans-serif; font-size: .95rem; font-weight: 800; cursor: pointer; }
+        .success-cta:hover { background: var(--blue-dark); }
+        @media (max-width: 820px) {
+            .booking-wrap { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .includes-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══ UNIFIED HEADER ══ -->
+<header class="header">
+    <div class="nav-container">
+        <div class="top-nav">
+            <a class="logo" href="index.html">
+                <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+            </a>
+            <div class="top-right">
+                <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon"></button>
+                <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+                <div class="relative">
+                    <button class="support-btn" onclick="toggleDropdown('fbMenu', event)">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+                    <div class="dropdown-menu" id="fbMenu">
+                        <div class="dropdown-item" onclick="window.location.href='hotel.html'"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes.</span></div></div>
+                        <div class="dropdown-item" onclick="window.location.href='car.html'"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Reserve cars for flexible travel.</span></div></div>
+                        <div class="dropdown-item" onclick="window.location.href='flights.html'"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search and manage air bookings.</span></div></div>
+                        <div class="dropdown-item" onclick="window.location.href='attractions.html'"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Tickets, tours, and activities.</span></div></div>
+                        <div class="dropdown-item" onclick="window.location.href='airport-taxis.html'"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers.</span></div></div>
+                    </div>
+                </div>
+                <!-- auth-header.js replaces this when logged in -->
+                <button class="btn-signin" onclick="if(typeof openAuthModal==='function'){openAuthModal('signin');}else{window.location.href='signin.html';}">Sign In / Register</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- STEP BAR -->
+<div class="booking-step-bar">
+    <div class="booking-step done"><span class="booking-step-num"><i class="fas fa-check" style="font-size:.6rem"></i></span> Choose Airport</div>
+    <div class="booking-step active"><span class="booking-step-num">2</span> Passenger Details &amp; Payment</div>
+</div>
+
+<div class="booking-wrap">
+    <div>
+        <div class="info-banner">
+            <div class="info-row blue"><i class="fas fa-taxi"></i> <span id="bannerText">Complete your taxi transfer booking below</span></div>
+            <div class="info-row orange"><i class="fas fa-bolt"></i> Instant confirmation — driver details sent to your email!</div>
+        </div>
+
+        <div class="bk-card">
+            <div class="bk-card-head"><i class="fas fa-car"></i> Choose Your Vehicle</div>
+            <div class="bk-card-body">
+                <div class="form-section-sub">Select the vehicle type that suits your party size and luggage.</div>
+                <div class="vehicle-grid" id="vehicleGrid"></div>
+            </div>
+        </div>
+
+        <div class="bk-card">
+            <div class="bk-card-head"><i class="fas fa-route"></i> Trip Details</div>
+            <div class="bk-card-body">
+                <div class="form-section-sub">Confirm your pickup, drop-off, and schedule.</div>
+                <div class="form-row single">
+                    <div class="field-group">
+                        <label class="field-lbl" for="pickupField">Pick-up location <span class="req">*</span></label>
+                        <div style="position:relative;">
+                            <i class="fas fa-plane-arrival" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--blue);font-size:13px;opacity:.8;pointer-events:none;"></i>
+                            <input id="pickupField" type="text" class="field-inp" style="padding-left:34px;" placeholder="Airport name or address" oninput="clearErr('pickupField');syncSidebar()">
+                        </div>
+                        <span class="field-error" id="err-pickupField">Please enter a pick-up location.</span>
+                    </div>
+                </div>
+                <div class="form-row single">
+                    <div class="field-group">
+                        <label class="field-lbl" for="dropoffField">Drop-off location <span class="req">*</span></label>
+                        <div style="position:relative;">
+                            <i class="fas fa-location-dot" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#16a34a;font-size:13px;opacity:.9;pointer-events:none;"></i>
+                            <input id="dropoffField" type="text" class="field-inp" style="padding-left:34px;" placeholder="Hotel, address or destination" oninput="clearErr('dropoffField');syncSidebar()">
+                        </div>
+                        <span class="field-error" id="err-dropoffField">Please enter a drop-off location.</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group">
+                        <label class="field-lbl" for="pickupDate">Pick-up date <span class="req">*</span></label>
+                        <div style="position:relative;">
+                            <i class="fas fa-calendar" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--blue);font-size:12px;opacity:.7;pointer-events:none;"></i>
+                            <input id="pickupDate" type="date" class="field-inp" style="padding-left:34px;" oninput="clearErr('pickupDate');syncSidebar()">
+                        </div>
+                        <span class="field-error" id="err-pickupDate">Please select a pick-up date.</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-lbl" for="pickupTime">Pick-up time <span class="req">*</span></label>
+                        <div style="position:relative;">
+                            <i class="fas fa-clock" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--blue);font-size:12px;opacity:.7;pointer-events:none;"></i>
+                            <input id="pickupTime" type="time" class="field-inp" style="padding-left:34px;" oninput="clearErr('pickupTime');syncSidebar()">
+                        </div>
+                        <span class="field-error" id="err-pickupTime">Please select a pick-up time.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bk-card">
+            <div class="bk-card-head"><i class="fas fa-user"></i> Contact Details</div>
+            <div class="bk-card-body">
+                <div class="form-section-sub">For driver contact and meet-and-greet sign.</div>
+                <div class="form-row">
+                    <div class="field-group">
+                        <label class="field-lbl" for="firstName">First &amp; middle name <span class="req">*</span></label>
+                        <input id="firstName" type="text" class="field-inp" placeholder="English first &amp; middle names" autocomplete="given-name" oninput="clearErr('firstName')">
+                        <span class="field-error" id="err-firstName">Please enter your first name.</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-lbl" for="lastName">Last name <span class="req">*</span></label>
+                        <input id="lastName" type="text" class="field-inp" placeholder="English last name" autocomplete="family-name" oninput="clearErr('lastName')">
+                        <span class="field-error" id="err-lastName">Please enter your last name.</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group">
+                        <label class="field-lbl" for="phoneField">Phone number <span class="req">*</span></label>
+                        <div class="phone-row">
+                            <div class="phone-prefix">(+63) <i class="fas fa-chevron-down" style="font-size:.65rem;margin-left:auto"></i></div>
+                            <input id="phoneField" type="tel" class="field-inp" placeholder="9XX XXX XXXX" autocomplete="tel" oninput="clearErr('phoneField')">
+                        </div>
+                        <span class="field-error" id="err-phoneField">Please enter your phone number.</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-lbl" for="emailField">Email <span class="req">*</span></label>
+                        <input id="emailField" type="email" class="field-inp" placeholder="your@email.com" autocomplete="email" oninput="clearErr('emailField')">
+                        <span class="email-note">Booking confirmation sent here</span>
+                        <span class="field-error" id="err-emailField">Please enter a valid email.</span>
+                    </div>
+                </div>
+                <div class="form-row single">
+                    <div class="field-group">
+                        <label class="field-lbl" for="whatsappField">WhatsApp <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-400)">(optional)</span></label>
+                        <input id="whatsappField" type="text" class="field-inp" placeholder="Account username (optional)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bk-card">
+            <div class="bk-card-head"><i class="fas fa-credit-card"></i> Payment</div>
+            <div class="bk-card-body">
+                <div class="pay-title">How would you like to pay?</div>
+                <div class="pay-option selected" id="payCard" onclick="selectPay('card')">
+                    <div class="pay-option-head">
+                        <input type="radio" class="pay-radio" name="payMethod" id="radioCard" checked onchange="selectPay('card')">
+                        <label for="radioCard" class="pay-lbl" style="cursor:pointer;">Credit/Debit Card</label>
+                        <div class="card-logos">
+                            <span class="card-logo" style="color:#1a1f71">VISA</span>
+                            <span class="card-logo" style="color:#eb001b">MC</span>
+                            <span class="card-logo" style="color:#0033a0">JCB</span>
+                            <span class="card-logo" style="color:#016fd0">AMEX</span>
+                            <span class="more-tag">+2</span>
+                        </div>
+                    </div>
+                    <div class="pay-fields" id="cardFields">
+                        <div class="field-group">
+                            <input id="cardNumber" type="text" class="field-inp" placeholder="Card number" maxlength="19" oninput="formatCard(this);clearErr('cardNumber')" autocomplete="cc-number">
+                            <span class="field-error" id="err-cardNumber">Please enter a valid 16-digit card number.</span>
+                        </div>
+                        <div class="field-group">
+                            <input id="cardName" type="text" class="field-inp" placeholder="Cardholder name" autocomplete="cc-name" oninput="clearErr('cardName')">
+                            <span class="field-error" id="err-cardName">Please enter the cardholder name.</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div class="field-group">
+                                <input id="cardExpiry" type="text" class="field-inp" placeholder="MM/YY" maxlength="5" oninput="formatExp(this);clearErr('cardExpiry')" autocomplete="cc-exp">
+                                <span class="field-error" id="err-cardExpiry">Enter valid expiry (MM/YY).</span>
+                            </div>
+                            <div class="field-group">
+                                <input id="cardCvv" type="text" class="field-inp" placeholder="CVV/CVC" maxlength="4" autocomplete="cc-csc" oninput="clearErr('cardCvv')">
+                                <span class="field-error" id="err-cardCvv">Enter a valid CVV.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pay-option" id="payOther" onclick="selectPay('other')">
+                    <div class="pay-option-head">
+                        <input type="radio" class="pay-radio" name="payMethod" id="radioOther" onchange="selectPay('other')">
+                        <label for="radioOther" class="pay-lbl" style="cursor:pointer;">Other payment methods</label>
+                        <div class="other-pay-icons">
+                            <span class="pay-icon-pill">GCash</span>
+                            <span class="pay-icon-pill">GPay</span>
+                        </div>
+                    </div>
+                    <div class="pay-next-note" id="payOtherNote">Pay on next page: Gift Card, GCash, Google Pay</div>
+                </div>
+                <button class="reserve-main-btn" id="reserveBtn" type="button" onclick="handleReserve()">
+                    <span class="btn-spinner"></span>
+                    <span class="btn-text"><i class="fas fa-taxi"></i> Confirm Booking</span>
+                </button>
+                <div class="trust-row">
+                    <span><i class="fas fa-bolt"></i> Instant confirmation</span>
+                    <span><i class="fas fa-lock"></i> Secure payment</span>
+                    <span><i class="fas fa-clock"></i> Free waiting time</span>
+                </div>
+                <p class="tos-note">By confirming, I agree to Easy Navigate's <a href="#">Terms of Use</a> and <a href="#">Privacy Statement</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+        <div class="bk-card" style="overflow:hidden;">
+            <div class="taxi-summary-header">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+                    <i class="fas fa-taxi" style="font-size:1.6rem;color:rgba(255,255,255,.8);"></i>
+                    <div>
+                        <div class="tsh-title" id="tshTitle">Airport Taxi Transfer</div>
+                        <div class="tsh-sub" id="tshSub">–</div>
+                    </div>
+                </div>
+                <div class="tsh-badges">
+                    <span class="tsh-badge" id="tshPax">1 Passenger</span>
+                    <span class="tsh-badge" id="tshVehicle">Comfort</span>
+                </div>
+            </div>
+            <div class="route-block">
+                <div class="rb-row">
+                    <div class="rb-icon blue"><i class="fas fa-plane-arrival"></i></div>
+                    <div class="rb-text"><span class="rb-label">Pick-up</span><span id="rbPickup">–</span></div>
+                </div>
+                <div class="rb-connector"></div>
+                <div class="rb-row">
+                    <div class="rb-icon green"><i class="fas fa-location-dot"></i></div>
+                    <div class="rb-text"><span class="rb-label">Drop-off</span><span id="rbDropoff">–</span></div>
+                </div>
+                <div class="rb-connector"></div>
+                <div class="rb-row">
+                    <div class="rb-icon orange"><i class="fas fa-calendar"></i></div>
+                    <div class="rb-text"><span class="rb-label">Date &amp; time</span><span id="rbDate">–</span></div>
+                </div>
+                <div class="rb-connector"></div>
+                <div class="rb-row">
+                    <div class="rb-icon purple"><i class="fas fa-users"></i></div>
+                    <div class="rb-text"><span class="rb-label">Passengers</span><span id="rbPax">–</span></div>
+                </div>
+            </div>
+            <div class="vehicle-summary-block">
+                <div class="vsb-title">Selected Vehicle</div>
+                <div class="vsb-row"><i class="fas fa-car"></i> <span id="vsbVehicle">–</span></div>
+                <div class="vsb-row"><i class="fas fa-user"></i> <span id="vsbSeats">–</span></div>
+                <div class="vsb-row"><i class="fas fa-suitcase"></i> <span id="vsbBags">–</span></div>
+            </div>
+            <div class="price-block" id="priceBlock"></div>
+            <div class="includes-block">
+                <div class="includes-title">What's included</div>
+                <div class="includes-grid">
+                    <div class="include-item"><i class="fas fa-circle-check"></i> Meet &amp; greet</div>
+                    <div class="include-item"><i class="fas fa-circle-check"></i> Free waiting time</div>
+                    <div class="include-item"><i class="fas fa-circle-check"></i> Flight tracking</div>
+                    <div class="include-item"><i class="fas fa-circle-check"></i> Door-to-door</div>
+                    <div class="include-item"><i class="fas fa-circle-check"></i> 24h support</div>
+                    <div class="include-item"><i class="fas fa-circle-check"></i> Free cancellation</div>
+                </div>
+            </div>
+            <div class="info-sec">
+                <div class="info-sec-title">Important Information</div>
+                <ul class="fine-list">
+                    <li>Driver will hold a name sign at arrivals.</li>
+                    <li>Free cancellation up to 24h before pickup.</li>
+                    <li>Flight delays are tracked automatically.</li>
+                    <li>Child seats available on request at no extra charge.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+    <div class="success-box">
+        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="success-title">Taxi Booked!</div>
+        <div class="success-sub">Your transfer from <strong id="successAirport"></strong> is confirmed. Driver details will be sent to <strong id="successEmail"></strong>.</div>
+        <div class="success-ref">Booking Ref: <span id="successRef"></span></div>
+        <div class="success-detail" id="successDetail"></div>
+        <button class="success-cta" onclick="window.location.href='index.html'">Back to Home</button>
+    </div>
+</div>
+
+<!-- auth-header.js must be LAST so DOM is ready -->
+<script src="auth-header.js"></script>
+<script>
+'use strict';
+
+function toggleDropdown(id, e) {
+    if (e) e.stopPropagation();
+    const m = document.getElementById(id);
+    if (!m) return;
+    const open = m.classList.contains('open');
+    document.querySelectorAll('.dropdown-menu.open').forEach(x => x.classList.remove('open'));
+    if (!open) m.classList.add('open');
+}
+document.addEventListener('click', () => {
+    document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+    const um = document.getElementById('userMenuDropdown');
+    if (um) um.style.display = 'none';
+});
+
+function fmt(v) {
+    return new Intl.NumberFormat('en-PH', { style:'currency', currency:'PHP', minimumFractionDigits:2, maximumFractionDigits:2 }).format(Number(v));
+}
+
+const VEHICLES = [
+    { id:'economy',  icon:'🚕', name:'Economy',        seats:3, bags:2, price:1200, desc:'Standard sedan — best value',      instant:false },
+    { id:'comfort',  icon:'🚙', name:'Comfort',         seats:4, bags:3, price:1800, desc:'Comfortable sedan with extra space', instant:true  },
+    { id:'premium',  icon:'🚗', name:'Premium Elite',   seats:4, bags:3, price:2800, desc:'Business-class sedan (5 seats)',    instant:true  },
+    { id:'van',      icon:'🚐', name:'Minivan / MPV',   seats:7, bags:5, price:2200, desc:'Ideal for groups and families',     instant:false },
+    { id:'business', icon:'🚘', name:'Business Class',  seats:3, bags:3, price:3500, desc:'Top-tier comfort & premium perks',  instant:true  },
+];
+
+let selectedVehicleId = 'comfort';
+
+const P = new URLSearchParams(window.location.search);
+const TAXI = {
+    iata:     P.get('iata')     || '',
+    city:     P.get('city')     || '',
+    terminal: P.get('terminal') || '',
+    pickup:   decodeURIComponent(P.get('pickup')  || ''),
+    dropoff:  decodeURIComponent(P.get('dropoff') || ''),
+    date:     P.get('date')     || '',
+    time:     P.get('time')     || '',
+    adults:   parseInt(P.get('adults')   || '1', 10),
+    children: parseInt(P.get('children') || '0', 10),
+    infants:  parseInt(P.get('infants')  || '0', 10),
+};
+
+function populateSidebar() {
+    const city = TAXI.city || TAXI.iata || 'Airport';
+    document.getElementById('tshTitle').textContent   = city + ' Transfer';
+    document.getElementById('tshSub').textContent     = TAXI.pickup || city;
+    document.getElementById('rbPickup').textContent   = TAXI.pickup  || city;
+    document.getElementById('rbDropoff').textContent  = TAXI.dropoff || 'Your destination';
+    document.getElementById('rbDate').textContent     = TAXI.date ? TAXI.date + (TAXI.time ? ' at ' + fmtTime(TAXI.time) : '') : 'Not specified';
+    let paxStr = TAXI.adults + ' Adult' + (TAXI.adults > 1 ? 's' : '');
+    if (TAXI.children > 0) paxStr += ', ' + TAXI.children + ' Child' + (TAXI.children > 1 ? 'ren' : '');
+    if (TAXI.infants  > 0) paxStr += ', ' + TAXI.infants  + ' Infant' + (TAXI.infants > 1 ? 's' : '');
+    document.getElementById('rbPax').textContent = paxStr;
+    document.getElementById('tshPax').textContent = paxStr;
+    document.getElementById('bannerText').textContent = city + ' transfer' + (TAXI.dropoff ? ' → ' + TAXI.dropoff : '');
+    if (TAXI.pickup)  document.getElementById('pickupField').value  = TAXI.pickup;
+    if (TAXI.dropoff) document.getElementById('dropoffField').value = TAXI.dropoff;
+    if (TAXI.date)    document.getElementById('pickupDate').value   = TAXI.date;
+    if (TAXI.time)    document.getElementById('pickupTime').value   = TAXI.time;
+}
+
+function syncSidebar() {
+    const pickup  = (document.getElementById('pickupField')?.value  || '').trim();
+    const dropoff = (document.getElementById('dropoffField')?.value || '').trim();
+    const date    = document.getElementById('pickupDate')?.value  || '';
+    const time    = document.getElementById('pickupTime')?.value  || '';
+    document.getElementById('rbPickup').textContent  = pickup  || '–';
+    document.getElementById('rbDropoff').textContent = dropoff || '–';
+    document.getElementById('rbDate').textContent    = date ? date + (time ? ' at ' + fmtTime(time) : '') : 'Not specified';
+    document.getElementById('tshSub').textContent    = pickup || (TAXI.city || '–');
+}
+
+function fmtTime(t) {
+    if (!t) return '';
+    const parts = t.split(':');
+    let hour = parseInt(parts[0], 10);
+    const min  = parts[1] || '00';
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return hour + ':' + min + ' ' + ampm;
+}
+
+function renderVehicles() {
+    const grid = document.getElementById('vehicleGrid');
+    if (!grid) return;
+    grid.innerHTML = VEHICLES.map(v => `
+    <div class="vehicle-card ${selectedVehicleId === v.id ? 'selected' : ''}" onclick="selectVehicle('${v.id}')">
+        <div class="vc-radio"></div>
+        <div class="vc-icon">${v.icon}</div>
+        <div class="vc-info">
+            <div class="vc-name">${v.name}${v.instant ? '<span class="vc-badge-instant">Instant confirmation</span>' : ''}</div>
+            <div class="vc-caps"><span><i class="fas fa-user"></i> Max. ${v.seats} passengers</span><span><i class="fas fa-suitcase"></i> ${v.bags} bags</span></div>
+            <div class="vc-desc">${v.desc}</div>
+        </div>
+        <div class="vc-price">${fmt(v.price)}</div>
+    </div>`).join('');
+}
+
+function selectVehicle(id) { selectedVehicleId = id; renderVehicles(); updateVehicleSidebar(); recalcPrice(); }
+
+function updateVehicleSidebar() {
+    const v = VEHICLES.find(x => x.id === selectedVehicleId) || VEHICLES[0];
+    document.getElementById('tshVehicle').textContent  = v.name;
+    document.getElementById('vsbVehicle').textContent  = `${v.icon} ${v.name}`;
+    document.getElementById('vsbSeats').textContent    = `Max. ${v.seats} passengers`;
+    document.getElementById('vsbBags').textContent     = `${v.bags} bags`;
+}
+
+function recalcPrice() {
+    const v = VEHICLES.find(x => x.id === selectedVehicleId) || VEHICLES[0];
+    const base = v.price;
+    const serviceFee = parseFloat((base * 0.05).toFixed(2));
+    const total = base + serviceFee;
+    const el = document.getElementById('priceBlock');
+    if (!el) return;
+    el.innerHTML = `
+        <div class="pr-row main"><span>Price Details</span></div>
+        <div class="pr-indent">
+            <div class="pr-tax"><span>Airport transfer fee (${v.name})</span><span>${fmt(base)}</span></div>
+            <div class="pr-tax pr-free"><span>Airport meet &amp; greet</span><span>PHP 0.00</span></div>
+        </div>
+        <div class="pr-row" style="margin-top:4px"><span style="color:var(--gray-500);font-size:.85rem">Service fee (5%)</span><span style="font-size:.85rem">${fmt(serviceFee)}</span></div>
+        <div class="pr-total"><span>Total</span><span>${fmt(total)}</span></div>
+        <p style="font-size:.72rem;color:var(--gray-400);margin-top:8px;line-height:1.5">
+            <i class="fas fa-clock" style="color:var(--blue);margin-right:4px"></i>Free unlimited waiting time after landing<br>
+            <i class="fas fa-ban" style="color:var(--blue);margin-right:4px"></i>Free cancellation available 24h before pickup
+        </p>`;
+    window._totalAmount = total;
+}
+
+let currentPayMethod = 'card';
+function selectPay(type) {
+    currentPayMethod = type;
+    const c = document.getElementById('payCard'), o = document.getElementById('payOther');
+    const f = document.getElementById('cardFields'), n = document.getElementById('payOtherNote');
+    if (type === 'card') {
+        c.classList.add('selected'); o.classList.remove('selected');
+        document.getElementById('radioCard').checked = true;
+        f.style.display = 'grid'; n.style.display = 'none';
+    } else {
+        o.classList.add('selected'); c.classList.remove('selected');
+        document.getElementById('radioOther').checked = true;
+        f.style.display = 'none'; n.style.display = 'block';
+    }
+}
+
+function formatCard(el) { let v = el.value.replace(/\D/g,'').substring(0,16); el.value = v.replace(/(.{4})/g,'$1 ').trim(); }
+function formatExp(el)  { let v = el.value.replace(/\D/g,'').substring(0,4); if (v.length > 2) v = v.substring(0,2)+'/'+v.substring(2); el.value = v; }
+
+function showErr(id, msg) { const e=document.getElementById('err-'+id), i=document.getElementById(id); if(e){if(msg)e.textContent=msg;e.classList.add('show');} if(i)i.classList.add('invalid'); }
+function clearErr(id)  { const e=document.getElementById('err-'+id), i=document.getElementById(id); if(e)e.classList.remove('show'); if(i)i.classList.remove('invalid'); }
+
+function validateAll() {
+    let valid = true;
+    if (!document.getElementById('pickupField').value.trim())  { showErr('pickupField');  valid = false; }
+    if (!document.getElementById('dropoffField').value.trim()) { showErr('dropoffField'); valid = false; }
+    if (!document.getElementById('pickupDate').value)          { showErr('pickupDate');   valid = false; }
+    if (!document.getElementById('pickupTime').value)          { showErr('pickupTime');   valid = false; }
+    if (!document.getElementById('firstName').value.trim())  { showErr('firstName');  valid = false; }
+    if (!document.getElementById('lastName').value.trim())   { showErr('lastName');   valid = false; }
+    if (!document.getElementById('phoneField').value.trim()) { showErr('phoneField'); valid = false; }
+    const email = document.getElementById('emailField').value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('emailField','Please enter a valid email.'); valid = false; }
+    if (currentPayMethod === 'card') {
+        const cn = document.getElementById('cardNumber').value.replace(/\s/g,'');
+        if (cn.length < 16) { showErr('cardNumber'); valid = false; }
+        if (!document.getElementById('cardName').value.trim()) { showErr('cardName'); valid = false; }
+        if (!/^\d{2}\/\d{2}$/.test(document.getElementById('cardExpiry').value.trim())) { showErr('cardExpiry'); valid = false; }
+        if (document.getElementById('cardCvv').value.trim().length < 3) { showErr('cardCvv'); valid = false; }
+    }
+    if (!valid) { const first = document.querySelector('.field-inp.invalid'); if (first) first.scrollIntoView({ behavior:'smooth', block:'center' }); }
+    return valid;
+}
+
+async function handleReserve() {
+    if (!validateAll()) return;
+    const btn = document.getElementById('reserveBtn');
+    btn.classList.add('loading'); btn.disabled = true;
+    const bookingRef = 'TX-' + (Date.now() % 1000000).toString().padStart(6,'0');
+    const v = VEHICLES.find(x => x.id === selectedVehicleId) || VEHICLES[0];
+
+    function getApiUrl(file) {
+        const href = window.location.href.split('?')[0];
+        const base = href.substring(0, href.lastIndexOf('/') + 1);
+        if (window.location.protocol === 'file:') {
+            const idx = base.toLowerCase().indexOf('htdocs/');
+            if (idx !== -1) return 'http://localhost/' + base.substring(idx + 7) + 'api/' + file;
+            return 'http://localhost/' + base.replace('file:///', '').replace(/^[A-Za-z]:\//, '') + 'api/' + file;
+        }
+        return base + 'api/' + file;
+    }
+
+    const serviceFeeVal = parseFloat((v.price * 0.05).toFixed(2));
+    try {
+        const res = await fetch(getApiUrl('save_taxi_booking.php'), {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+                booking_ref:      bookingRef,
+                first_name:       document.getElementById('firstName').value.trim(),
+                last_name:        document.getElementById('lastName').value.trim(),
+                email:            document.getElementById('emailField').value.trim(),
+                phone:            document.getElementById('phoneField').value.trim(),
+                whatsapp:         document.getElementById('whatsappField').value.trim(),
+                airport_iata:     TAXI.iata,
+                airport_city:     TAXI.city,
+                airport_terminal: TAXI.terminal,
+                pickup_location:  document.getElementById('pickupField').value.trim(),
+                dropoff_location: document.getElementById('dropoffField').value.trim(),
+                pickup_date:      document.getElementById('pickupDate').value,
+                pickup_time:      document.getElementById('pickupTime').value,
+                adults: TAXI.adults, children: TAXI.children, infants: TAXI.infants,
+                vehicle_type: selectedVehicleId, vehicle_name: v.name,
+                max_seats: v.seats, max_bags: v.bags,
+                transfer_fee: v.price, meet_greet_fee: 0,
+                service_fee: serviceFeeVal,
+                total_amount: window._totalAmount || v.price + serviceFeeVal,
+                payment_method: currentPayMethod,
+            }),
+        });
+        const result = await res.json();
+        btn.classList.remove('loading'); btn.disabled = false;
+        if (result.success) {
+            document.getElementById('successAirport').textContent = TAXI.city + (TAXI.terminal ? ' – Terminal ' + TAXI.terminal : '');
+            document.getElementById('successEmail').textContent  = document.getElementById('emailField').value.trim();
+            document.getElementById('successRef').textContent    = result.booking_ref || bookingRef;
+            document.getElementById('successDetail').textContent = `${v.name} · ${TAXI.date || 'Date TBD'} · ${TAXI.adults} passenger${TAXI.adults > 1 ? 's' : ''}`;
+            document.getElementById('successOverlay').classList.add('show');
+        } else {
+            alert('Booking failed: ' + (result.message || 'Unknown error. Please try again.'));
+        }
+    } catch (err) {
+        btn.classList.remove('loading'); btn.disabled = false;
+        alert('Network error. Please check your connection and try again.');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    populateSidebar();
+    renderVehicles();
+    updateVehicleSidebar();
+    recalcPrice();
+    // Pre-fill email from auth state
+    try {
+        const auth = JSON.parse(localStorage.getItem('easyNavigateAuth') || '{}');
+        if (auth && auth.email) document.getElementById('emailField').value = auth.email;
+        if (auth && auth.name) {
+            const parts = auth.name.trim().split(/\s+/);
+            if (parts[0]) document.getElementById('firstName').value = parts.slice(0,-1).join(' ') || parts[0];
+            if (parts.length > 1) document.getElementById('lastName').value = parts[parts.length-1];
+        }
+    } catch(e) {}
+});
+</script>
+</body>
+</html>
