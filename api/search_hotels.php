@@ -7,36 +7,37 @@
 require_once __DIR__ . '/db.php';
 corsHeaders();
 
-$pdo      = getDB();
+$pdo = getDB();
+
 $city     = trim($_GET['city']     ?? '');
-$priceMin = $_GET['priceMin'] !== null && $_GET['priceMin'] !== ''
+$priceMin = isset($_GET['priceMin']) && $_GET['priceMin'] !== ''
             ? (float) $_GET['priceMin'] : null;
-$priceMax = $_GET['priceMax'] !== null && $_GET['priceMax'] !== ''
+$priceMax = isset($_GET['priceMax']) && $_GET['priceMax'] !== ''
             ? (float) $_GET['priceMax'] : null;
 $starsRaw = trim($_GET['stars'] ?? '');
 
 /* ── Build query ─────────────────────────────────────────────── */
 $conditions = [];
-$params     = [];
+$namedParams = [];
+$starList    = [];
 
 if ($city !== '') {
-    $conditions[] = 'LOWER(h.city) LIKE LOWER(:city)';
-    $params[':city'] = '%' . $city . '%';
+    $conditions[]         = 'LOWER(h.city) LIKE LOWER(:city)';
+    $namedParams[':city'] = '%' . $city . '%';
 }
 if ($priceMin !== null) {
-    $conditions[] = 'h.price_per_night >= :priceMin';
-    $params[':priceMin'] = $priceMin;
+    $conditions[]             = 'h.price_per_night >= :priceMin';
+    $namedParams[':priceMin'] = $priceMin;
 }
 if ($priceMax !== null) {
-    $conditions[] = 'h.price_per_night <= :priceMax';
-    $params[':priceMax'] = $priceMax;
+    $conditions[]             = 'h.price_per_night <= :priceMax';
+    $namedParams[':priceMax'] = $priceMax;
 }
 if ($starsRaw !== '') {
-    $starList = array_filter(array_map('intval', explode(',', $starsRaw)));
+    $starList = array_values(array_filter(array_map('intval', explode(',', $starsRaw))));
     if ($starList) {
         $placeholders = implode(',', array_fill(0, count($starList), '?'));
         $conditions[] = "h.stars IN ($placeholders)";
-        array_push($params, ...$starList);
     }
 }
 
@@ -51,8 +52,7 @@ $sql = "
         h.stars,
         h.rating,
         h.review_count,
-        h.price_per_night,
-        h.description
+        h.price_per_night
     FROM hotels h
     $where
     ORDER BY h.rating DESC, h.review_count DESC
@@ -62,18 +62,15 @@ $sql = "
 try {
     $stmt = $pdo->prepare($sql);
 
-    /* Bind named params first, then positional (stars) */
-    foreach ($params as $key => $val) {
-        if (is_string($key)) {
-            $stmt->bindValue($key, $val);
-        }
+    /* Bind named params (city, priceMin, priceMax) */
+    foreach ($namedParams as $key => $val) {
+        $stmt->bindValue($key, $val);
     }
-    /* Re-bind positional params for the IN clause */
+
+    /* Bind positional params for IN clause (stars) */
     $posIdx = 1;
-    foreach ($params as $key => $val) {
-        if (is_int($key)) {
-            $stmt->bindValue($posIdx++, $val, PDO::PARAM_INT);
-        }
+    foreach ($starList as $starVal) {
+        $stmt->bindValue($posIdx++, $starVal, PDO::PARAM_INT);
     }
 
     $stmt->execute();

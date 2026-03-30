@@ -1,16 +1,21 @@
 <?php
+/* ═══════════════════════════════════════════════════════════════
+   api/get_hotels.php
+   Returns all distinct cities from the hotels table.
+   Used by the destination dropdown on the hotel search page.
+   ═══════════════════════════════════════════════════════════════ */
 
 declare(strict_types=1);
 
-header('Content-Type: application/json');
-
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
+    header('Content-Type: application/json');
     echo json_encode(['ok' => false, 'message' => 'Method not allowed']);
     exit;
 }
 
-require_once __DIR__ . '/db_connect.php';
+require_once __DIR__ . '/db.php';
+corsHeaders();
 
 try {
     $pdo = getDB();
@@ -24,16 +29,8 @@ try {
 
     $cities = $statement->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
-    echo json_encode([
-        'ok'     => true,
-        'cities' => array_values($cities),
-    ]);
+    jsonOk(['cities' => array_values($cities)]);
 
 } catch (Throwable $error) {
-    http_response_code(500);
-    echo json_encode([
-        'ok'      => false,
-        'message' => 'Database error',
-        'error'   => $error->getMessage(),
-    ]);
+    jsonError('Database error: ' . $error->getMessage(), 500);
 }

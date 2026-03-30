@@ -409,11 +409,11 @@ const defaultHotelCities = [
 
 let hotelDestinationCities = [...defaultHotelCities];
 
-function getApiUrl(pathWithFile) {
+// ── RENAMED from getApiUrl to getPanelApiUrl to avoid collision with hotel-results.js ──
+function getPanelApiUrl(pathWithFile) {
     if (window.location.protocol === 'file:') {
         return `http://localhost/platform-technologies-proj-v1-main/api/${pathWithFile}`;
     }
-
     return `api/${pathWithFile}`;
 }
 
@@ -431,7 +431,8 @@ function normalizeCityList(cities) {
 
 async function loadHotelCitiesFromApi() {
     try {
-        const response = await fetch(getApiUrl('get_hotels.php'), {
+        // Uses getPanelApiUrl (renamed) — no longer conflicts with hotel-results.js
+        const response = await fetch(getPanelApiUrl('get_hotels.php'), {
             method: 'GET',
             headers: { 'Accept': 'application/json' }
         });

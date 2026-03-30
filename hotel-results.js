@@ -1,6 +1,16 @@
 (function () {
     const HOTEL_PAGE_CLASS = 'service-hotel';
 
+    // ── API URL BUILDER (defined first so all functions below can use it) ──
+    function getApiUrl(pathWithFile) {
+        if (window.location.protocol === 'file:') {
+            return `http://localhost/platform-technologies-proj-v1-main/api/${pathWithFile}`;
+        }
+        const href = window.location.href.split('?')[0];
+        const base = href.substring(0, href.lastIndexOf('/') + 1);
+        return base + 'api/' + pathWithFile;
+    }
+
     // --- Price Filter Logic ---
     function parsePriceRange(text) {
         const match = text.match(/([\d,]+)/g);
@@ -55,6 +65,7 @@
         filterAndLoadHotels(priceMin, priceMax, stars);
     }
 
+    // ── FILTER + LOAD (uses IIFE-local getApiUrl) ────────────────────────
     async function filterAndLoadHotels(priceMin, priceMax, stars) {
         const listEl = document.getElementById('hotelResultsList');
         if (!listEl) return;
@@ -78,8 +89,9 @@
             updateResultsHeader(city, hotels.length);
             renderHotels(hotels);
         } catch (error) {
+            console.error('Filter load failed:', error);
             updateResultsHeader(city, 0);
-            listEl.innerHTML = '<div class="hotel-results-empty">No hotels found for the selected filters.</div>';
+            listEl.innerHTML = '<div class="hotel-results-empty">No hotels found for the selected filters. Please check your server is running and try again.</div>';
         }
     }
 
@@ -95,16 +107,6 @@
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
     }
-
-    function getApiUrl(pathWithFile) {
-    if (window.location.protocol === 'file:') {
-        return `http://localhost/platform-technologies-proj-v1-main/api/${pathWithFile}`;
-    }
-    // Get the folder the current HTML file lives in, then append api/
-    const href = window.location.href.split('?')[0];
-    const base = href.substring(0, href.lastIndexOf('/') + 1);
-    return base + 'api/' + pathWithFile;
-}
 
     function getCityFromQuery() {
         const params = new URLSearchParams(window.location.search);
@@ -130,7 +132,7 @@
         const metaEl  = document.getElementById('hotelResultsMeta');
         if (!titleEl || !metaEl) return;
         titleEl.textContent = city ? `${city} Hotels & Homes` : 'Hotels & Homes';
-        metaEl.textContent  = `${count} stays available`;
+        metaEl.textContent  = `${count} ${count === 1 ? 'stay' : 'stays'} available`;
     }
 
     // ── BOOKING URL BUILDER ──────────────────────────────────────
@@ -167,7 +169,10 @@
             ? `<span class="hotel-result-stars">${'★'.repeat(stars)}</span>`
             : '';
 
-        const ratingLabel = rating >= 4.5 ? 'Excellent' : rating >= 3.5 ? 'Very Good' : 'Good';
+        const ratingNum = parseFloat(rating);
+        const ratingLabel = !isNaN(ratingNum)
+            ? (ratingNum >= 4.5 ? 'Excellent' : ratingNum >= 3.5 ? 'Very Good' : 'Good')
+            : 'Good';
 
         const base     = (hotel.hotel_name || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
         const images   = [1, 2, 3].map(i => `hotel_homes/${base}_${i}.jpg`);
@@ -226,7 +231,7 @@
         if (!listEl) return;
 
         if (!Array.isArray(hotels) || hotels.length === 0) {
-            listEl.innerHTML = '<div class="hotel-results-empty">No hotels found.</div>';
+            listEl.innerHTML = '<div class="hotel-results-empty">No hotels found. Try a different destination or adjust your filters.</div>';
             return;
         }
 
@@ -290,7 +295,7 @@
         modal.innerHTML = `
 <div class="hotel-modal-content">
 
-    <button class="hotel-modal-close-btn" id="hotelModalClose" aria-label="Close modal">✕</button>
+    <button class="hotel-modal-close-btn" id="hotelModalClose" aria-label="Close modal">&#x2715;</button>
 
     <div class="hotel-modal-titlebox">
         <h1 class="hotel-modal-title">${escapeHtml(hotel.hotel_name || '')}</h1>
@@ -350,8 +355,8 @@
         <div class="hotel-modal-footer-price">
             <span class="hotel-modal-footer-label">Price per night</span>
             <div class="hotel-modal-footer-amounts">
-                <span class="hotel-modal-price-current">${price ? `₱${price.toLocaleString()}` : 'Contact for price'}</span>
-                ${price ? `<span class="hotel-modal-price-original">₱${Math.round(price * 1.15).toLocaleString()}</span>` : ''}
+                <span class="hotel-modal-price-current">${price ? `&#x20B1;${price.toLocaleString()}` : 'Contact for price'}</span>
+                ${price ? `<span class="hotel-modal-price-original">&#x20B1;${Math.round(price * 1.15).toLocaleString()}</span>` : ''}
             </div>
         </div>
         <button class="hotel-modal-reserve-btn reserve-btn"
@@ -374,7 +379,11 @@
             if (e.target === modal) { modal.remove(); document.body.style.overflow = ''; }
         });
         document.addEventListener('keydown', function escHandler(e) {
-            if (e.key === 'Escape') { modal.remove(); document.body.style.overflow = ''; document.removeEventListener('keydown', escHandler); }
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.body.style.overflow = '';
+                document.removeEventListener('keydown', escHandler);
+            }
         });
 
         let currentImg = 0;
@@ -405,7 +414,14 @@
         if (!listEl) return;
         listEl.innerHTML = '<div class="hotel-results-loading">Loading hotels...</div>';
 
-        const endpointUrl = new URL(getApiUrl('search_hotels.php'), window.location.href);
+        let endpointUrl;
+        try {
+            endpointUrl = new URL(getApiUrl('search_hotels.php'), window.location.href);
+        } catch (e) {
+            // Fallback if URL construction fails (e.g. file:// edge case)
+            endpointUrl = new URL('http://localhost/platform-technologies-proj-v1-main/api/search_hotels.php');
+        }
+
         if (city) endpointUrl.searchParams.set('city', city);
 
         try {
@@ -421,7 +437,13 @@
         } catch (error) {
             console.error('Hotel load failed:', error);
             updateResultsHeader(city, 0);
-            listEl.innerHTML = '<div class="hotel-results-empty">Unable to load hotels. Check F12 console.</div>';
+            listEl.innerHTML = `
+                <div class="hotel-results-empty">
+                    Unable to load hotels. Please make sure your local server (XAMPP/WAMP) is running
+                    and you are opening this page via <strong>http://localhost/...</strong> not as a file.
+                    <br><br>
+                    <small style="color:#aaa;">Error: ${error.message}</small>
+                </div>`;
         }
     };
 
@@ -432,10 +454,7 @@
         const searchButton     = document.querySelector('#panel-hotel .search-btn');
         if (!destinationInput || !searchButton) return;
 
-        // ── KEY FIX: Read ?city= from URL on page load ──
-        // Previously this always called loadHotels('') which ignored the URL param.
-        // Now it reads the city from the URL so arriving from index.html with
-        // ?city=El+Nido shows only El Nido hotels immediately.
+        // Read ?city= from URL on page load so arriving from index.html works correctly
         const initialCity = getCityFromQuery();
         destinationInput.value = initialCity;
         window.loadHotels(initialCity);
@@ -444,6 +463,15 @@
             const city = destinationInput.value.trim();
             setCityQuery(city, true);
             window.loadHotels(city);
+        });
+
+        // Also trigger search on Enter key inside the destination input
+        destinationInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const city = destinationInput.value.trim();
+                setCityQuery(city, true);
+                window.loadHotels(city);
+            }
         });
 
         window.addEventListener('popstate', () => {
