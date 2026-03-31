@@ -357,7 +357,7 @@
         }
         .txm-close:hover { background: var(--gray-100); color: var(--text); }
 
-        /* ── LEFT: Form ── */
+        /* ── LEFT ── */
         .txm-left {
             padding: 28px 28px 24px;
             overflow-y: auto;
@@ -476,46 +476,64 @@
             margin: 0 0 10px;
         }
 
-        /* Form fields */
-        .txm-form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .txm-form-row.single { grid-template-columns: 1fr; }
-        .txm-field-group { display: flex; flex-direction: column; gap: 5px; }
-        .txm-field-lbl {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gray-500);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .txm-field-lbl .req { color: #e53935; }
-        .txm-field-inp {
+        /* Trip details card */
+        .txm-trip-details {
+            background: var(--gray-50);
             border: 1.5px solid var(--gray-200);
-            border-radius: 8px;
-            padding: 9px 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 13.5px;
-            color: var(--text);
-            outline: none;
-            background: #fff;
-            width: 100%;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 22px;
         }
-        .txm-field-inp:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(40,45,158,0.10); }
-        .txm-field-inp.invalid { border-color: #e53935 !important; }
-        .txm-field-error { font-size: 11px; color: #e53935; font-weight: 600; display: none; }
-        .txm-field-error.show { display: block; }
 
-        .txm-phone-row { display: grid; grid-template-columns: 90px 1fr; gap: 8px; }
-        .txm-phone-prefix {
-            border: 1.5px solid var(--gray-200); border-radius: 8px;
-            padding: 9px 10px; font-size: 12.5px; font-weight: 700;
-            background: var(--gray-50); color: var(--text);
-            display: flex; align-items: center; gap: 4px;
+        .txm-trip-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .txm-trip-row-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .txm-trip-row-icon.blue   { background: #dbeafe; color: #1d4ed8; }
+        .txm-trip-row-icon.green  { background: #dcfce7; color: #15803d; }
+        .txm-trip-row-icon.amber  { background: #fef3c7; color: #92400e; }
+        .txm-trip-row-icon.purple { background: #ede9fe; color: #6d28d9; }
+
+        .txm-trip-row-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            min-width: 0;
+        }
+
+        .txm-trip-row-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .txm-trip-row-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* Confirm button */
@@ -529,7 +547,7 @@
             cursor: pointer;
             transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
             box-shadow: 0 4px 14px rgba(40,45,158,0.28);
-            margin-top: 16px;
+            margin-top: 4px;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .txm-confirm-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
@@ -542,7 +560,7 @@
 
         .txm-trust-row {
             display: flex; justify-content: center; gap: 20px;
-            margin-top: 10px; font-size: 11.5px; color: var(--gray-500); font-weight: 600;
+            margin-top: 12px; font-size: 11.5px; color: var(--gray-500); font-weight: 600;
         }
         .txm-trust-row span { display: flex; align-items: center; gap: 5px; }
         .txm-trust-row i { color: var(--blue); font-size: 10px; }
@@ -643,35 +661,9 @@
         }
         .txm-include-item i { color: #16a34a; font-size: 11px; width: 14px; }
 
-        /* Success overlay */
-        .txm-success {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,.55);
-            backdrop-filter: blur(4px);
-            z-index: 99999;
-            align-items: center; justify-content: center;
-        }
-        .txm-success.show { display: flex; }
-        .txm-success-box {
-            background: #fff; border-radius: 18px;
-            padding: 44px 48px; text-align: center;
-            max-width: 460px; width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,.25);
-            animation: txmPopIn .4s cubic-bezier(.34,1.56,.64,1) both;
-        }
-        @keyframes txmPopIn { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .txm-success-icon  { font-size: 3.5rem; color: #16a34a; margin-bottom: 16px; }
-        .txm-success-title { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-        .txm-success-sub   { font-size: .9rem; color: var(--gray-500); margin-bottom: 16px; line-height: 1.6; }
-        .txm-success-ref   { background: var(--gray-50); border-radius: 8px; padding: 12px 20px; font-size: .88rem; font-weight: 700; color: var(--blue); margin-bottom: 20px; }
-        .txm-success-cta   { background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 12px 36px; font-family: 'Inter', sans-serif; font-size: .95rem; font-weight: 800; cursor: pointer; }
-        .txm-success-cta:hover { background: var(--blue-dark); }
-
         @media (max-width: 700px) {
             .txm-box { grid-template-columns: 1fr; }
             .txm-right { border-left: none; border-top: 1px solid var(--gray-200); }
-            .txm-form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -955,7 +947,7 @@
 
             <button class="txm-close" onclick="closeTaxiModalBtn()">&times;</button>
 
-            <!-- LEFT: Form -->
+            <!-- LEFT: Details + Book Now -->
             <div class="txm-left">
                 <div class="txm-title" id="txmTitle">Book Your Taxi Transfer</div>
                 <div class="txm-route" id="txmRoute">
@@ -969,49 +961,51 @@
                     <!-- populated by JS -->
                 </div>
 
-                <!-- Contact info -->
-                <div class="txm-section-label" style="margin-top:4px;">Contact info</div>
-                <p style="font-size:12px;color:var(--gray-400);margin-bottom:14px;">For driver contact and meet-and-greet sign (optional)</p>
-
-                <div class="txm-form-row">
-                    <div class="txm-field-group">
-                        <label class="txm-field-lbl">First &amp; middle name <span class="req">*</span></label>
-                        <input id="txmFirstName" type="text" class="txm-field-inp" placeholder="English first &amp; middle names">
-                        <span class="txm-field-error" id="txm-err-firstName">Required.</span>
-                    </div>
-                    <div class="txm-field-group">
-                        <label class="txm-field-lbl">Last name <span class="req">*</span></label>
-                        <input id="txmLastName" type="text" class="txm-field-inp" placeholder="English last name">
-                        <span class="txm-field-error" id="txm-err-lastName">Required.</span>
-                    </div>
-                </div>
-
-                <div class="txm-form-row">
-                    <div class="txm-field-group">
-                        <label class="txm-field-lbl">Phone number <span class="req">*</span></label>
-                        <div class="txm-phone-row">
-                            <div class="txm-phone-prefix">+63 <i class="fas fa-chevron-down" style="font-size:8px;margin-left:auto"></i></div>
-                            <input id="txmPhone" type="tel" class="txm-field-inp" placeholder="9XX XXX XXXX">
+                <!-- Trip details -->
+                <div class="txm-section-label" style="margin-top: 2px;">Trip details</div>
+                <div class="txm-trip-details">
+                    <div class="txm-trip-row">
+                        <div class="txm-trip-row-icon blue">
+                            <i class="fas fa-plane-arrival"></i>
                         </div>
-                        <span class="txm-field-error" id="txm-err-phone">Required.</span>
+                        <div class="txm-trip-row-content">
+                            <span class="txm-trip-row-label">Pick-up</span>
+                            <span class="txm-trip-row-value" id="txmDetailPickup">–</span>
+                        </div>
                     </div>
-                    <div class="txm-field-group">
-                        <label class="txm-field-lbl">Email <span class="req">*</span></label>
-                        <input id="txmEmail" type="email" class="txm-field-inp" placeholder="your@email.com">
-                        <span class="txm-field-error" id="txm-err-email">Enter a valid email.</span>
+                    <div class="txm-trip-row">
+                        <div class="txm-trip-row-icon green">
+                            <i class="fas fa-location-dot"></i>
+                        </div>
+                        <div class="txm-trip-row-content">
+                            <span class="txm-trip-row-label">Drop-off</span>
+                            <span class="txm-trip-row-value" id="txmDetailDropoff">–</span>
+                        </div>
+                    </div>
+                    <div class="txm-trip-row">
+                        <div class="txm-trip-row-icon amber">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="txm-trip-row-content">
+                            <span class="txm-trip-row-label">Date &amp; Time</span>
+                            <span class="txm-trip-row-value" id="txmDetailDate">–</span>
+                        </div>
+                    </div>
+                    <div class="txm-trip-row">
+                        <div class="txm-trip-row-icon purple">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="txm-trip-row-content">
+                            <span class="txm-trip-row-label">Passengers</span>
+                            <span class="txm-trip-row-value" id="txmDetailPax">–</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="txm-form-row single">
-                    <div class="txm-field-group">
-                        <label class="txm-field-lbl">WhatsApp <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-400)">(optional)</span></label>
-                        <input id="txmWhatsapp" type="text" class="txm-field-inp" placeholder="Account (optional)">
-                    </div>
-                </div>
-
-                <button class="txm-confirm-btn" id="txmConfirmBtn" onclick="confirmTaxiBooking()">
+                <!-- Book Now button -->
+                <button class="txm-confirm-btn" id="txmConfirmBtn" onclick="goToBookingPage()">
                     <span class="txm-spinner"></span>
-                    <span class="txm-btn-text"><i class="fas fa-taxi"></i> Confirm Booking</span>
+                    <span class="txm-btn-text"><i class="fas fa-taxi"></i> Book Now</span>
                 </button>
 
                 <div class="txm-trust-row">
@@ -1069,17 +1063,6 @@
         </div>
     </div>
 
-    <!-- SUCCESS -->
-    <div class="txm-success" id="txmSuccess">
-        <div class="txm-success-box">
-            <div class="txm-success-icon"><i class="fas fa-check-circle"></i></div>
-            <div class="txm-success-title">Taxi Booked!</div>
-            <div class="txm-success-sub">Your transfer from <strong id="txmSuccessAirport"></strong> is confirmed. Details sent to <strong id="txmSuccessEmail"></strong>.</div>
-            <div class="txm-success-ref">Booking Ref: <span id="txmSuccessRef"></span></div>
-            <button class="txm-success-cta" onclick="window.location.href='index.html'">Back to Home</button>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="auth-header.js"></script>
     <script src="db-search-tracker.js"></script>
@@ -1089,7 +1072,7 @@
     <script>
     (function () {
 
-        /* ── API URL helper (same pattern as flight-results.js) ── */
+        /* ── API URL helper ── */
         function getApiUrl(file) {
             const href = window.location.href.split('?')[0];
             const base = href.substring(0, href.lastIndexOf('/') + 1);
@@ -1103,14 +1086,6 @@
                 return 'http://localhost/' + noProto + 'api/' + file;
             }
             return base + 'api/' + file;
-        }
-
-        /* ── Format currency ── */
-        function fmt(v) {
-            return new Intl.NumberFormat('en-PH', {
-                style: 'currency', currency: 'PHP',
-                minimumFractionDigits: 0, maximumFractionDigits: 0,
-            }).format(Number(v));
         }
 
         let allAirports = [];
@@ -1174,7 +1149,6 @@
             }
 
             grid.innerHTML = airports.map((ap, i) => {
-                /* Build airline logos strip */
                 const logos = (ap.airlines || []).map(a => a.logo
                     ? `<img src="${a.logo}" alt="${a.name}" class="taxi-airline-logo" title="${a.name}"
                             onerror="this.style.display='none'">`
@@ -1219,7 +1193,6 @@
                 </div>`;
             }).join('');
 
-            /* Stagger entrance animation */
             requestAnimationFrame(() => {
                 grid.querySelectorAll('.taxi-airport-card').forEach((card, i) => {
                     card.style.animationDelay = `${i * 50}ms`;
@@ -1243,26 +1216,9 @@
             renderAirports(filtered);
         };
 
-        /* ── Select airport → go to booking page ── */
+        /* ── Select airport → open modal ── */
         window.selectAirport = function (iata, city, terminal) {
-            const pickup  = terminal ? `${city} – Terminal ${terminal} (${iata})` : `${city} (${iata})`;
-            const dropoff = (document.getElementById('taxi-dropoff')?.value || '').trim();
-            const dateVal = document.querySelector('#panel-taxi input[type="date"]')?.value || '';
-            const timeVal = document.querySelector('#panel-taxi .time-picker')?.value || '';
-            const adults  = document.getElementById('taxiAdults')?.textContent || '1';
-            const children= document.getElementById('taxiChildren')?.textContent || '0';
-            const infants = document.getElementById('taxiInfants')?.textContent || '0';
-
-            const p = new URLSearchParams({
-                iata, city,
-                terminal: terminal || '',
-                pickup,
-                dropoff:  dropoff || '',
-                date:     dateVal,
-                time:     timeVal,
-                adults, children, infants,
-            });
-            window.location.href = 'taxi-booking.html?' + p.toString();
+            openTaxiModal(iata, city, terminal);
         };
 
         /* ══════════════════════════════════════════
@@ -1282,6 +1238,13 @@
 
         function getVehiclePrice(vehicleId) {
             return (VEHICLES.find(v => v.id === vehicleId) || VEHICLES[0]).price;
+        }
+
+        function fmtModal(v) {
+            return new Intl.NumberFormat('en-PH', {
+                style:'currency', currency:'PHP',
+                minimumFractionDigits:2, maximumFractionDigits:2
+            }).format(Number(v));
         }
 
         function renderVehicles() {
@@ -1306,18 +1269,10 @@
             </div>`).join('');
         }
 
-        function fmtModal(v) {
-            return new Intl.NumberFormat('en-PH', {
-                style:'currency', currency:'PHP',
-                minimumFractionDigits:2, maximumFractionDigits:2
-            }).format(Number(v));
-        }
-
         function renderModalPrice() {
-            const price     = getVehiclePrice(selectedVehicleId);
-            const meetGreet = 0;
-            const total     = price + meetGreet;
-            const el        = document.getElementById('txmPriceBlock');
+            const price = getVehiclePrice(selectedVehicleId);
+            const total = price;
+            const el    = document.getElementById('txmPriceBlock');
             if (!el) return;
             el.innerHTML = `
                 <div class="txm-pr-row">
@@ -1349,31 +1304,43 @@
             currentAirport = { iata, city, terminal };
 
             /* Title & route */
-            document.getElementById('txmTitle').textContent   = `Book Your Taxi — ${city}`;
+            document.getElementById('txmTitle').textContent    = `Book Your Taxi — ${city}`;
             document.getElementById('txmRouteText').textContent =
                 terminal ? `${city} – Terminal ${terminal} (${iata})` : `${city} (${iata})`;
 
-            /* Summary sidebar */
+            /* Build values */
             const pickup  = terminal ? `${city} – Terminal ${terminal} (${iata})` : `${city} (${iata})`;
             const dropoff = (document.getElementById('taxi-dropoff')?.value || '').trim() || 'Your destination';
             const dateVal = document.querySelector('#panel-taxi input[type="date"]')?.value || '';
             const timeVal = document.querySelector('#panel-taxi .time-picker')?.value || '';
+
+            /* RIGHT sidebar summary */
             document.getElementById('txmSummaryPickup').textContent  = pickup;
             document.getElementById('txmSummaryDropoff').textContent = dropoff;
             document.getElementById('txmSummaryDate').textContent    =
                 dateVal ? `${dateVal}${timeVal ? ' at ' + timeVal : ''}` : 'Select date in search';
 
-            /* Pre-fill email from auth */
-            try {
-                const auth = JSON.parse(localStorage.getItem('easyNavigateAuth') || '{}');
-                if (auth && auth.email) document.getElementById('txmEmail').value = auth.email;
-            } catch(e) {}
+            /* LEFT trip detail rows */
+            document.getElementById('txmDetailPickup').textContent  = pickup;
+            document.getElementById('txmDetailDropoff').textContent = dropoff;
+            document.getElementById('txmDetailDate').textContent    =
+                dateVal ? `${dateVal}${timeVal ? ' at ' + timeVal : ''}` : 'Not selected';
+
+            /* Passengers */
+            const adults   = document.getElementById('taxiAdults')?.textContent   || '1';
+            const children = document.getElementById('taxiChildren')?.textContent || '0';
+            const infants  = document.getElementById('taxiInfants')?.textContent  || '0';
+            const paxParts = [];
+            if (+adults)   paxParts.push(`${adults} Adult${+adults > 1 ? 's' : ''}`);
+            if (+children) paxParts.push(`${children} Child${+children > 1 ? 'ren' : ''}`);
+            if (+infants)  paxParts.push(`${infants} Infant${+infants > 1 ? 's' : ''}`);
+            document.getElementById('txmDetailPax').textContent = paxParts.join(', ') || '1 Adult';
 
             /* Render vehicles + price */
             renderVehicles();
             renderModalPrice();
 
-            /* Show */
+            /* Show modal */
             document.getElementById('txmOverlay').classList.add('open');
             document.body.style.overflow = 'hidden';
         };
@@ -1389,60 +1356,36 @@
             document.body.style.overflow = '';
         }
 
-        /* ── Validation helpers ── */
-        function txmShowErr(fieldId) {
-            document.getElementById('txm-err-' + fieldId)?.classList.add('show');
-            document.getElementById('txm' + fieldId.charAt(0).toUpperCase() + fieldId.slice(1))?.classList.add('invalid');
-        }
-        function txmClearErr(fieldId) {
-            document.getElementById('txm-err-' + fieldId)?.classList.remove('show');
-            document.getElementById('txm' + fieldId.charAt(0).toUpperCase() + fieldId.slice(1))?.classList.remove('invalid');
-        }
+        /* ── Book Now → go to booking page with all params ── */
+        window.goToBookingPage = function () {
+            const pickup  = document.getElementById('txmDetailPickup').textContent;
+            const dropoff = document.getElementById('txmDetailDropoff').textContent;
+            const date    = document.getElementById('txmDetailDate').textContent;
+            const pax     = document.getElementById('txmDetailPax').textContent;
 
-        window.confirmTaxiBooking = async function () {
-            let valid = true;
-
-            const firstName = document.getElementById('txmFirstName').value.trim();
-            const lastName  = document.getElementById('txmLastName').value.trim();
-            const phone     = document.getElementById('txmPhone').value.trim();
-            const email     = document.getElementById('txmEmail').value.trim();
-
-            if (!firstName) { txmShowErr('firstName'); valid = false; } else txmClearErr('firstName');
-            if (!lastName)  { txmShowErr('lastName');  valid = false; } else txmClearErr('lastName');
-            if (!phone)     { txmShowErr('phone');      valid = false; } else txmClearErr('phone');
-            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { txmShowErr('email'); valid = false; } else txmClearErr('email');
-
-            if (!valid) return;
-
-            const btn = document.getElementById('txmConfirmBtn');
-            btn.classList.add('loading'); btn.disabled = true;
-
-            const ref = 'TX-' + (Date.now() % 1000000).toString().padStart(6, '0');
-
-            /* Simulate a brief loading then show success */
-            await new Promise(r => setTimeout(r, 900));
-
-            btn.classList.remove('loading'); btn.disabled = false;
-            doCloseTaxiModal();
-
-            document.getElementById('txmSuccessAirport').textContent =
-                currentAirport.city + (currentAirport.terminal ? ' – Terminal ' + currentAirport.terminal : '');
-            document.getElementById('txmSuccessEmail').textContent = email;
-            document.getElementById('txmSuccessRef').textContent   = ref;
-            document.getElementById('txmSuccess').classList.add('show');
+            const p = new URLSearchParams({
+                iata:     currentAirport.iata     || '',
+                city:     currentAirport.city     || '',
+                terminal: currentAirport.terminal || '',
+                vehicle:  selectedVehicleId,
+                price:    getVehiclePrice(selectedVehicleId),
+                pickup,
+                dropoff,
+                date,
+                pax,
+            });
+            window.location.href = 'taxi-booking.html?' + p.toString();
         };
 
         /* ── Init ── */
         document.addEventListener('DOMContentLoaded', function () {
             loadAirports();
 
-            /* Allow Enter key in pickup field to filter */
             const pickupEl = document.getElementById('taxi-pickup');
             if (pickupEl) {
                 pickupEl.addEventListener('keydown', function (e) {
                     if (e.key === 'Enter') filterAirports();
                 });
-                /* Live filter as user types */
                 pickupEl.addEventListener('input', function () {
                     const q = this.value.trim().toLowerCase();
                     if (!q) { renderAirports(allAirports); return; }

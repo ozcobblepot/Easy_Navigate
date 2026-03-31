@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Booking - Easy Navigate</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+    /* ══════════════════════════════════════════════════════════
+       BOOKING CONFIRMATION PAGE
+       ══════════════════════════════════════════════════════════ */
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+        --blue:       #282D9E;
+        --blue-dark:  #1e2280;
+        --blue-muted: #eef0ff;
+        --text:       #111827;
+        --gray-50:    #f9fafb;
+        --gray-100:   #f3f4f6;
+        --gray-200:   #e5e7eb;
+        --gray-300:   #d1d5db;
+        --gray-400:   #9ca3af;
+        --gray-500:   #6b7280;
+        --gray-600:   #4b5563;
+        --gray-700:   #374151;
+        --green:      #16a34a;
+        --green-bg:   #dcfce7;
+        --radius:     12px;
+        --radius-lg:  16px;
+        --shadow-sm:  0 1px 4px rgba(0,0,0,0.06);
+        --shadow-md:  0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--gray-50);
+        color: var(--text);
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    /* ── Progress Bar ── */
+    .bc-progress {
+        background: #fff;
+        border-bottom: 1px solid var(--gray-200);
+        padding: 0 28px;
+    }
+    .bc-progress-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        padding: 16px 0;
+    }
+    .bc-step {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-400);
+        white-space: nowrap;
+    }
+    .bc-step.active { color: var(--blue); }
+    .bc-step.done   { color: var(--green); }
+    .bc-step-num {
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: var(--gray-200);
+        color: var(--gray-500);
+        font-size: 12px;
+        font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        transition: background 0.2s, color 0.2s;
+    }
+    .bc-step.active .bc-step-num { background: var(--blue); color: #fff; }
+    .bc-step.done   .bc-step-num { background: var(--green); color: #fff; }
+    .bc-step-line {
+        flex: 1;
+        height: 2px;
+        background: var(--gray-200);
+        margin: 0 10px;
+        min-width: 32px;
+    }
+    .bc-step-line.done { background: var(--green); }
+
+    /* ── Page layout ── */
+    .bc-wrap {
+        max-width: 960px;
+        margin: 32px auto 60px;
+        padding: 0 28px;
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    /* ── Section card ── */
+    .bc-card {
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow-sm);
+    }
+    .bc-card:last-child { margin-bottom: 0; }
+    .bc-card-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--gray-100);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .bc-card-header-icon {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        background: var(--blue-muted);
+        color: var(--blue);
+        font-size: 15px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .bc-card-header-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text);
+        margin: 0;
+        letter-spacing: -0.2px;
+    }
+    .bc-card-header-sub {
+        font-size: 12px;
+        color: var(--gray-400);
+        margin: 2px 0 0;
+        font-weight: 400;
+    }
+    .bc-card-body { padding: 20px; }
+
+    /* ── Booking Summary Strip ── */
+    .bc-summary-strip {
+        background: linear-gradient(135deg, var(--blue) 0%, #1e2280 100%);
+        border-radius: var(--radius-lg);
+        padding: 20px 24px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        position: relative;
+        overflow: hidden;
+    }
+    .bc-summary-strip::before {
+        content: '';
+        position: absolute;
+        top: -40px; right: -40px;
+        width: 130px; height: 130px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.06);
+    }
+    .bc-summary-strip::after {
+        content: '';
+        position: absolute;
+        bottom: -30px; right: 60px;
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.04);
+    }
+    .bc-summary-icon {
+        width: 52px; height: 52px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.15);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+        position: relative; z-index: 1;
+    }
+    .bc-summary-info { position: relative; z-index: 1; flex: 1; min-width: 0; }
+    .bc-summary-service {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.7;
+        margin-bottom: 3px;
+    }
+    .bc-summary-title {
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+        line-height: 1.2;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .bc-summary-meta {
+        font-size: 12.5px;
+        opacity: 0.75;
+        font-weight: 500;
+    }
+    .bc-summary-price {
+        text-align: right;
+        flex-shrink: 0;
+        position: relative; z-index: 1;
+    }
+    .bc-summary-price-label { font-size: 11px; opacity: 0.65; font-weight: 500; }
+    .bc-summary-price-value { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; }
+
+    /* ── Detail rows ── */
+    .bc-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 20px;
+    }
+    .bc-detail-item { display: flex; flex-direction: column; gap: 3px; }
+    .bc-detail-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--gray-400);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .bc-detail-value {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.35;
+    }
+    .bc-detail-divider {
+        height: 1px;
+        background: var(--gray-100);
+        margin: 16px 0;
+    }
+
+    /* ── Guest / Traveller Form ── */
+    .bc-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+    .bc-form-row.single { grid-template-columns: 1fr; }
+    .bc-field { display: flex; flex-direction: column; gap: 5px; }
+    .bc-field-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .bc-field-label .req { color: #e53935; }
+    .bc-field-input {
+        border: 1.5px solid var(--gray-200);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-family: 'Inter', sans-serif;
+        font-size: 13.5px;
+        color: var(--text);
+        outline: none;
+        background: #fff;
+        width: 100%;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .bc-field-input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(40,45,158,0.10);
+    }
+    .bc-field-input.invalid { border-color: #e53935 !important; }
+    .bc-field-error {
+        font-size: 11px;
+        color: #e53935;
+        font-weight: 600;
+        display: none;
+    }
+    .bc-field-error.show { display: block; }
+
+    .bc-phone-row { display: grid; grid-template-columns: 86px 1fr; gap: 8px; }
+    .bc-phone-prefix {
+        border: 1.5px solid var(--gray-200);
+        border-radius: 8px;
+        padding: 10px 10px;
+        font-size: 12.5px;
+        font-weight: 700;
+        background: var(--gray-50);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .bc-special-row {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .bc-special-input {
+        border: 1.5px solid var(--gray-200);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-family: 'Inter', sans-serif;
+        font-size: 13.5px;
+        color: var(--text);
+        outline: none;
+        background: #fff;
+        width: 100%;
+        min-height: 72px;
+        resize: vertical;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .bc-special-input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(40,45,158,0.10);
+    }
+
+    /* ── Payment method selector ── */
+    .bc-payment-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+    .bc-pay-option {
+        border: 1.5px solid var(--gray-200);
+        border-radius: 10px;
+        padding: 14px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+    }
+    .bc-pay-option:hover { border-color: var(--blue); }
+    .bc-pay-option.selected {
+        border-color: var(--blue);
+        background: var(--blue-muted);
+        box-shadow: 0 0 0 3px rgba(40,45,158,0.08);
+    }
+    .bc-pay-radio {
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--gray-300);
+        flex-shrink: 0;
+        position: relative;
+        transition: border-color 0.15s;
+    }
+    .bc-pay-option.selected .bc-pay-radio { border-color: var(--blue); }
+    .bc-pay-option.selected .bc-pay-radio::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        border-radius: 50%;
+        background: var(--blue);
+    }
+    .bc-pay-icon {
+        width: 42px; height: 42px;
+        border-radius: 10px;
+        background: var(--gray-100);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    .bc-pay-info { flex: 1; min-width: 0; }
+    .bc-pay-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .bc-pay-desc { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+    /* Card number inputs */
+    .bc-card-fields { display: none; margin-top: 14px; }
+    .bc-card-fields.show { display: block; }
+    .bc-card-num-row { position: relative; margin-bottom: 12px; }
+    .bc-card-num-row .bc-field-input { padding-right: 100px; }
+    .bc-card-icons {
+        position: absolute;
+        right: 10px; top: 50%;
+        transform: translateY(-50%);
+        display: flex; gap: 4px;
+    }
+    .bc-card-icon-img {
+        height: 20px; width: auto;
+        border-radius: 3px;
+        border: 1px solid var(--gray-200);
+        background: #fff;
+        padding: 2px 4px;
+        opacity: 0.8;
+    }
+
+    /* ── Price Summary Sidebar ── */
+    .bc-sidebar { position: sticky; top: 20px; }
+    .bc-price-card {
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 12px;
+    }
+    .bc-price-header {
+        background: var(--gray-50);
+        border-bottom: 1px solid var(--gray-200);
+        padding: 14px 18px;
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--text);
+    }
+    .bc-price-body { padding: 16px 18px; }
+    .bc-price-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--gray-600);
+        font-weight: 500;
+        margin-bottom: 9px;
+    }
+    .bc-price-row.free { color: var(--green); font-weight: 600; }
+    .bc-price-row.discount { color: #b91c1c; font-weight: 600; }
+    .bc-price-divider { height: 1px; background: var(--gray-200); margin: 12px 0; }
+    .bc-price-total {
+        display: flex;
+        justify-content: space-between;
+        font-size: 18px;
+        font-weight: 900;
+        color: var(--text);
+        letter-spacing: -0.3px;
+    }
+    .bc-price-total span:last-child { color: var(--blue); }
+    .bc-price-note {
+        font-size: 11px;
+        color: var(--gray-400);
+        margin-top: 10px;
+        line-height: 1.5;
+    }
+    .bc-price-note i { color: var(--blue); font-size: 10px; margin-right: 3px; }
+
+    /* Includes */
+    .bc-includes {
+        border-top: 1px solid var(--gray-100);
+        padding: 14px 18px;
+    }
+    .bc-includes-title {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--text);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+    }
+    .bc-include-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        color: var(--gray-600);
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+    .bc-include-item i { color: var(--green); font-size: 11px; width: 14px; }
+
+    /* Trust signals */
+    .bc-trust {
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: var(--shadow-sm);
+    }
+    .bc-trust-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 12.5px;
+        color: var(--gray-600);
+        font-weight: 500;
+    }
+    .bc-trust-item i { color: var(--blue); font-size: 13px; width: 16px; }
+
+    /* ── Submit button ── */
+    .bc-submit-wrap { margin-top: 4px; }
+    .bc-submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+        box-shadow: 0 4px 18px rgba(40,45,158,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        letter-spacing: -0.2px;
+    }
+    .bc-submit-btn:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(40,45,158,0.38); }
+    .bc-submit-btn:active { transform: translateY(0); }
+    .bc-submit-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+    .bc-submit-spinner {
+        display: none;
+        width: 17px; height: 17px;
+        border: 2.5px solid rgba(255,255,255,0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: bcSpin 0.65s linear infinite;
+    }
+    .bc-submit-btn.loading .bc-submit-spinner { display: block; }
+    .bc-submit-btn.loading .bc-submit-text   { opacity: 0.7; }
+    @keyframes bcSpin { to { transform: rotate(360deg); } }
+
+    .bc-terms-note {
+        font-size: 11.5px;
+        color: var(--gray-400);
+        text-align: center;
+        margin-top: 10px;
+        line-height: 1.55;
+    }
+    .bc-terms-note a { color: var(--blue); text-decoration: none; }
+    .bc-terms-note a:hover { text-decoration: underline; }
+
+    /* ══ SUCCESS OVERLAY ══ */
+    .bc-success-overlay {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.55);
+        backdrop-filter: blur(5px);
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+    .bc-success-overlay.show { display: flex; }
+
+    .bc-success-box {
+        background: #fff;
+        border-radius: 20px;
+        padding: 48px 52px;
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+        animation: bcPopIn 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes bcPopIn {
+        from { transform: scale(0.7); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+    }
+    .bc-success-checkmark {
+        width: 72px; height: 72px;
+        border-radius: 50%;
+        background: var(--green-bg);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px;
+        animation: bcBounce 0.5s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes bcBounce {
+        from { transform: scale(0); opacity: 0; }
+        to   { transform: scale(1); opacity: 1; }
+    }
+    .bc-success-checkmark i { font-size: 34px; color: var(--green); }
+    .bc-success-title {
+        font-size: 26px;
+        font-weight: 900;
+        color: var(--text);
+        letter-spacing: -0.4px;
+        margin-bottom: 10px;
+    }
+    .bc-success-subtitle {
+        font-size: 14px;
+        color: var(--gray-500);
+        line-height: 1.65;
+        margin-bottom: 22px;
+    }
+    .bc-success-ref {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 10px;
+        padding: 13px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--blue);
+        margin-bottom: 28px;
+        letter-spacing: 0.3px;
+    }
+    .bc-success-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .bc-success-btn-primary {
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 32px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 3px 12px rgba(40,45,158,0.25);
+        transition: background 0.15s;
+    }
+    .bc-success-btn-primary:hover { background: var(--blue-dark); }
+    .bc-success-btn-secondary {
+        background: #fff;
+        color: var(--blue);
+        border: 2px solid var(--blue);
+        border-radius: 10px;
+        padding: 12px 28px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+    .bc-success-btn-secondary:hover { background: var(--blue-muted); }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+        .bc-wrap { grid-template-columns: 1fr; }
+        .bc-sidebar { position: static; }
+    }
+    @media (max-width: 600px) {
+        .bc-wrap { padding: 0 16px; margin-top: 20px; }
+        .bc-progress { padding: 0 16px; }
+        .bc-form-row { grid-template-columns: 1fr; }
+        .bc-detail-grid { grid-template-columns: 1fr; }
+        .bc-summary-strip { flex-direction: column; align-items: flex-start; }
+        .bc-summary-price { text-align: left; }
+        .bc-success-box { padding: 32px 24px; }
+        .bc-success-title { font-size: 20px; }
+        .bc-step-label { display: none; }
+    }
+    </style>
+</head>
+
+<body class="service-page">
+
+    <!-- ══ HEADER ══ -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="top-nav">
+                <a class="logo" href="index.html">
+                    <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+                </a>
+                <div class="top-right">
+                    <button class="currency-btn">
+                        PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon">
+                    </button>
+                    <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══ PROGRESS BAR ══ -->
+    <div class="bc-progress">
+        <div class="bc-progress-inner">
+            <div class="bc-step done">
+                <div class="bc-step-num"><i class="fas fa-check" style="font-size:10px;"></i></div>
+                <span class="bc-step-label">Search</span>
+            </div>
+            <div class="bc-step-line done"></div>
+            <div class="bc-step done">
+                <div class="bc-step-num"><i class="fas fa-check" style="font-size:10px;"></i></div>
+                <span class="bc-step-label">Select</span>
+            </div>
+            <div class="bc-step-line done"></div>
+            <div class="bc-step active">
+                <div class="bc-step-num">3</div>
+                <span class="bc-step-label">Confirm</span>
+            </div>
+            <div class="bc-step-line"></div>
+            <div class="bc-step">
+                <div class="bc-step-num">4</div>
+                <span class="bc-step-label">Done</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ MAIN CONTENT ══ -->
+    <div class="bc-wrap">
+
+        <!-- ══ LEFT COLUMN ══ -->
+        <div class="bc-left">
+
+            <!-- Booking Summary Strip -->
+            <div class="bc-summary-strip" id="bcSummaryStrip">
+                <div class="bc-summary-icon" id="bcSummaryIcon"><i class="fas fa-bed"></i></div>
+                <div class="bc-summary-info">
+                    <div class="bc-summary-service" id="bcSummaryService">Hotel &amp; Homes</div>
+                    <div class="bc-summary-title"  id="bcSummaryTitle">Loading…</div>
+                    <div class="bc-summary-meta"   id="bcSummaryMeta">—</div>
+                </div>
+                <div class="bc-summary-price">
+                    <div class="bc-summary-price-label">Total</div>
+                    <div class="bc-summary-price-value" id="bcSummaryPrice">PHP —</div>
+                </div>
+            </div>
+
+            <!-- Booking Details -->
+            <div class="bc-card">
+                <div class="bc-card-header">
+                    <div class="bc-card-header-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div>
+                        <div class="bc-card-header-title">Booking Details</div>
+                        <div class="bc-card-header-sub">Your selected dates and preferences</div>
+                    </div>
+                </div>
+                <div class="bc-card-body">
+                    <div class="bc-detail-grid" id="bcDetailsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guest / Contact Information -->
+            <div class="bc-card">
+                <div class="bc-card-header">
+                    <div class="bc-card-header-icon"><i class="fas fa-user-circle"></i></div>
+                    <div>
+                        <div class="bc-card-header-title">Guest / Contact Information</div>
+                        <div class="bc-card-header-sub">Used for booking confirmation and driver/host contact</div>
+                    </div>
+                </div>
+                <div class="bc-card-body">
+
+                    <div class="bc-form-row">
+                        <div class="bc-field">
+                            <label class="bc-field-label">First &amp; middle name <span class="req">*</span></label>
+                            <input id="bcFirstName" type="text" class="bc-field-input" placeholder="English first &amp; middle names">
+                            <span class="bc-field-error" id="bc-err-firstName">This field is required.</span>
+                        </div>
+                        <div class="bc-field">
+                            <label class="bc-field-label">Last name <span class="req">*</span></label>
+                            <input id="bcLastName" type="text" class="bc-field-input" placeholder="English last name">
+                            <span class="bc-field-error" id="bc-err-lastName">This field is required.</span>
+                        </div>
+                    </div>
+
+                    <div class="bc-form-row">
+                        <div class="bc-field">
+                            <label class="bc-field-label">Phone number <span class="req">*</span></label>
+                            <div class="bc-phone-row">
+                                <div class="bc-phone-prefix">+63 <i class="fas fa-chevron-down" style="font-size:8px;margin-left:auto;"></i></div>
+                                <input id="bcPhone" type="tel" class="bc-field-input" placeholder="9XX XXX XXXX">
+                            </div>
+                            <span class="bc-field-error" id="bc-err-phone">This field is required.</span>
+                        </div>
+                        <div class="bc-field">
+                            <label class="bc-field-label">Email address <span class="req">*</span></label>
+                            <input id="bcEmail" type="email" class="bc-field-input" placeholder="your@email.com">
+                            <span class="bc-field-error" id="bc-err-email">Enter a valid email address.</span>
+                        </div>
+                    </div>
+
+                    <div class="bc-form-row single">
+                        <div class="bc-field">
+                            <label class="bc-field-label">Nationality</label>
+                            <input id="bcNationality" type="text" class="bc-field-input" placeholder="e.g. Filipino">
+                        </div>
+                    </div>
+
+                    <div class="bc-detail-divider"></div>
+
+                    <div class="bc-special-row">
+                        <label class="bc-field-label">Special requests <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-400)">(optional)</span></label>
+                        <textarea id="bcSpecialReq" class="bc-special-input" placeholder="Let us know any special requirements, dietary needs, accessibility requests, or extra preferences…"></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="bc-card">
+                <div class="bc-card-header">
+                    <div class="bc-card-header-icon"><i class="fas fa-credit-card"></i></div>
+                    <div>
+                        <div class="bc-card-header-title">Payment Method</div>
+                        <div class="bc-card-header-sub">Your payment is encrypted and secure</div>
+                    </div>
+                </div>
+                <div class="bc-card-body">
+
+                    <div class="bc-payment-options">
+
+                        <div class="bc-pay-option selected" id="payCredit" onclick="selectPayment('credit')">
+                            <div class="bc-pay-radio"></div>
+                            <div class="bc-pay-icon">💳</div>
+                            <div class="bc-pay-info">
+                                <div class="bc-pay-name">Credit / Debit Card</div>
+                                <div class="bc-pay-desc">Visa, Mastercard, JCB accepted</div>
+                            </div>
+                        </div>
+
+                        <div class="bc-pay-option" id="payGcash" onclick="selectPayment('gcash')">
+                            <div class="bc-pay-radio"></div>
+                            <div class="bc-pay-icon">📱</div>
+                            <div class="bc-pay-info">
+                                <div class="bc-pay-name">GCash</div>
+                                <div class="bc-pay-desc">Pay via GCash e-wallet</div>
+                            </div>
+                        </div>
+
+                        <div class="bc-pay-option" id="payMaya" onclick="selectPayment('maya')">
+                            <div class="bc-pay-radio"></div>
+                            <div class="bc-pay-icon">💚</div>
+                            <div class="bc-pay-info">
+                                <div class="bc-pay-name">Maya</div>
+                                <div class="bc-pay-desc">Pay via Maya (formerly PayMaya)</div>
+                            </div>
+                        </div>
+
+                        <div class="bc-pay-option" id="payCounter" onclick="selectPayment('counter')">
+                            <div class="bc-pay-radio"></div>
+                            <div class="bc-pay-icon">🏦</div>
+                            <div class="bc-pay-info">
+                                <div class="bc-pay-name">Pay at Property / Counter</div>
+                                <div class="bc-pay-desc">Pay upon arrival or at the counter</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Card Fields (shown only for credit card) -->
+                    <div class="bc-card-fields show" id="bcCardFields">
+                        <div class="bc-form-row single bc-card-num-row">
+                            <div class="bc-field">
+                                <label class="bc-field-label">Card number <span class="req">*</span></label>
+                                <div style="position:relative;">
+                                    <input id="bcCardNum" type="text" class="bc-field-input" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNum(this)">
+                                    <div class="bc-card-icons">
+                                        <span style="font-size:18px;">💳</span>
+                                    </div>
+                                </div>
+                                <span class="bc-field-error" id="bc-err-cardNum">Enter a valid 16-digit card number.</span>
+                            </div>
+                        </div>
+                        <div class="bc-form-row">
+                            <div class="bc-field">
+                                <label class="bc-field-label">Name on card <span class="req">*</span></label>
+                                <input id="bcCardName" type="text" class="bc-field-input" placeholder="As printed on card">
+                                <span class="bc-field-error" id="bc-err-cardName">Required.</span>
+                            </div>
+                            <div class="bc-field">
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                                    <div>
+                                        <label class="bc-field-label">Expiry <span class="req">*</span></label>
+                                        <input id="bcCardExp" type="text" class="bc-field-input" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
+                                        <span class="bc-field-error" id="bc-err-cardExp">Invalid.</span>
+                                    </div>
+                                    <div>
+                                        <label class="bc-field-label">CVV <span class="req">*</span></label>
+                                        <input id="bcCardCvv" type="password" class="bc-field-input" placeholder="•••" maxlength="4">
+                                        <span class="bc-field-error" id="bc-err-cardCvv">Required.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div><!-- /bc-left -->
+
+        <!-- ══ RIGHT SIDEBAR ══ -->
+        <div class="bc-sidebar">
+
+            <!-- Price Summary -->
+            <div class="bc-price-card">
+                <div class="bc-price-header">Price Summary</div>
+                <div class="bc-price-body" id="bcPriceBody">
+                    <!-- Populated by JS -->
+                </div>
+                <div class="bc-includes" id="bcIncludes">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="bc-submit-wrap">
+                <button class="bc-submit-btn" id="bcSubmitBtn" onclick="submitBooking()">
+                    <div class="bc-submit-spinner"></div>
+                    <span class="bc-submit-text"><i class="fas fa-lock"></i> Confirm &amp; Pay</span>
+                </button>
+                <p class="bc-terms-note">
+                    By confirming, you agree to our
+                    <a href="#">Terms &amp; Conditions</a> and
+                    <a href="#">Privacy Policy</a>.
+                </p>
+            </div>
+
+            <!-- Trust signals -->
+            <div class="bc-trust" style="margin-top:12px;">
+                <div class="bc-trust-item"><i class="fas fa-shield-alt"></i> SSL encrypted payment</div>
+                <div class="bc-trust-item"><i class="fas fa-bolt"></i> Instant booking confirmation</div>
+                <div class="bc-trust-item"><i class="fas fa-headset"></i> 24/7 customer support</div>
+                <div class="bc-trust-item"><i class="fas fa-undo"></i> Free cancellation on selected bookings</div>
+            </div>
+
+        </div><!-- /bc-sidebar -->
+    </div><!-- /bc-wrap -->
+
+    <!-- ══ SUCCESS OVERLAY ══ -->
+    <div class="bc-success-overlay" id="bcSuccessOverlay">
+        <div class="bc-success-box">
+            <div class="bc-success-checkmark">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="bc-success-title">Booking Confirmed! 🎉</div>
+            <div class="bc-success-subtitle" id="bcSuccessSubtitle">
+                Your booking has been confirmed. A confirmation email has been sent to your inbox.
+            </div>
+            <div class="bc-success-ref">Booking Ref: <span id="bcSuccessRef">—</span></div>
+            <div class="bc-success-actions">
+                <button class="bc-success-btn-primary" onclick="window.location.href='index.html'">
+                    <i class="fas fa-home"></i> Back to Home
+                </button>
+                <button class="bc-success-btn-secondary" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth-header.js"></script>
+
+    <script>
+    /* ══════════════════════════════════════════════════════════
+       BOOKING CONFIRMATION PAGE — Universal JS
+       Works for: hotel, flights, car, attractions, taxi
+       Reads all data from URL search params
+       ══════════════════════════════════════════════════════════ */
+
+    const p = new URLSearchParams(window.location.search);
+
+    /* ── Helpers ── */
+    function fmt(v) {
+        return new Intl.NumberFormat('en-PH', {
+            style: 'currency', currency: 'PHP',
+            minimumFractionDigits: 0, maximumFractionDigits: 0,
+        }).format(Number(v) || 0);
+    }
+    function fmtDec(v) {
+        return new Intl.NumberFormat('en-PH', {
+            style: 'currency', currency: 'PHP',
+            minimumFractionDigits: 2, maximumFractionDigits: 2,
+        }).format(Number(v) || 0);
+    }
+    function detail(label, value) {
+        if (!value || value === 'undefined' || value === 'null') return '';
+        return `<div class="bc-detail-item">
+                    <span class="bc-detail-label">${label}</span>
+                    <span class="bc-detail-value">${value}</span>
+                </div>`;
+    }
+    function include(text) {
+        return `<div class="bc-include-item"><i class="fas fa-circle-check"></i> ${text}</div>`;
+    }
+
+    /* ── Detect service type from URL ── */
+    const service = p.get('service') ||
+        (p.get('iata')        ? 'taxi'        :
+         p.get('flight_number')? 'flights'    :
+         p.get('id') && p.get('transmission') ? 'car' :
+         p.get('id') && p.get('category')    ? 'attractions' :
+         'hotel');
+
+    /* ══════════════════════════════════════════════════════════
+       SERVICE CONFIGS
+       ══════════════════════════════════════════════════════════ */
+
+    const SERVICES = {
+
+        hotel: {
+            label:   'Hotel & Homes',
+            icon:    'fas fa-hotel',
+            getTitle:  () => p.get('name')     || 'Hotel Booking',
+            getMeta:   () => [p.get('city'), p.get('country')].filter(Boolean).join(', '),
+            getPrice:  () => Number(p.get('price') || 0) * Number(p.get('nights') || 1),
+            details: () => [
+                detail('Hotel',          p.get('name')),
+                detail('Location',       [p.get('city'), p.get('country')].filter(Boolean).join(', ')),
+                detail('Check-in',       p.get('checkin')),
+                detail('Check-out',      p.get('checkout')),
+                detail('Nights',         p.get('nights')),
+                detail('Guests',         p.get('guests')),
+                detail('Rooms',          p.get('rooms')),
+                detail('Room type',      p.get('room_type')),
+                detail('Star rating',    p.get('stars') ? '★'.repeat(Number(p.get('stars'))) : null),
+            ].filter(Boolean).join(''),
+            priceRows: () => {
+                const nightly = Number(p.get('price') || 0);
+                const nights  = Number(p.get('nights') || 1);
+                const taxes   = Math.round(nightly * nights * 0.12);
+                const total   = nightly * nights + taxes;
+                return {
+                    rows: [
+                        `<div class="bc-price-row"><span>${fmtDec(nightly)} × ${nights} night${nights>1?'s':''}</span><span>${fmtDec(nightly*nights)}</span></div>`,
+                        `<div class="bc-price-row free"><span>Breakfast included</span><span>Free</span></div>`,
+                        `<div class="bc-price-row"><span>Taxes &amp; fees (12%)</span><span>${fmtDec(taxes)}</span></div>`,
+                        `<div class="bc-price-divider"></div>`,
+                        `<div class="bc-price-total"><span>Total</span><span>${fmtDec(total)}</span></div>`,
+                        `<div class="bc-price-note"><i class="fas fa-info-circle"></i> Price includes all taxes and fees</div>`,
+                    ].join(''),
+                    total,
+                };
+            },
+            includes: () => [
+                include('Free cancellation (selected rooms)'),
+                include('Instant booking confirmation'),
+                include('Pay at property option'),
+                include('24/7 concierge service'),
+            ].join(''),
+        },
+
+        flights: {
+            label:   'Flights',
+            icon:    'fas fa-plane',
+            getTitle:  () => `${p.get('origin') || '—'} → ${p.get('destination') || '—'}`,
+            getMeta:   () => [p.get('airline'), p.get('flight_number'), p.get('depart_time')].filter(Boolean).join(' · '),
+            getPrice:  () => Number(p.get('price') || 0) * Number(p.get('adults') || 1),
+            details: () => [
+                detail('Airline',        p.get('airline')),
+                detail('Flight number',  p.get('flight_number')),
+                detail('From',           p.get('origin_name') || p.get('origin')),
+                detail('To',             p.get('destination_name') || p.get('destination')),
+                detail('Depart time',    p.get('depart_time')),
+                detail('Arrive time',    p.get('arrive_time')),
+                detail('Duration',       p.get('duration')),
+                detail('Cabin class',    p.get('cabin') || 'Economy'),
+                detail('Passengers',     [p.get('adults') + ' Adult(s)', p.get('children') > 0 ? p.get('children') + ' Child(ren)' : null].filter(Boolean).join(', ')),
+                detail('Baggage',        p.get('baggage') || 'Standard allowance'),
+            ].filter(Boolean).join(''),
+            priceRows: () => {
+                const base     = Number(p.get('price') || 0);
+                const adults   = Number(p.get('adults') || 1);
+                const children = Number(p.get('children') || 0);
+                const fees     = Math.round(base * 0.08);
+                const total    = base * adults + base * 0.75 * children + fees;
+                return {
+                    rows: [
+                        `<div class="bc-price-row"><span>Adult(s) × ${adults}</span><span>${fmtDec(base * adults)}</span></div>`,
+                        children > 0 ? `<div class="bc-price-row"><span>Child(ren) × ${children}</span><span>${fmtDec(base * 0.75 * children)}</span></div>` : '',
+                        `<div class="bc-price-row"><span>Taxes &amp; airport fees</span><span>${fmtDec(fees)}</span></div>`,
+                        `<div class="bc-price-divider"></div>`,
+                        `<div class="bc-price-total"><span>Total</span><span>${fmtDec(total)}</span></div>`,
+                        `<div class="bc-price-note"><i class="fas fa-info-circle"></i> Fares locked until checkout</div>`,
+                    ].join(''),
+                    total,
+                };
+            },
+            includes: () => [
+                include('E-ticket issued instantly'),
+                include('Carry-on baggage included'),
+                include('Seat selection available'),
+                include('Free rebooking (selected fares)'),
+            ].join(''),
+        },
+
+        car: {
+            label:   'Car Rental',
+            icon:    'fas fa-car',
+            getTitle:  () => p.get('name') || 'Car Rental',
+            getMeta:   () => [p.get('brand'), p.get('category'), p.get('transmission')].filter(Boolean).join(' · '),
+            getPrice:  () => Number(p.get('price') || 0) * Number(p.get('days') || 1),
+            details: () => [
+                detail('Car',            p.get('name')),
+                detail('Brand',          p.get('brand')),
+                detail('Category',       p.get('category')),
+                detail('Transmission',   p.get('trans')),
+                detail('Fuel type',      p.get('fuel')),
+                detail('Seats',          p.get('seats') ? p.get('seats') + ' seats' : null),
+                detail('Rental period',  p.get('days') ? p.get('days') + ' days' : null),
+                detail('Rate per day',   p.get('price') ? fmt(p.get('price')) + '/day' : null),
+            ].filter(Boolean).join(''),
+            priceRows: () => {
+                const daily  = Number(p.get('price') || 0);
+                const days   = Number(p.get('days') || 1);
+                const total  = daily * days;
+                return {
+                    rows: [
+                        `<div class="bc-price-row"><span>${fmtDec(daily)} × ${days} day${days>1?'s':''}</span><span>${fmtDec(total)}</span></div>`,
+                        `<div class="bc-price-row free"><span>Unlimited mileage</span><span>Free</span></div>`,
+                        `<div class="bc-price-row free"><span>Free cancellation</span><span>Free</span></div>`,
+                        `<div class="bc-price-divider"></div>`,
+                        `<div class="bc-price-total"><span>Total</span><span>${fmtDec(total)}</span></div>`,
+                        `<div class="bc-price-note"><i class="fas fa-info-circle"></i> Full to Full fuel policy applies</div>`,
+                    ].join(''),
+                    total,
+                };
+            },
+            includes: () => [
+                include('Unlimited mileage'),
+                include('Free cancellation'),
+                include('Airport meet & greet'),
+                include('E-voucher issued'),
+            ].join(''),
+        },
+
+        attractions: {
+            label:   'Attractions & Tours',
+            icon:    'fas fa-ticket-alt',
+            getTitle:  () => p.get('name') || 'Attraction Booking',
+            getMeta:   () => [p.get('city'), p.get('country'), p.get('duration')].filter(Boolean).join(' · '),
+            getPrice:  () => Number(p.get('price') || 0),
+            details: () => [
+                detail('Experience',     p.get('name')),
+                detail('Location',       [p.get('location'), p.get('city')].filter(Boolean).join(', ')),
+                detail('Category',       p.get('category')),
+                detail('Duration',       p.get('duration')),
+                detail('Participants',   p.get('participants') || '1 Adult'),
+                detail('Rating',         p.get('rating') ? p.get('rating') + '/5' : null),
+                detail('Cancellation',   p.get('cancel') === '1' ? 'Free cancellation' : 'Non-refundable'),
+                detail('Confirmation',   p.get('instant') === '1' ? 'Instant confirmation' : 'Within 24 hours'),
+            ].filter(Boolean).join(''),
+            priceRows: () => {
+                const base  = Number(p.get('price') || 0);
+                const disc  = Math.round(base * 0.85);
+                const saved = base - disc;
+                if (base === 0) {
+                    return {
+                        rows: [
+                            `<div class="bc-price-row free"><span>Admission fee</span><span>Free!</span></div>`,
+                            `<div class="bc-price-divider"></div>`,
+                            `<div class="bc-price-total"><span>Total</span><span style="color:var(--green);">PHP 0</span></div>`,
+                        ].join(''),
+                        total: 0,
+                    };
+                }
+                return {
+                    rows: [
+                        `<div class="bc-price-row"><span>Original price</span><span style="text-decoration:line-through;color:var(--gray-400);">${fmtDec(base)}</span></div>`,
+                        `<div class="bc-price-row discount"><span>New user discount</span><span>−${fmtDec(saved)}</span></div>`,
+                        `<div class="bc-price-row free"><span>Booking fee</span><span>Free</span></div>`,
+                        `<div class="bc-price-divider"></div>`,
+                        `<div class="bc-price-total"><span>Total</span><span>${fmtDec(disc)}</span></div>`,
+                        `<div class="bc-price-note"><i class="fas fa-info-circle"></i> E-voucher sent immediately after booking</div>`,
+                    ].join(''),
+                    total: disc,
+                };
+            },
+            includes: () => [
+                include('Instant e-voucher'),
+                include(p.get('cancel') === '1' ? 'Free cancellation' : 'Standard cancellation policy'),
+                include('Guide / instructor included'),
+                include('Entry fees included'),
+            ].join(''),
+        },
+
+        taxi: {
+            label:   'Airport Taxis',
+            icon:    'fas fa-taxi',
+            getTitle:  () => p.get('city') ? `${p.get('city')} (${p.get('iata')})` : 'Airport Transfer',
+            getMeta:   () => [p.get('pickup'), p.get('date') ? 'on ' + p.get('date') : null, p.get('time')].filter(Boolean).join(' · '),
+            getPrice:  () => Number(p.get('vehicle_price') || 1800),
+            details: () => [
+                detail('Pick-up',        p.get('pickup')),
+                detail('Drop-off',       p.get('dropoff') || 'Your destination'),
+                detail('Date',           p.get('date')),
+                detail('Time',           p.get('time')),
+                detail('Vehicle',        p.get('vehicle_name') || 'Comfort'),
+                detail('Passengers',     [p.get('adults') + ' Adult(s)', p.get('children') > 0 ? p.get('children') + ' Child(ren)' : null].filter(Boolean).join(', ')),
+            ].filter(Boolean).join(''),
+            priceRows: () => {
+                const price = Number(p.get('vehicle_price') || 1800);
+                return {
+                    rows: [
+                        `<div class="bc-price-row"><span>Transfer fee</span><span>${fmtDec(price)}</span></div>`,
+                        `<div class="bc-price-row free"><span>Airport meet &amp; greet</span><span>PHP 0.00</span></div>`,
+                        `<div class="bc-price-row free"><span>Waiting time</span><span>Unlimited</span></div>`,
+                        `<div class="bc-price-divider"></div>`,
+                        `<div class="bc-price-total"><span>Total</span><span>${fmtDec(price)}</span></div>`,
+                        `<div class="bc-price-note"><i class="fas fa-clock"></i> Free unlimited waiting after landing<br><i class="fas fa-ban"></i> Free cancellation 24h before pickup</div>`,
+                    ].join(''),
+                    total: price,
+                };
+            },
+            includes: () => [
+                include('Airport meet & greet'),
+                include('Free unlimited waiting time'),
+                include('Flight tracking'),
+                include('Door-to-door transfer'),
+                include('Free cancellation (24h)'),
+            ].join(''),
+        },
+    };
+
+    /* ══════════════════════════════════════════════════════════
+       INIT PAGE
+       ══════════════════════════════════════════════════════════ */
+    (function init() {
+        const cfg = SERVICES[service] || SERVICES.hotel;
+
+        /* Summary strip */
+        document.getElementById('bcSummaryIcon').innerHTML    = `<i class="${cfg.icon}"></i>`;
+        document.getElementById('bcSummaryService').textContent = cfg.label;
+        document.getElementById('bcSummaryTitle').textContent  = cfg.getTitle();
+        document.getElementById('bcSummaryMeta').textContent   = cfg.getMeta();
+
+        /* Details grid */
+        document.getElementById('bcDetailsGrid').innerHTML = cfg.details();
+
+        /* Price sidebar */
+        const { rows, total } = cfg.priceRows();
+        document.getElementById('bcPriceBody').innerHTML   = rows;
+        document.getElementById('bcIncludes').innerHTML    =
+            `<div class="bc-includes-title">What's included</div>` + cfg.includes();
+        document.getElementById('bcSummaryPrice').textContent = fmtDec(total);
+
+        /* Pre-fill email from auth if available */
+        try {
+            const auth = JSON.parse(localStorage.getItem('easyNavigateAuth') || '{}');
+            if (auth && auth.email) document.getElementById('bcEmail').value = auth.email;
+            if (auth && auth.name) {
+                const parts = auth.name.trim().split(' ');
+                document.getElementById('bcFirstName').value = parts.slice(0,-1).join(' ') || parts[0];
+                if (parts.length > 1) document.getElementById('bcLastName').value = parts[parts.length - 1];
+            }
+        } catch(e) {}
+    })();
+
+    /* ══════════════════════════════════════════════════════════
+       PAYMENT METHOD TOGGLE
+       ══════════════════════════════════════════════════════════ */
+    let selectedPayment = 'credit';
+
+    function selectPayment(method) {
+        selectedPayment = method;
+        ['credit','gcash','maya','counter'].forEach(m => {
+            document.getElementById('pay' + m.charAt(0).toUpperCase() + m.slice(1))
+                    ?.classList.toggle('selected', m === method);
+        });
+        document.getElementById('bcCardFields').classList.toggle('show', method === 'credit');
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       CARD NUMBER / EXPIRY FORMATTERS
+       ══════════════════════════════════════════════════════════ */
+    function formatCardNum(el) {
+        let v = el.value.replace(/\D/g, '').substring(0, 16);
+        el.value = v.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function formatExpiry(el) {
+        let v = el.value.replace(/\D/g, '').substring(0, 4);
+        if (v.length >= 3) v = v.substring(0,2) + '/' + v.substring(2);
+        el.value = v;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       VALIDATION
+       ══════════════════════════════════════════════════════════ */
+    function showErr(id) {
+        document.getElementById('bc-err-' + id)?.classList.add('show');
+        const fieldMap = { firstName:'bcFirstName', lastName:'bcLastName', phone:'bcPhone', email:'bcEmail', cardNum:'bcCardNum', cardName:'bcCardName', cardExp:'bcCardExp', cardCvv:'bcCardCvv' };
+        document.getElementById(fieldMap[id])?.classList.add('invalid');
+    }
+    function clearErr(id) {
+        document.getElementById('bc-err-' + id)?.classList.remove('show');
+        const fieldMap = { firstName:'bcFirstName', lastName:'bcLastName', phone:'bcPhone', email:'bcEmail', cardNum:'bcCardNum', cardName:'bcCardName', cardExp:'bcCardExp', cardCvv:'bcCardCvv' };
+        document.getElementById(fieldMap[id])?.classList.remove('invalid');
+    }
+
+    function validate() {
+        let ok = true;
+
+        const firstName = document.getElementById('bcFirstName').value.trim();
+        const lastName  = document.getElementById('bcLastName').value.trim();
+        const phone     = document.getElementById('bcPhone').value.trim();
+        const email     = document.getElementById('bcEmail').value.trim();
+
+        if (!firstName) { showErr('firstName'); ok=false; } else clearErr('firstName');
+        if (!lastName)  { showErr('lastName');  ok=false; } else clearErr('lastName');
+        if (!phone)     { showErr('phone');      ok=false; } else clearErr('phone');
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('email'); ok=false; } else clearErr('email');
+
+        if (selectedPayment === 'credit') {
+            const cardNum  = document.getElementById('bcCardNum').value.replace(/\s/g,'');
+            const cardName = document.getElementById('bcCardName').value.trim();
+            const cardExp  = document.getElementById('bcCardExp').value.trim();
+            const cardCvv  = document.getElementById('bcCardCvv').value.trim();
+
+            if (cardNum.length < 16)  { showErr('cardNum');  ok=false; } else clearErr('cardNum');
+            if (!cardName)            { showErr('cardName'); ok=false; } else clearErr('cardName');
+            if (cardExp.length < 5)   { showErr('cardExp');  ok=false; } else clearErr('cardExp');
+            if (cardCvv.length < 3)   { showErr('cardCvv');  ok=false; } else clearErr('cardCvv');
+        }
+
+        return ok;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SUBMIT
+       ══════════════════════════════════════════════════════════ */
+    async function submitBooking() {
+        if (!validate()) {
+            /* Scroll to first error */
+            const firstErr = document.querySelector('.bc-field-input.invalid');
+            if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
+        const btn = document.getElementById('bcSubmitBtn');
+        btn.classList.add('loading');
+        btn.disabled = true;
+
+        /* Simulate processing */
+        await new Promise(r => setTimeout(r, 1200));
+
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        /* Generate reference */
+        const prefixes = { hotel:'HTL', flights:'FLT', car:'CAR', attractions:'ATT', taxi:'TX' };
+        const prefix   = prefixes[service] || 'BK';
+        const ref      = prefix + '-' + (Date.now() % 1000000).toString().padStart(6,'0');
+
+        /* Show success */
+        const email = document.getElementById('bcEmail').value.trim();
+        const cfg   = SERVICES[service] || SERVICES.hotel;
+        document.getElementById('bcSuccessRef').textContent = ref;
+        document.getElementById('bcSuccessSubtitle').innerHTML =
+            `Your <strong>${cfg.label}</strong> booking for <strong>${cfg.getTitle()}</strong> is confirmed.<br>
+             A confirmation email has been sent to <strong>${email}</strong>.`;
+
+        document.getElementById('bcSuccessOverlay').classList.add('show');
+    }
+    </script>
+
+</body>
+</html>

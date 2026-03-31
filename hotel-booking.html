@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Booking - Easy Navigate</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ══════════════════════════════════════════════
+           PAGE LAYOUT
+           ══════════════════════════════════════════════ */
+        * { box-sizing: border-box; }
+
+        body {
+            background: #f4f6fb;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .hb-page {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        /* Breadcrumb */
+        .hb-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .hb-breadcrumb a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .hb-breadcrumb a:hover { text-decoration: underline; }
+        .hb-breadcrumb i { font-size: 10px; color: var(--gray-400); }
+
+        /* Page title */
+        .hb-page-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0 0 6px;
+            letter-spacing: -0.3px;
+        }
+        .hb-page-sub {
+            font-size: 13.5px;
+            color: var(--gray-500);
+            margin: 0 0 28px;
+        }
+
+        /* Savings banner */
+        .hb-savings-banner {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #6ee7b7;
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 24px;
+        }
+        .hb-savings-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #065f46;
+        }
+        .hb-savings-row i { font-size: 13px; color: #10b981; }
+
+        /* Two-column layout */
+        .hb-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* ══════════════════════════════════════════════
+           LEFT COLUMN — form sections
+           ══════════════════════════════════════════════ */
+        .hb-left { display: flex; flex-direction: column; gap: 20px; }
+
+        .hb-card {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .hb-card-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0 0 4px;
+            letter-spacing: -0.2px;
+        }
+        .hb-card-sub {
+            font-size: 12.5px;
+            color: var(--gray-500);
+            margin: 0 0 20px;
+        }
+
+        /* Form fields */
+        .hb-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .hb-form-grid.single { grid-template-columns: 1fr; }
+        .hb-form-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+        .hb-field { display: flex; flex-direction: column; gap: 5px; }
+        .hb-field-lbl {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .hb-field-lbl .req { color: #e53935; }
+        .hb-field-inp {
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 10px 13px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13.5px;
+            color: var(--text);
+            outline: none;
+            background: #fff;
+            width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .hb-field-inp:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(40,45,158,0.08);
+        }
+        .hb-field-inp.invalid { border-color: #e53935 !important; }
+        .hb-field-err {
+            font-size: 11px; color: #e53935;
+            font-weight: 600; display: none;
+        }
+        .hb-field-err.show { display: block; }
+
+        .hb-phone-row { display: grid; grid-template-columns: 96px 1fr; gap: 8px; }
+        .hb-phone-prefix {
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            background: var(--gray-50);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .hb-phone-prefix i { font-size: 8px; margin-left: auto; color: var(--gray-400); }
+
+        /* Add guest link */
+        .hb-add-guest {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+            cursor: pointer;
+            margin-top: 4px;
+            text-decoration: none;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .hb-add-guest:hover { text-decoration: underline; }
+
+        /* ── Special Requests ── */
+        .hb-bed-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .hb-radio-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .hb-radio-label input[type="radio"] { accent-color: var(--blue); width: 16px; height: 16px; }
+
+        .hb-other-requests-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .hb-other-requests-toggle i { font-size: 11px; color: var(--gray-500); transition: transform 0.2s; }
+        .hb-other-requests-toggle.open i { transform: rotate(180deg); }
+
+        .hb-other-requests-body {
+            display: none;
+            margin-top: 14px;
+        }
+        .hb-other-requests-body.open { display: block; }
+
+        textarea.hb-field-inp {
+            resize: vertical;
+            min-height: 90px;
+            line-height: 1.5;
+        }
+
+        /* ── Promo Code ── */
+        .hb-promo-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-bottom: 14px;
+        }
+        .hb-promo-toggle i { font-size: 11px; color: var(--gray-500); transition: transform 0.2s; }
+        .hb-promo-toggle.open i { transform: rotate(180deg); }
+
+        .hb-promo-body { display: none; margin-bottom: 16px; }
+        .hb-promo-body.open { display: block; }
+
+        .hb-promo-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .hb-promo-input-row .hb-field-inp { flex: 1; }
+        .hb-promo-apply {
+            padding: 10px 20px;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .hb-promo-apply:hover { background: var(--blue-dark); }
+
+        /* Voucher cards */
+        .hb-vouchers { display: flex; flex-direction: column; gap: 10px; }
+        .hb-voucher {
+            border: 1.5px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: border-color 0.18s, box-shadow 0.18s;
+            position: relative;
+        }
+        .hb-voucher:hover { border-color: var(--blue); }
+        .hb-voucher.selected {
+            border-color: var(--blue);
+            background: #f0f4ff;
+            box-shadow: 0 0 0 3px rgba(40,45,158,0.08);
+        }
+        .hb-voucher-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: #fef3c7;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .hb-voucher-info { flex: 1; min-width: 0; }
+        .hb-voucher-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .hb-voucher-desc {
+            font-size: 12px;
+            color: var(--gray-500);
+            line-height: 1.4;
+        }
+        .hb-voucher-check {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-300);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+        .hb-voucher.selected .hb-voucher-check {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+        }
+        .hb-voucher-check i { font-size: 10px; display: none; }
+        .hb-voucher.selected .hb-voucher-check i { display: block; }
+
+        /* ── Payment ── */
+        .hb-payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .hb-payment-method {
+            border: 1.5px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: border-color 0.18s, box-shadow 0.18s;
+        }
+        .hb-payment-method.selected {
+            border-color: var(--blue);
+            background: #f8faff;
+            box-shadow: 0 0 0 3px rgba(40,45,158,0.07);
+        }
+        .hb-payment-method-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .hb-pm-radio {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--gray-300);
+            flex-shrink: 0;
+            position: relative;
+            transition: border-color 0.15s;
+        }
+        .hb-payment-method.selected .hb-pm-radio { border-color: var(--blue); }
+        .hb-payment-method.selected .hb-pm-radio::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: var(--blue);
+        }
+        .hb-pm-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            flex: 1;
+        }
+        .hb-pm-logos {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hb-pm-logo {
+            height: 20px;
+            width: auto;
+            border-radius: 3px;
+            border: 1px solid var(--gray-200);
+            padding: 2px 4px;
+            background: #fff;
+            font-size: 9px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            min-width: 30px;
+        }
+        .hb-pm-more {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gray-500);
+            background: var(--gray-100);
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        .hb-payment-fields {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-100);
+        }
+        .hb-payment-method.selected .hb-payment-fields { display: block; }
+
+        /* ── Submit button ── */
+        .hb-submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 4px 16px rgba(40,45,158,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .hb-submit-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+        .hb-submit-btn:active { transform: translateY(0); }
+        .hb-submit-spinner {
+            display: none;
+            width: 17px; height: 17px;
+            border: 2px solid rgba(255,255,255,.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: hbSpin .7s linear infinite;
+        }
+        .hb-submit-btn.loading .hb-submit-spinner { display: block; }
+        .hb-submit-btn.loading .hb-submit-text { opacity: 0.65; }
+        @keyframes hbSpin { to { transform: rotate(360deg); } }
+
+        .hb-submit-note {
+            font-size: 12px;
+            color: var(--gray-400);
+            text-align: center;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+        .hb-submit-note i { color: var(--blue); font-size: 11px; }
+
+        /* ══════════════════════════════════════════════
+           RIGHT COLUMN — sticky summary
+           ══════════════════════════════════════════════ */
+        .hb-right {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: sticky;
+            top: 24px;
+        }
+
+        .hb-summary-card {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        /* Property photo + name */
+        .hb-property-header {
+            display: flex;
+            gap: 14px;
+            padding: 18px 18px 16px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .hb-property-img {
+            width: 72px;
+            height: 72px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .hb-property-info { flex: 1; min-width: 0; }
+        .hb-property-name {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+        .hb-property-stars { color: #f59e0b; font-size: 12px; margin-bottom: 6px; }
+        .hb-property-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        .hb-score-badge {
+            background: var(--blue);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            border-radius: 6px;
+            padding: 2px 7px;
+        }
+        .hb-score-reviews { color: var(--gray-500); font-weight: 500; }
+
+        /* Room detail block */
+        .hb-room-block {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .hb-room-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+        .hb-room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .hb-room-feature {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11.5px;
+            color: var(--blue);
+            font-weight: 600;
+            background: #eff2ff;
+            border-radius: 20px;
+            padding: 3px 9px;
+        }
+        .hb-room-feature i { font-size: 10px; }
+        .hb-room-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11.5px;
+            color: #7c3aed;
+            font-weight: 600;
+            background: #ede9fe;
+            border-radius: 20px;
+            padding: 3px 9px;
+        }
+        .hb-room-nr {
+            font-size: 11.5px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Date block */
+        .hb-dates-block {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .hb-dates-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .hb-dates-row:last-child { margin-bottom: 0; }
+        .hb-date-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            min-width: 72px;
+        }
+        .hb-date-val {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .hb-date-sub {
+            font-size: 11.5px;
+            color: var(--gray-500);
+            font-weight: 400;
+            margin-top: 1px;
+        }
+        .hb-dates-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-100);
+        }
+        .hb-dates-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+        .hb-dates-meta-item i { font-size: 11px; color: var(--blue); }
+        .hb-dates-meta-sep { color: var(--gray-200); }
+
+        /* Price detail block */
+        .hb-price-block {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .hb-price-block-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+        }
+        .hb-pr-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 13px;
+            color: var(--gray-600);
+            font-weight: 500;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+        .hb-pr-row span:last-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+        .hb-pr-row.discount span:last-child { color: #16a34a; }
+        .hb-pr-row.discount span:first-child { color: #16a34a; }
+        .hb-pr-divider { height: 1px; background: var(--gray-200); margin: 12px 0; }
+        .hb-pr-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .hb-pr-total span:last-child { color: var(--blue); }
+        .hb-pr-savings {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #16a34a;
+            margin-top: 8px;
+        }
+        .hb-pr-savings i { font-size: 12px; }
+        .hb-price-match {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--blue);
+            margin-top: 6px;
+            cursor: pointer;
+        }
+        .hb-price-match:hover { text-decoration: underline; }
+
+        /* Cancellation, Rewards, Fine Print */
+        .hb-info-block {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .hb-info-block:last-child { border-bottom: none; }
+        .hb-info-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 100%;
+            text-align: left;
+        }
+        .hb-info-toggle-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .hb-info-toggle i { font-size: 12px; color: var(--gray-400); transition: transform 0.2s; }
+        .hb-info-toggle.open i { transform: rotate(180deg); }
+        .hb-info-body {
+            display: none;
+            padding-top: 12px;
+        }
+        .hb-info-body.open { display: block; }
+        .hb-info-body p {
+            font-size: 12.5px;
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin: 0 0 8px;
+        }
+        .hb-info-body p:last-child { margin-bottom: 0; }
+        .hb-info-body ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .hb-info-body ul li {
+            font-size: 12.5px;
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+        .hb-cancel-fee {
+            font-size: 13px;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+        .hb-rewards-earn {
+            font-size: 13px;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+        .hb-rewards-earn span { color: var(--blue); font-weight: 700; }
+
+        /* ── Success overlay ── */
+        .hb-success {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.55);
+            backdrop-filter: blur(4px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+        }
+        .hb-success.show { display: flex; }
+        .hb-success-box {
+            background: #fff;
+            border-radius: 20px;
+            padding: 48px 52px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22);
+            animation: hbPopIn .4s cubic-bezier(.34,1.56,.64,1) both;
+        }
+        @keyframes hbPopIn {
+            from { transform: scale(.75); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .hb-success-icon  { font-size: 3.8rem; color: #16a34a; margin-bottom: 18px; }
+        .hb-success-title { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .hb-success-sub   { font-size: .92rem; color: var(--gray-500); margin-bottom: 18px; line-height: 1.65; }
+        .hb-success-ref   {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 14px 22px;
+            font-size: .9rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 22px;
+        }
+        .hb-success-cta {
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 38px;
+            font-family: 'Inter', sans-serif;
+            font-size: .95rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .hb-success-cta:hover { background: var(--blue-dark); }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .hb-layout { grid-template-columns: 1fr; }
+            .hb-right { position: static; }
+        }
+        @media (max-width: 600px) {
+            .hb-page { padding: 20px 16px 48px; }
+            .hb-form-grid { grid-template-columns: 1fr; }
+            .hb-form-grid.triple { grid-template-columns: 1fr 1fr; }
+            .hb-card { padding: 18px 16px; }
+        }
+    </style>
+</head>
+
+<body class="service-page service-hotel">
+
+    <!-- ══ HEADER ══ -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="top-nav">
+                <a class="logo" href="index.html">
+                    <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+                </a>
+                <div class="top-right">
+                    <button class="currency-btn">
+                        PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon">
+                    </button>
+                    <button class="support-btn">
+                        Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                    </button>
+                    <div class="relative">
+                        <button class="support-btn" onclick="toggleDropdown('findBookingsMenu', event)">
+                            Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i>
+                        </button>
+                        <div class="dropdown-menu" id="findBookingsMenu">
+                            <div class="dropdown-item" onclick="selectFindBooking('hotel')">
+                                <i class="fas fa-bed fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Hotel &amp; Homes</span>
+                                    <span class="fb-desc">Book hotels, rooms, and homes for your stay.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('car')">
+                                <i class="fas fa-car fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Car Rental</span>
+                                    <span class="fb-desc">Find and reserve cars for flexible local travel.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('flights')">
+                                <i class="fas fa-plane fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Flights</span>
+                                    <span class="fb-desc">Search flights and manage your air bookings fast.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('attractions')">
+                                <i class="fas fa-ticket-alt fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Attraction &amp; Tours</span>
+                                    <span class="fb-desc">Discover tickets, tours, and activities in one place.</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="selectFindBooking('taxi')">
+                                <i class="fas fa-taxi fb-icon"></i>
+                                <div class="fb-content">
+                                    <span class="fb-title">Airport Taxis</span>
+                                    <span class="fb-desc">Pre-book airport transfers and private taxi rides.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══ BOOKING PAGE ══ -->
+    <div class="hb-page">
+
+        <!-- Breadcrumb -->
+        <div class="hb-breadcrumb">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="hotel.html">Hotel &amp; Homes</a>
+            <i class="fas fa-chevron-right"></i>
+            <span id="hbBreadcrumbHotel">Hotel</span>
+            <i class="fas fa-chevron-right"></i>
+            <span>Complete Booking</span>
+        </div>
+
+        <!-- Page heading -->
+        <h1 class="hb-page-title">Complete Your Booking</h1>
+        <p class="hb-page-sub">Fill in your details to confirm your reservation</p>
+
+        <!-- Savings banner -->
+        <div class="hb-savings-banner" id="hbSavingsBanner" style="display:none">
+            <div class="hb-savings-row">
+                <i class="fas fa-gem"></i>
+                <span id="hbSavingsText">You've saved a total of PHP 0!</span>
+            </div>
+            <div class="hb-savings-row">
+                <i class="fas fa-thumbs-up"></i>
+                <span>This property's best price is yours</span>
+            </div>
+        </div>
+
+        <div class="hb-layout">
+
+            <!-- ════ LEFT ════ -->
+            <div class="hb-left">
+
+                <!-- Who's staying -->
+                <div class="hb-card">
+                    <h2 class="hb-card-title">Who's staying?</h2>
+                    <p class="hb-card-sub">Guest names must match the valid ID which will be used at check-in.</p>
+
+                    <div class="hb-form-grid">
+                        <div class="hb-field">
+                            <label class="hb-field-lbl">First name <span class="req">*</span></label>
+                            <input id="hbFirstName" type="text" class="hb-field-inp" placeholder="Use only English letters">
+                            <span class="hb-field-err" id="hb-err-firstName">First name is required.</span>
+                        </div>
+                        <div class="hb-field">
+                            <label class="hb-field-lbl">Last name <span class="req">*</span></label>
+                            <input id="hbLastName" type="text" class="hb-field-inp" placeholder="Use only English letters">
+                            <span class="hb-field-err" id="hb-err-lastName">Last name is required.</span>
+                        </div>
+                    </div>
+
+                    <div class="hb-form-grid">
+                        <div class="hb-field">
+                            <label class="hb-field-lbl">Email <span class="req">*</span></label>
+                            <input id="hbEmail" type="email" class="hb-field-inp" placeholder="your@email.com">
+                            <span class="hb-field-err" id="hb-err-email">Enter a valid email.</span>
+                            <span style="font-size:11px;color:var(--gray-400);margin-top:3px;">Booking confirmation will be sent to this email</span>
+                        </div>
+                        <div class="hb-field">
+                            <label class="hb-field-lbl">Phone number <span class="req">*</span></label>
+                            <div class="hb-phone-row">
+                                <div class="hb-phone-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                                <input id="hbPhone" type="tel" class="hb-field-inp" placeholder="Phone number">
+                            </div>
+                            <span class="hb-field-err" id="hb-err-phone">Phone number is required.</span>
+                        </div>
+                    </div>
+
+                    <button class="hb-add-guest" onclick="toggleAddGuest()">
+                        <i class="fas fa-plus-circle"></i>
+                        <span id="hbAddGuestLabel">+ Add New Guest (Optional)</span>
+                    </button>
+
+                    <div id="hbGuestFields" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid var(--gray-100);">
+                        <div class="hb-form-grid">
+                            <div class="hb-field">
+                                <label class="hb-field-lbl">Guest first name</label>
+                                <input type="text" class="hb-field-inp" placeholder="Use only English letters">
+                            </div>
+                            <div class="hb-field">
+                                <label class="hb-field-lbl">Guest last name</label>
+                                <input type="text" class="hb-field-inp" placeholder="Use only English letters">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Requests -->
+                <div class="hb-card">
+                    <h2 class="hb-card-title">Special Requests <span style="font-size:13px;font-weight:400;color:var(--gray-400)">(Optional)</span></h2>
+                    <p class="hb-card-sub">The property will do its best, but cannot guarantee to fulfill all requests.</p>
+
+                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">Bed type preference</div>
+                    <div class="hb-bed-options">
+                        <label class="hb-radio-label">
+                            <input type="radio" name="bedPref" value="double" checked>
+                            1 double bed preferred
+                        </label>
+                        <label class="hb-radio-label">
+                            <input type="radio" name="bedPref" value="twin">
+                            2 single beds preferred
+                        </label>
+                    </div>
+
+                    <button class="hb-other-requests-toggle" id="otherReqToggle" onclick="toggleOtherRequests()">
+                        Other requests <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="hb-other-requests-body" id="otherReqBody">
+                        <div class="hb-field">
+                            <label class="hb-field-lbl">Additional requests</label>
+                            <textarea class="hb-field-inp" placeholder="E.g. early check-in, high floor, quiet room..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo / Vouchers -->
+                <div class="hb-card">
+                    <h2 class="hb-card-title">Available for This Booking</h2>
+
+                    <button class="hb-promo-toggle" id="promoToggle" onclick="togglePromo()">
+                        Enter promo code <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="hb-promo-body" id="promoBody">
+                        <div class="hb-promo-input-row">
+                            <input type="text" class="hb-field-inp" placeholder="Enter promo code" id="hbPromoInput">
+                            <button class="hb-promo-apply" onclick="applyPromo()">Apply</button>
+                        </div>
+                    </div>
+
+                    <div class="hb-vouchers" id="hbVouchers">
+                        <div class="hb-voucher selected" onclick="selectVoucher(this, 192.42)">
+                            <div class="hb-voucher-icon">🎫</div>
+                            <div class="hb-voucher-info">
+                                <div class="hb-voucher-name">10% off max discount PHP 300.00</div>
+                                <div class="hb-voucher-desc">New user promo code (1st booking)<br>Valid until 11:59 PM, Apr 4, 2026</div>
+                                <div style="font-size:11px;color:var(--blue);font-weight:600;margin-top:4px;cursor:pointer;">Terms and Conditions</div>
+                            </div>
+                            <div class="hb-voucher-check"><i class="fas fa-check"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment -->
+                <div class="hb-card">
+                    <h2 class="hb-card-title">How would you like to pay?</h2>
+
+                    <div class="hb-payment-methods">
+                        <!-- Credit/Debit Card -->
+                        <div class="hb-payment-method selected" onclick="selectPayment(this)">
+                            <div class="hb-payment-method-header">
+                                <div class="hb-pm-radio"></div>
+                                <div class="hb-pm-label">Credit / Debit Card</div>
+                                <div class="hb-pm-logos">
+                                    <div class="hb-pm-logo">VISA</div>
+                                    <div class="hb-pm-logo">MC</div>
+                                    <div class="hb-pm-logo">JCB</div>
+                                    <div class="hb-pm-more">+2</div>
+                                </div>
+                            </div>
+                            <div class="hb-payment-fields">
+                                <div class="hb-form-grid single" style="margin-bottom:12px">
+                                    <div class="hb-field">
+                                        <label class="hb-field-lbl">Bank card no.</label>
+                                        <input id="hbCardNo" type="text" class="hb-field-inp" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+                                    </div>
+                                </div>
+                                <div class="hb-form-grid single" style="margin-bottom:12px">
+                                    <div class="hb-field">
+                                        <label class="hb-field-lbl">Cardholder name</label>
+                                        <input id="hbCardName" type="text" class="hb-field-inp" placeholder="Name as on card">
+                                    </div>
+                                </div>
+                                <div class="hb-form-grid">
+                                    <div class="hb-field">
+                                        <label class="hb-field-lbl">Expiration date</label>
+                                        <input id="hbCardExp" type="text" class="hb-field-inp" placeholder="MM / YY" maxlength="7" oninput="formatExp(this)">
+                                    </div>
+                                    <div class="hb-field">
+                                        <label class="hb-field-lbl">CVV / CVC <i class="fas fa-circle-info" style="color:var(--gray-400);font-size:11px;" title="3 or 4 digit security code on your card"></i></label>
+                                        <input id="hbCardCvv" type="text" class="hb-field-inp" placeholder="•••" maxlength="4">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GCash -->
+                        <div class="hb-payment-method" onclick="selectPayment(this)">
+                            <div class="hb-payment-method-header">
+                                <div class="hb-pm-radio"></div>
+                                <div class="hb-pm-label">GCash</div>
+                                <div class="hb-pm-logos">
+                                    <div class="hb-pm-logo" style="background:#0062ff;color:#fff;border-color:#0062ff;">G</div>
+                                </div>
+                            </div>
+                            <div class="hb-payment-fields">
+                                <div class="hb-field">
+                                    <label class="hb-field-lbl">GCash mobile number</label>
+                                    <div class="hb-phone-row">
+                                        <div class="hb-phone-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                                        <input type="tel" class="hb-field-inp" placeholder="9XX XXX XXXX">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pay at Property -->
+                        <div class="hb-payment-method" onclick="selectPayment(this)">
+                            <div class="hb-payment-method-header">
+                                <div class="hb-pm-radio"></div>
+                                <div class="hb-pm-label">Pay at Property</div>
+                                <div class="hb-pm-logos">
+                                    <div class="hb-pm-logo"><i class="fas fa-hotel" style="font-size:10px;"></i></div>
+                                </div>
+                            </div>
+                            <div class="hb-payment-fields">
+                                <p style="font-size:12.5px;color:var(--gray-500);margin:0;line-height:1.5;">
+                                    Your card will not be charged now. You'll pay directly at the property during check-in.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button class="hb-submit-btn" id="hbSubmitBtn" onclick="submitBooking()">
+                        <span class="hb-submit-spinner"></span>
+                        <span class="hb-submit-text"><i class="fas fa-lock"></i> Complete Booking</span>
+                    </button>
+                    <p class="hb-submit-note">
+                        <i class="fas fa-shield-alt"></i> Your payment info is encrypted and secure.
+                        By completing this booking you agree to our Terms &amp; Conditions.
+                    </p>
+                </div>
+
+            </div><!-- end .hb-left -->
+
+            <!-- ════ RIGHT ════ -->
+            <div class="hb-right">
+
+                <div class="hb-summary-card">
+
+                    <!-- Property header -->
+                    <div class="hb-property-header">
+                        <div class="hb-property-img" id="hbPropertyImg">🏨</div>
+                        <div class="hb-property-info">
+                            <div class="hb-property-name" id="hbPropertyName">Hotel Name</div>
+                            <div class="hb-property-stars" id="hbPropertyStars">★★★</div>
+                            <div class="hb-property-score">
+                                <span class="hb-score-badge" id="hbScore">7.5</span>
+                                <span class="hb-score-reviews" id="hbReviews">— reviews</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Room -->
+                    <div class="hb-room-block">
+                        <div class="hb-room-name" id="hbRoomName">Room Type</div>
+                        <div class="hb-room-features" id="hbRoomFeatures"></div>
+                        <div class="hb-room-nr" id="hbRoomNr"></div>
+                    </div>
+
+                    <!-- Dates -->
+                    <div class="hb-dates-block">
+                        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;" id="hbDatesTitle">Check-in — Check-out</div>
+                        <div class="hb-dates-row">
+                            <span class="hb-date-label">Check-in</span>
+                            <div>
+                                <div class="hb-date-val" id="hbCheckin">–</div>
+                                <div class="hb-date-sub">From 15:00–06:00</div>
+                            </div>
+                        </div>
+                        <div class="hb-dates-row">
+                            <span class="hb-date-label">Check-out</span>
+                            <div>
+                                <div class="hb-date-val" id="hbCheckout">–</div>
+                                <div class="hb-date-sub">Before 12:00</div>
+                            </div>
+                        </div>
+                        <div class="hb-dates-meta">
+                            <div class="hb-dates-meta-item">
+                                <i class="fas fa-moon"></i>
+                                <span id="hbNights">1 night</span>
+                            </div>
+                            <span class="hb-dates-meta-sep">|</span>
+                            <div class="hb-dates-meta-item">
+                                <i class="fas fa-door-open"></i>
+                                <span id="hbRooms">1 room</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Details -->
+                    <div class="hb-price-block">
+                        <div class="hb-price-block-title">Price Details</div>
+
+                        <div class="hb-pr-row">
+                            <span id="hbPrRoomLabel">1 room × 1 night</span>
+                            <span id="hbPrBase">–</span>
+                        </div>
+                        <div class="hb-pr-row" id="hbPrDiscountRow" style="display:none">
+                            <span id="hbPrDiscountLabel">Price before discount:</span>
+                            <span id="hbPrBeforeDiscount" style="color:var(--gray-400);text-decoration:line-through;font-weight:500;">–</span>
+                        </div>
+                        <div class="hb-pr-row discount" id="hbPrPromoRow" style="display:none">
+                            <span id="hbPrPromoLabel">New user promo code:–</span>
+                            <span id="hbPrPromo">–</span>
+                        </div>
+                        <div class="hb-pr-row discount" id="hbPrSpecialRow" style="display:none">
+                            <span>Special Discount:–</span>
+                            <span id="hbPrSpecial">–</span>
+                        </div>
+                        <div class="hb-pr-row">
+                            <span>VAT</span>
+                            <span id="hbPrVat">–</span>
+                        </div>
+                        <div class="hb-pr-divider"></div>
+                        <div class="hb-pr-total">
+                            <span>Total</span>
+                            <span id="hbPrTotal">–</span>
+                        </div>
+                        <div class="hb-pr-savings" id="hbPrSavingsRow" style="display:none">
+                            <i class="fas fa-gem"></i>
+                            <span id="hbPrSavings">You saved PHP 0 on this booking</span>
+                        </div>
+                        <div class="hb-price-match">
+                            <i class="fas fa-heart"></i> We Price Match
+                        </div>
+                    </div>
+
+                    <!-- Cancellation Policy -->
+                    <div class="hb-info-block">
+                        <button class="hb-info-toggle open" id="cancelToggle" onclick="toggleInfo('cancelToggle','cancelBody')">
+                            <span class="hb-info-toggle-title">Cancellation policy</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="hb-info-body open" id="cancelBody">
+                            <div class="hb-cancel-fee" id="hbCancelFee">Cancellation fee: –</div>
+                            <p>This booking cannot be modified, and no refund will be given if you cancel it. You'll be charged the cancellation fee if you don't check in. If you apply a discount to your booking, the cancellation fee will be based on the total you paid.</p>
+                        </div>
+                    </div>
+
+                    <!-- Rewards -->
+                    <div class="hb-info-block">
+                        <button class="hb-info-toggle open" id="rewardsToggle" onclick="toggleInfo('rewardsToggle','rewardsBody')">
+                            <span class="hb-info-toggle-title">Rewards</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="hb-info-body open" id="rewardsBody">
+                            <div class="hb-rewards-earn">
+                                Earn <span id="hbTripCoins">15 Trip Coins (≈PHP 9.10)</span> after your stay.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fine Print -->
+                    <div class="hb-info-block">
+                        <button class="hb-info-toggle" id="fineToggle" onclick="toggleInfo('fineToggle','fineBody')">
+                            <span class="hb-info-toggle-title">Fine Print</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="hb-info-body" id="fineBody">
+                            <ul>
+                                <li>This property requires a deposit at check-in. The deposit costs PHP 1,000.00 per day. Refunds for deposits not paid in cash may take 2–4 weeks to process.</li>
+                                <li>Guests under the age of 18 can only check in with a parent or legal guardian.</li>
+                                <li>The property has connecting/adjoining rooms, available on request.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div><!-- end .hb-summary-card -->
+
+            </div><!-- end .hb-right -->
+
+        </div><!-- end .hb-layout -->
+
+    </div><!-- end .hb-page -->
+
+    <!-- ══ SUCCESS ══ -->
+    <div class="hb-success" id="hbSuccess">
+        <div class="hb-success-box">
+            <div class="hb-success-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="hb-success-title">Booking Confirmed!</div>
+            <div class="hb-success-sub">
+                Your stay at <strong id="hbSuccessHotel"></strong> is confirmed.<br>
+                A confirmation has been sent to <strong id="hbSuccessEmail"></strong>.
+            </div>
+            <div class="hb-success-ref">Booking Ref: <span id="hbSuccessRef"></span></div>
+            <button class="hb-success-cta" onclick="window.location.href='index.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <div class="footer-columns">
+                    <div class="footer-column">
+                        <h4>Contact Us</h4>
+                        <ul>
+                            <li><a href="#">Customer Support</a></li>
+                            <li><a href="#">Service Guarantee</a></li>
+                            <li><a href="#">More Service Info</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>About</h4>
+                        <ul>
+                            <li><a href="#">About Easy Navigate</a></li>
+                            <li><a href="#">News</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Terms &amp; Condition</a></li>
+                            <li><a href="#">Privacy Statement</a></li>
+                            <li><a href="#">Accessibility Statement</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Other Services</h4>
+                        <ul>
+                            <li><a href="#">Investor Relations</a></li>
+                            <li><a href="#">Affiliate Program</a></li>
+                            <li><a href="#">List Your Property</a></li>
+                            <li><a href="#">Become Supplier</a></li>
+                            <li><a href="#">Security</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-logo">
+                    <img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
+                </div>
+            </div>
+            <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved Site Operator: Easy Navigate Travel</p>
+        </div>
+    </footer>
+
+    <script src="auth-header.js"></script>
+
+    <script>
+    (function () {
+
+        /* ── Read URL params ── */
+        const p           = new URLSearchParams(window.location.search);
+        const hotelName   = p.get('hotel')    || 'Hotel';
+        const roomName    = p.get('room')     || 'Standard Room';
+        const checkin     = p.get('checkin')  || '';
+        const checkout    = p.get('checkout') || '';
+        const nights      = parseInt(p.get('nights')  || '1');
+        const rooms       = parseInt(p.get('rooms')   || '1');
+        const stars       = parseInt(p.get('stars')   || '3');
+        const score       = p.get('score')    || '7.5';
+        const reviews     = p.get('reviews')  || '0';
+        const basePrice   = parseFloat(p.get('price') || '1500');
+        const image       = p.get('image')    || '';
+
+        /* ── Populate breadcrumb ── */
+        document.getElementById('hbBreadcrumbHotel').textContent = hotelName;
+        document.title = `Complete Booking — ${hotelName} | Easy Navigate`;
+
+        /* ── Property header ── */
+        document.getElementById('hbPropertyName').textContent = hotelName;
+        document.getElementById('hbPropertyStars').textContent = '★'.repeat(Math.max(1, Math.min(5, stars))) + '☆'.repeat(5 - Math.max(1, Math.min(5, stars)));
+        document.getElementById('hbScore').textContent   = score;
+        document.getElementById('hbReviews').textContent = reviews > 0 ? `${reviews} reviews` : 'No reviews yet';
+
+        if (image) {
+            const img = document.createElement('img');
+            img.src = image;
+            img.alt = hotelName;
+            img.className = 'hb-property-img';
+            img.style.width = '72px';
+            img.style.height = '72px';
+            img.style.borderRadius = '10px';
+            img.style.objectFit = 'cover';
+            img.onerror = function () { this.style.display = 'none'; };
+            document.getElementById('hbPropertyImg').replaceWith(img);
+        }
+
+        /* ── Room ── */
+        document.getElementById('hbRoomName').textContent = roomName;
+
+        const features = ['Free Wi-Fi', 'Non-smoking', 'Has window(s)'];
+        const featureHTML = features.map(f =>
+            `<span class="hb-room-feature"><i class="fas fa-check"></i> ${f}</span>`
+        ).join('');
+        document.getElementById('hbRoomFeatures').innerHTML =
+            featureHTML + `<span class="hb-room-badge"><i class="fas fa-info-circle"></i> Non-refundable</span>`;
+        document.getElementById('hbRoomNr').textContent = `${rooms} room${rooms > 1 ? 's' : ''} selected`;
+
+        /* ── Dates ── */
+        function fmtDate(str) {
+            if (!str) return '–';
+            const d = new Date(str + 'T00:00:00');
+            return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+        document.getElementById('hbCheckin').textContent   = fmtDate(checkin);
+        document.getElementById('hbCheckout').textContent  = fmtDate(checkout);
+        document.getElementById('hbNights').textContent    = `${nights} night${nights !== 1 ? 's' : ''}`;
+        document.getElementById('hbRooms').textContent     = `${rooms} room${rooms !== 1 ? 's' : ''}`;
+        document.getElementById('hbDatesTitle').textContent =
+            (checkin && checkout) ? `${fmtDate(checkin)} — ${fmtDate(checkout)}` : 'Check-in — Check-out';
+
+        /* ── Pricing ── */
+        function fmt(v) {
+            return new Intl.NumberFormat('en-PH', {
+                style: 'currency', currency: 'PHP',
+                minimumFractionDigits: 2, maximumFractionDigits: 2
+            }).format(v);
+        }
+
+        const totalBase     = basePrice * nights * rooms;
+        const originalPrice = +(totalBase * 1.176).toFixed(2);   // simulate before-discount
+        const promoDiscount = +(Math.min(originalPrice * 0.10, 300)).toFixed(2);
+        const specialDisc   = +(originalPrice * 0.044).toFixed(2);
+        const vatRate       = 0.12;
+        const afterDiscounts= totalBase;
+        const vat           = +(afterDiscounts * vatRate).toFixed(2);
+        const total         = +(afterDiscounts + vat).toFixed(2);
+        const totalSaved    = +(originalPrice - total + vat).toFixed(2);
+
+        document.getElementById('hbPrRoomLabel').textContent     = `${rooms} room${rooms>1?'s':''} × ${nights} night${nights>1?'s':''}`;
+        document.getElementById('hbPrBase').textContent          = fmt(totalBase);
+        document.getElementById('hbPrBeforeDiscount').textContent= fmt(originalPrice);
+        document.getElementById('hbPrPromoLabel').textContent    = `New user promo code:–`;
+        document.getElementById('hbPrPromo').textContent         = `– ${fmt(promoDiscount)}`;
+        document.getElementById('hbPrSpecial').textContent       = `– ${fmt(specialDisc)}`;
+        document.getElementById('hbPrVat').textContent           = fmt(vat);
+        document.getElementById('hbPrTotal').textContent         = fmt(total);
+        document.getElementById('hbPrSavings').textContent       = `You saved ${fmt(totalSaved)} on this booking`;
+
+        if (totalSaved > 0) {
+            document.getElementById('hbPrDiscountRow').style.display = '';
+            document.getElementById('hbPrPromoRow').style.display    = '';
+            document.getElementById('hbPrSpecialRow').style.display  = '';
+            document.getElementById('hbPrSavingsRow').style.display  = '';
+
+            const banner = document.getElementById('hbSavingsBanner');
+            banner.style.display = '';
+            document.getElementById('hbSavingsText').textContent =
+                `You've saved a total of ${fmt(totalSaved)}!`;
+        }
+
+        /* ── Cancellation fee ── */
+        document.getElementById('hbCancelFee').textContent = `Cancellation fee: ${fmt(total * 1.11)}`;
+
+        /* ── Trip Coins ── */
+        const coins = Math.floor(total / 10);
+        const coinsPhp = (coins * 0.606).toFixed(2);
+        document.getElementById('hbTripCoins').textContent = `${coins} Trip Coins (≈PHP ${coinsPhp})`;
+
+        /* ── Pre-fill email from auth ── */
+        try {
+            const auth = JSON.parse(localStorage.getItem('easyNavigateAuth') || '{}');
+            if (auth && auth.email) {
+                document.getElementById('hbEmail').value = auth.email;
+            }
+        } catch(e) {}
+
+        /* ══ UI interactions ══ */
+
+        window.toggleAddGuest = function () {
+            const el  = document.getElementById('hbGuestFields');
+            const lbl = document.getElementById('hbAddGuestLabel');
+            const open = el.style.display === 'none';
+            el.style.display   = open ? 'block' : 'none';
+            lbl.textContent    = open ? '− Remove Additional Guest' : '+ Add New Guest (Optional)';
+        };
+
+        window.toggleOtherRequests = function () {
+            const btn  = document.getElementById('otherReqToggle');
+            const body = document.getElementById('otherReqBody');
+            btn.classList.toggle('open');
+            body.classList.toggle('open');
+        };
+
+        window.togglePromo = function () {
+            const btn  = document.getElementById('promoToggle');
+            const body = document.getElementById('promoBody');
+            btn.classList.toggle('open');
+            body.classList.toggle('open');
+        };
+
+        window.applyPromo = function () {
+            const code = document.getElementById('hbPromoInput').value.trim();
+            if (!code) return;
+            alert(`Promo code "${code}" applied! (Demo only)`);
+        };
+
+        window.selectVoucher = function (el, amount) {
+            document.querySelectorAll('.hb-voucher').forEach(v => v.classList.remove('selected'));
+            el.classList.add('selected');
+        };
+
+        window.selectPayment = function (el) {
+            document.querySelectorAll('.hb-payment-method').forEach(m => m.classList.remove('selected'));
+            el.classList.add('selected');
+        };
+
+        window.toggleInfo = function (toggleId, bodyId) {
+            document.getElementById(toggleId).classList.toggle('open');
+            document.getElementById(bodyId).classList.toggle('open');
+        };
+
+        /* Card number formatter */
+        window.formatCard = function (el) {
+            let v = el.value.replace(/\D/g,'').substring(0,16);
+            el.value = v.replace(/(.{4})/g,'$1 ').trim();
+        };
+
+        /* Expiry formatter */
+        window.formatExp = function (el) {
+            let v = el.value.replace(/\D/g,'').substring(0,4);
+            if (v.length >= 3) v = v.substring(0,2) + ' / ' + v.substring(2);
+            el.value = v;
+        };
+
+        /* ── Validation ── */
+        function showErr(id) {
+            document.getElementById('hb-err-' + id)?.classList.add('show');
+            document.getElementById('hb' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.add('invalid');
+        }
+        function clearErr(id) {
+            document.getElementById('hb-err-' + id)?.classList.remove('show');
+            document.getElementById('hb' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.remove('invalid');
+        }
+
+        window.submitBooking = async function () {
+            let valid = true;
+
+            const firstName = document.getElementById('hbFirstName').value.trim();
+            const lastName  = document.getElementById('hbLastName').value.trim();
+            const phone     = document.getElementById('hbPhone').value.trim();
+            const email     = document.getElementById('hbEmail').value.trim();
+
+            if (!firstName) { showErr('firstName'); valid = false; } else clearErr('firstName');
+            if (!lastName)  { showErr('lastName');  valid = false; } else clearErr('lastName');
+            if (!phone)     { showErr('phone');      valid = false; } else clearErr('phone');
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showErr('email'); valid = false;
+            } else clearErr('email');
+
+            if (!valid) {
+                document.querySelector('.hb-field-err.show')
+                    ?.closest('.hb-card')
+                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
+            const btn = document.getElementById('hbSubmitBtn');
+            btn.classList.add('loading'); btn.disabled = true;
+
+            await new Promise(r => setTimeout(r, 1200));
+
+            btn.classList.remove('loading'); btn.disabled = false;
+
+            const ref = 'HB-' + (Date.now() % 1000000).toString().padStart(6, '0');
+            document.getElementById('hbSuccessHotel').textContent = hotelName;
+            document.getElementById('hbSuccessEmail').textContent = email;
+            document.getElementById('hbSuccessRef').textContent   = ref;
+            document.getElementById('hbSuccess').classList.add('show');
+        };
+
+    })();
+    </script>
+
+</body>
+</html>

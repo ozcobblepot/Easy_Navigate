@@ -9,6 +9,301 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ══════════════════════════════════════════════════════════════
+           FLIGHT FARE SELECTION MODAL
+           ══════════════════════════════════════════════════════════════ */
+
+        /* Overlay */
+        .fl-fare-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 50, 0.55);
+            z-index: 9999;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 28px 16px;
+            backdrop-filter: blur(4px);
+            overflow-y: auto;
+        }
+        .fl-fare-modal-overlay.open {
+            display: flex;
+            animation: flModalFadeIn 0.22s ease;
+        }
+        @keyframes flModalFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* Modal box */
+        .fl-fare-modal {
+            background: #fff;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            box-shadow: 0 24px 80px rgba(20, 30, 100, 0.22);
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            animation: flModalSlideIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            margin: auto;
+        }
+        @keyframes flModalSlideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Close button */
+        .fl-fare-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1.5px solid var(--gray-200);
+            background: rgba(255, 255, 255, 0.95);
+            font-size: 16px;
+            color: var(--gray-600);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.15s, color 0.15s;
+            line-height: 1;
+        }
+        .fl-fare-modal-close:hover { background: #fff; color: var(--text); }
+
+        /* ── MODAL HEADER ── */
+        .fl-fare-modal-header {
+            padding: 22px 26px 16px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .fl-fare-modal-route {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0 40px 14px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .fl-fare-modal-route i { font-size: 14px; color: var(--blue); }
+
+        /* Flight legs */
+        .fl-fare-legs {
+            display: flex;
+            gap: 0;
+            flex-wrap: wrap;
+        }
+        .fl-fare-leg {
+            flex: 1;
+            min-width: 260px;
+            padding-right: 24px;
+        }
+        .fl-fare-leg + .fl-fare-leg {
+            padding-left: 24px;
+            padding-right: 0;
+            border-left: 1px solid var(--gray-200);
+        }
+        .fl-fare-leg-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .fl-fare-leg-badge.depart       { background: var(--blue); color: #fff; }
+        .fl-fare-leg-badge.return-badge { background: #e0f2fe; color: #0369a1; }
+        .fl-fare-leg-date     { font-size: 13px; color: var(--gray-500); font-weight: 500; margin-left: 4px; }
+        .fl-fare-leg-duration { font-size: 12px; color: var(--gray-400); font-weight: 500; margin-left: 8px; }
+        .fl-fare-leg-flight {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .fl-fare-leg-logo {
+            width: 30px; height: 30px;
+            border-radius: 8px;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; flex-shrink: 0;
+        }
+        .fl-fare-leg-logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+        .fl-fare-leg-logo-abbr { font-size: 11px; font-weight: 800; color: var(--blue); }
+        .fl-fare-leg-times { display: flex; flex-direction: column; gap: 2px; }
+        .fl-fare-leg-time-row { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1; }
+        .fl-fare-leg-airports { font-size: 12px; color: var(--gray-600); font-weight: 500; }
+        .fl-fare-leg-info     { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+
+        /* ── FARE TIERS GRID ── */
+        .fl-fare-body { padding: 20px 26px; }
+        .fl-fare-tiers {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .fl-fare-card {
+            border: 2px solid var(--gray-200);
+            border-radius: 14px;
+            padding: 16px 16px 14px;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+            background: #fff;
+        }
+        .fl-fare-card:hover {
+            border-color: var(--blue);
+            box-shadow: 0 4px 18px rgba(40, 45, 158, 0.12);
+            transform: translateY(-2px);
+        }
+        .fl-fare-card.selected {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(40, 45, 158, 0.13);
+        }
+        .fl-fare-card.recommended { border-color: var(--blue); }
+
+        /* Recommended ribbon */
+        .fl-fare-recommended-badge {
+            position: absolute;
+            top: -1px; left: 14px;
+            background: #0f766e;
+            color: #fff;
+            font-size: 10px; font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 0 0 8px 8px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Card header & radio */
+        .fl-fare-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            margin-top: 8px;
+        }
+        .fl-fare-card-title-group { display: flex; flex-direction: column; gap: 3px; }
+        .fl-fare-card-name     { font-size: 15px; font-weight: 800; color: var(--text); }
+        .fl-fare-card-subtitle { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+        .fl-fare-radio {
+            width: 20px; height: 20px;
+            border: 2px solid var(--gray-300);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: border-color 0.15s;
+        }
+        .fl-fare-radio.checked { border-color: var(--blue); background: var(--blue); }
+        .fl-fare-radio.checked::after {
+            content: '';
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        /* Feature rows */
+        .fl-fare-section-title {
+            font-size: 11.5px; font-weight: 700;
+            color: var(--text); margin: 12px 0 6px;
+        }
+        .fl-fare-feature {
+            display: flex; align-items: flex-start; gap: 8px;
+            font-size: 12px; color: var(--gray-700);
+            font-weight: 500; margin-bottom: 5px; line-height: 1.4;
+        }
+        .fl-fare-feature i { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+        .fl-fare-feature.ok  i { color: #16a34a; }
+        .fl-fare-feature.no  i { color: #dc2626; }
+        .fl-fare-feature.bag i { color: var(--blue); }
+
+        /* Price inside card */
+        .fl-fare-card-price-row {
+            margin-top: 14px; padding-top: 12px;
+            border-top: 1px solid var(--gray-100);
+        }
+        .fl-fare-card-price {
+            font-size: 20px; font-weight: 800;
+            color: var(--blue); letter-spacing: -0.5px; line-height: 1;
+        }
+        .fl-fare-card-original {
+            font-size: 12px; color: var(--gray-400);
+            text-decoration: line-through; margin-left: 6px;
+        }
+        .fl-fare-card-trip-label { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+
+        /* Payment method row */
+        .fl-fare-payment-row {
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid var(--gray-200); border-radius: 8px;
+            padding: 8px 12px; margin-top: 10px;
+            font-size: 12.5px; color: var(--gray-700);
+            font-weight: 600; cursor: pointer; gap: 6px;
+        }
+        .fl-fare-payment-row i           { color: var(--blue); font-size: 13px; }
+        .fl-fare-payment-row .fa-chevron-down { color: var(--gray-400); font-size: 10px; }
+
+        /* ── Hotel cross-sell banner ── */
+        .fl-fare-crosssell {
+            display: flex; align-items: center; gap: 10px;
+            background: #fffbeb; border: 1px solid #fcd34d;
+            border-radius: 10px; padding: 10px 16px;
+            font-size: 12.5px; color: #78350f; font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .fl-fare-crosssell span.highlight { color: #b45309; font-weight: 800; }
+        .fl-fare-crosssell i { font-size: 22px; flex-shrink: 0; }
+
+        /* ── MODAL FOOTER ── */
+        .fl-fare-modal-footer {
+            display: flex; align-items: center;
+            justify-content: flex-end; gap: 16px;
+            padding: 14px 26px 18px;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            flex-wrap: wrap;
+        }
+        .fl-fare-footer-price-block { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+        .fl-fare-footer-original    { font-size: 13px; color: var(--gray-400); text-decoration: line-through; }
+        .fl-fare-footer-price       { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; line-height: 1; }
+        .fl-fare-footer-trip        { font-size: 11px; color: var(--gray-500); }
+        .fl-fare-continue-btn {
+            background: var(--blue); color: #fff; border: none;
+            border-radius: 10px; padding: 13px 36px;
+            font-size: 15px; font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.15s;
+            box-shadow: 0 4px 14px rgba(40, 45, 158, 0.28);
+            white-space: nowrap;
+        }
+        .fl-fare-continue-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+        /* Responsive */
+        @media (max-width: 720px) {
+            .fl-fare-tiers { grid-template-columns: 1fr; }
+            .fl-fare-legs  { flex-direction: column; }
+            .fl-fare-leg + .fl-fare-leg {
+                border-left: none; border-top: 1px solid var(--gray-200);
+                padding-left: 0; padding-top: 14px; margin-top: 14px;
+            }
+            .fl-fare-modal-footer { justify-content: space-between; }
+        }
+        @media (max-width: 500px) {
+            .fl-fare-modal-header,
+            .fl-fare-body,
+            .fl-fare-modal-footer { padding-left: 16px; padding-right: 16px; }
+        }
+    </style>
 </head>
 
 <script src="service-search-suggestions.js"></script>
@@ -80,7 +375,6 @@
     <!-- ══ HERO + SEARCH ══ -->
     <section class="hero">
         <div class="hero-container">
-            
             <h1>Flights</h1>
             <p>Search deals on flights worldwide...</p>
             <div class="search-card">
@@ -225,9 +519,8 @@
     </section>
 
     <!-- ══ FLIGHT RESULTS ══ -->
-    <!-- AFTER -->
-<section class="hotel-results-section">
-    <div class="hotel-results-flex">
+    <section class="hotel-results-section">
+        <div class="hotel-results-flex">
 
             <!-- Filter Sidebar -->
             <aside class="hotel-filter-sidebar">
@@ -254,15 +547,13 @@
             </aside>
 
             <!-- Results -->
-            <!-- BEFORE -->
-<!-- AFTER -->
-<div class="hotel-results-container">
-    <div class="hotel-results-header">
-        <h2>Available Flights</h2>
-        <p id="flightResultsMeta"></p>
-    </div>
-    <div id="flightResultsList" class="hotel-results-list"></div>
-</div>
+            <div class="hotel-results-container">
+                <div class="hotel-results-header">
+                    <h2>Available Flights</h2>
+                    <p id="flightResultsMeta"></p>
+                </div>
+                <div id="flightResultsList" class="hotel-results-list"></div>
+            </div>
 
         </div>
     </section>
@@ -356,6 +647,51 @@
             <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
         </div>
     </footer>
+
+    <!-- ══ FLIGHT FARE MODAL ══ -->
+    <div class="fl-fare-modal-overlay" id="flFareModalOverlay" onclick="closeFareModal(event)">
+        <div class="fl-fare-modal" id="flFareModal">
+
+            <!-- Close -->
+            <button class="fl-fare-modal-close" onclick="closeFareModalBtn()" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Header: route + flight legs -->
+            <div class="fl-fare-modal-header">
+                <div class="fl-fare-modal-route">
+                    <span id="flFareOriginName"></span>
+                    <i class="fas fa-right-left"></i>
+                    <span id="flFareDestName"></span>
+                </div>
+                <div class="fl-fare-legs" id="flFareLegs"></div>
+            </div>
+
+            <!-- Fare tier cards -->
+            <div class="fl-fare-body">
+                <div class="fl-fare-tiers" id="flFareTiers"></div>
+
+                <!-- Hotel cross-sell -->
+                <div class="fl-fare-crosssell">
+                    <i class="fas fa-hotel"></i>
+                    <span>Get up to <span class="highlight">25% off</span> stays by booking a flight, plus free cancellation for your stay if your flight is rescheduled &nbsp;<i class="fas fa-circle-info" style="font-size:12px;color:#b45309;"></i></span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="fl-fare-modal-footer">
+                <div class="fl-fare-footer-price-block">
+                    <span class="fl-fare-footer-original" id="flFareFooterOriginal"></span>
+                    <div style="display:flex;align-items:baseline;gap:8px;">
+                        <span class="fl-fare-footer-price" id="flFareFooterPrice"></span>
+                        <span class="fl-fare-footer-trip" id="flFareFooterTrip"></span>
+                    </div>
+                </div>
+                <button class="fl-fare-continue-btn" onclick="fareModalContinue()">Continue</button>
+            </div>
+
+        </div>
+    </div>
 
     <!-- ══ SCRIPTS ══ -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
