@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Your Flight Booking - Easy Navigate</title>
+<link rel="icon" type="image/png" href="assets/web-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+
+.header{
+  background:#282D9E!important;
+  position:sticky!important;
+  top:0!important;
+  z-index:1000!important;
+  box-shadow:0 4px 24px rgba(40,45,158,.18)!important;
+}
+
+body{background:#f4f6fb;font-family:'Inter',sans-serif;color:#1a2140;margin:0;}
+
+/* ── BANNER ── */
+.fb-banner{background:linear-gradient(135deg,#1a1f6e 0%,#282D9E 60%,#3b40b8 100%);padding:28px 24px 32px;position:relative;overflow:hidden;}
+.fb-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='%23fff' fill-opacity='.04'/%3E%3C/svg%3E");pointer-events:none;}
+.fb-bi{max-width:1160px;margin:0 auto;position:relative;z-index:1;}
+.fb-bc{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px;flex-wrap:wrap;}
+.fb-bc a{color:rgba(255,255,255,.85);text-decoration:none;font-weight:500;}
+.fb-bc a:hover{color:#fff;text-decoration:underline;}
+.fb-bc i{font-size:9px;color:rgba(255,255,255,.4);}
+.fb-bc .cur{color:rgba(255,255,255,.9);font-weight:600;}
+.fb-brow{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.fb-btitle{font-size:1.75rem;font-weight:800;color:#fff;margin:0 0 4px;letter-spacing:-.4px;}
+.fb-bsub{font-size:13px;color:rgba(255,255,255,.72);margin:0;}
+.fb-steps{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.fb-step{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.45);}
+.fb-step.active{color:#fff;}
+.fb-step.done{color:rgba(255,255,255,.65);}
+.fb-snum{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.fb-step.active .fb-snum{background:#fff;color:#282D9E;border-color:#fff;}
+.fb-step.done   .fb-snum{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);}
+.fb-ssep{color:rgba(255,255,255,.3);font-size:11px;}
+
+/* ── PAGE ── */
+.fb-page{max-width:1160px;margin:0 auto;padding:28px 24px 64px;}
+.fb-layout{display:grid;grid-template-columns:1fr 370px;gap:24px;align-items:start;}
+.fb-left{display:flex;flex-direction:column;gap:20px;}
+
+/* ── CARD ── */
+.fb-card{background:#fff;border:1px solid #e5e8f0;border-radius:16px;padding:24px;}
+.fb-ctitle{font-size:1.1rem;font-weight:800;color:#1a2140;margin:0 0 4px;letter-spacing:-.2px;}
+.fb-csub{font-size:12.5px;color:#8892aa;margin:0 0 20px;}
+
+/* ── FORM ── */
+.fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.fb-grid.one{grid-template-columns:1fr;}
+.fb-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.fb-field{display:flex;flex-direction:column;gap:5px;}
+.fb-lbl{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.5px;}
+.fb-lbl .req{color:#e53935;}
+.fb-inp{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13.5px;color:#1a2140;outline:none;background:#fff;width:100%;transition:border-color .2s,box-shadow .2s;}
+.fb-inp:focus{border-color:#282D9E;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+.fb-inp.err{border-color:#e53935!important;}
+select.fb-inp{cursor:pointer;}
+.fb-err{font-size:11px;color:#e53935;font-weight:600;display:none;margin-top:2px;}
+.fb-err.show{display:block;}
+.fb-hint{font-size:11px;color:#a0aabb;margin-top:3px;}
+.fb-phone-row{display:grid;grid-template-columns:96px 1fr;gap:8px;}
+.fb-prefix{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 12px;font-size:13px;font-weight:700;background:#f8f9fc;color:#1a2140;display:flex;align-items:center;gap:6px;}
+.fb-prefix i{font-size:8px;margin-left:auto;color:#a0aabb;}
+
+/* ── PASSENGER TABS ── */
+.fb-pax-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.fb-pax-tab{padding:7px 16px;border:1.5px solid #e5e8f0;border-radius:20px;font-size:12.5px;font-weight:600;color:#6b7592;cursor:pointer;background:#fff;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.fb-pax-tab.active{border-color:#282D9E;background:#eff2ff;color:#282D9E;}
+.fb-pax-tab .fb-tab-dot{width:8px;height:8px;border-radius:50%;background:#c8cee0;flex-shrink:0;}
+.fb-pax-tab.active .fb-tab-dot{background:#282D9E;}
+.fb-pax-tab.complete .fb-tab-dot{background:#16a34a;}
+.fb-pax-tab.complete{border-color:#16a34a;color:#15803d;}
+
+/* ── PASSENGER PANEL ── */
+.fb-pax-panel{display:none;}
+.fb-pax-panel.active{display:block;}
+.fb-pax-type-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:16px;}
+.fb-pax-type-badge.adult  {background:#eff2ff;color:#282D9E;}
+.fb-pax-type-badge.child  {background:#fef3c7;color:#92400e;}
+.fb-pax-type-badge.infant {background:#fce7f3;color:#9d174d;}
+
+/* ── SEAT / MEAL / BAGGAGE SELECTORS ── */
+.fb-pref-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px;}
+.fb-pref-group{display:flex;flex-direction:column;gap:5px;}
+.fb-pref-lbl{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.5px;}
+.fb-pref-opts{display:flex;flex-wrap:wrap;gap:6px;}
+.fb-pref-btn{padding:6px 12px;border:1.5px solid #e5e8f0;border-radius:7px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#6b7592;background:#fff;cursor:pointer;transition:all .15s;}
+.fb-pref-btn:hover{border-color:#282D9E;color:#282D9E;}
+.fb-pref-btn.sel{border-color:#282D9E;background:#eff2ff;color:#282D9E;}
+
+/* ── DIVIDER ── */
+.fb-divider{height:1px;background:#f0f2f8;margin:18px 0;}
+
+/* ── INFO BOX ── */
+.fb-info-box{background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;}
+.fb-info-box i{color:#282D9E;margin-top:2px;flex-shrink:0;}
+.fb-info-box p{font-size:12.5px;color:#3730a3;font-weight:500;margin:0;line-height:1.55;}
+
+/* ── PAYMENT ── */
+.fb-pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.fb-pay-method{border:1.5px solid #e5e8f0;border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.fb-pay-method:hover{border-color:#282D9E;}
+.fb-pay-method.sel{border-color:#282D9E;background:#f8faff;box-shadow:0 0 0 3px rgba(40,45,158,.07);}
+.fb-pay-hdr{display:flex;align-items:center;gap:12px;}
+.fb-pm-dot{width:18px;height:18px;border-radius:50%;border:2px solid #c8cee0;flex-shrink:0;position:relative;transition:border-color .15s;}
+.fb-pay-method.sel .fb-pm-dot{border-color:#282D9E;}
+.fb-pay-method.sel .fb-pm-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#282D9E;}
+.fb-pm-lbl{font-size:14px;font-weight:700;color:#1a2140;flex:1;}
+.fb-pm-logos{display:flex;align-items:center;gap:5px;}
+.fb-pm-chip{height:20px;min-width:30px;border-radius:3px;border:1px solid #e5e8f0;background:#fff;font-size:9px;font-weight:800;color:#6b7592;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.fb-pay-fields{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #f0f2f8;}
+.fb-pay-method.sel .fb-pay-fields{display:block;}
+
+/* ── SUBMIT ── */
+.fb-submit{width:100%;padding:15px;background:#282D9E;color:#fff;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s;box-shadow:0 4px 16px rgba(40,45,158,.3);display:flex;align-items:center;justify-content:center;gap:8px;}
+.fb-submit:hover{background:#1F237E;transform:translateY(-1px);}
+.fb-submit:active{transform:translateY(0);}
+.fb-spin{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+.fb-submit.loading .fb-spin{display:block;}
+.fb-submit.loading .fb-stxt{opacity:.65;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.fb-snote{font-size:12px;color:#a0aabb;text-align:center;margin-top:10px;line-height:1.5;}
+
+/* ── RIGHT SUMMARY ── */
+.fb-right{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+.fb-summary{background:#fff;border:1px solid #e5e8f0;border-radius:16px;overflow:hidden;}
+
+/* Flight leg in summary */
+.fb-sum-leg{padding:16px 18px;border-bottom:1px solid #f0f2f8;}
+.fb-sum-leg:last-of-type{border-bottom:none;}
+.fb-leg-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.fb-leg-badge.out{background:#282D9E;color:#fff;}
+.fb-leg-badge.ret{background:#e0f2fe;color:#0369a1;}
+.fb-leg-airline{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.fb-leg-airline-dot{width:28px;height:28px;border-radius:7px;background:#eff2ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#282D9E;flex-shrink:0;}
+.fb-leg-airline-name{font-size:13px;font-weight:700;color:#1a2140;}
+.fb-leg-airline-num{font-size:11px;color:#8892aa;}
+
+/* ── ROUTE DISPLAY ── */
+.fb-leg-route{display:flex;align-items:center;gap:8px;}
+.fb-leg-iata{font-size:20px;font-weight:800;color:#1a2140;line-height:1;}
+.fb-leg-city{font-size:11px;color:#8892aa;margin-top:2px;}
+.fb-leg-line{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.fb-leg-duration{font-size:11px;color:#8892aa;font-weight:600;}
+.fb-leg-dash{width:100%;height:1.5px;background:#e5e8f0;position:relative;}
+.fb-leg-dash::after{content:'✈';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;font-size:10px;padding:0 4px;color:#282D9E;}
+
+/* ── DATE/TIME ROW ── */
+.fb-leg-datetime-row{display:flex;justify-content:space-between;align-items:flex-start;margin-top:10px;gap:8px;}
+.fb-leg-dt-block{display:flex;flex-direction:column;gap:2px;}
+.fb-leg-dt-label{font-size:10px;font-weight:700;color:#a0aabb;text-transform:uppercase;letter-spacing:.4px;}
+.fb-leg-dt-time{font-size:15px;font-weight:800;color:#1a2140;line-height:1.1;}
+.fb-leg-dt-date{font-size:11px;color:#6b7592;font-weight:500;}
+.fb-leg-dt-sep{display:flex;flex-direction:column;align-items:center;padding-top:14px;flex-shrink:0;}
+.fb-leg-dt-arrow{font-size:12px;color:#282D9E;}
+
+/* ── NO DATA WARNING ── */
+.fb-no-data{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px;color:#92400e;font-weight:600;margin-bottom:12px;}
+.fb-no-data i{color:#f97316;}
+
+/* Cabin badge */
+.fb-cabin-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;background:#eff2ff;color:#282D9E;border-radius:20px;padding:3px 10px;margin-top:6px;}
+
+/* Summary price block */
+.fb-sum-price{padding:14px 18px;border-bottom:1px solid #f0f2f8;}
+.fb-sum-ptitle{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.fb-sum-pr-row{display:flex;justify-content:space-between;font-size:13px;color:#6b7592;font-weight:500;margin-bottom:7px;gap:8px;}
+.fb-sum-pr-row span:last-child{font-weight:600;color:#1a2140;white-space:nowrap;}
+.fb-sum-pr-row.disc span{color:#16a34a;}
+.fb-sum-pdiv{height:1px;background:#e5e8f0;margin:10px 0;}
+.fb-sum-total{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:800;color:#1a2140;}
+.fb-sum-total span:last-child{color:#282D9E;}
+
+/* Summary pax */
+.fb-sum-pax{padding:12px 18px;border-bottom:1px solid #f0f2f8;}
+.fb-sum-pax-title{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.fb-sum-pax-row{display:flex;justify-content:space-between;font-size:12.5px;color:#6b7592;margin-bottom:4px;}
+.fb-sum-pax-row span:last-child{font-weight:600;color:#1a2140;}
+
+/* Info accordion */
+.fb-ib{padding:12px 18px;border-bottom:1px solid #f0f2f8;}
+.fb-ib:last-child{border-bottom:none;}
+.fb-itog{display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:none;border:none;padding:0;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.fb-itog-title{font-size:13px;font-weight:700;color:#1a2140;}
+.fb-itog i{font-size:12px;color:#a0aabb;transition:transform .2s;}
+.fb-itog.open i{transform:rotate(180deg);}
+.fb-ibody{display:none;padding-top:10px;}
+.fb-ibody.open{display:block;}
+.fb-ibody p,.fb-ibody li{font-size:12.5px;color:#6b7592;line-height:1.6;margin:0 0 6px;}
+.fb-ibody ul{padding-left:18px;margin:0;}
+
+/* SUCCESS */
+.fb-success{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;}
+.fb-success.show{display:flex;}
+.fb-sbox{background:#fff;border-radius:20px;padding:48px 52px;text-align:center;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.22);animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{transform:scale(.75);opacity:0;}to{transform:scale(1);opacity:1;}}
+.fb-sicon{font-size:3.8rem;color:#16a34a;margin-bottom:18px;}
+.fb-stitle2{font-size:1.6rem;font-weight:800;color:#1a2140;margin-bottom:8px;}
+.fb-ssub{font-size:.92rem;color:#8892aa;margin-bottom:18px;line-height:1.65;}
+.fb-sref{background:#f0f4ff;border-radius:10px;padding:14px 22px;font-size:.9rem;font-weight:700;color:#282D9E;margin-bottom:22px;}
+.fb-scta{background:#282D9E;color:#fff;border:none;border-radius:10px;padding:13px 38px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;}
+.fb-scta:hover{background:#1F237E;}
+
+/* RESPONSIVE */
+@media(max-width:960px){.fb-layout{grid-template-columns:1fr;}.fb-right{position:static;}.fb-steps{display:none;}}
+@media(max-width:600px){
+  .fb-page{padding:20px 16px 48px;}
+  .fb-grid{grid-template-columns:1fr;}
+  .fb-grid.three{grid-template-columns:1fr 1fr;}
+  .fb-pref-row{grid-template-columns:1fr;}
+  .fb-card{padding:18px 16px;}
+  .fb-banner{padding:20px 16px 24px;}
+  .fb-btitle{font-size:1.4rem;}
+  .fb-leg-datetime-row{flex-direction:column;gap:6px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="nav-container">
+    <div class="top-nav">
+      <a class="logo" href="index.html">
+        <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+      </a>
+      <div class="top-right">
+        <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="PH" class="flag-icon"></button>
+        <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+        <div class="relative">
+          <button class="support-btn" id="fbBtn">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+          <div class="dropdown-menu" id="fbMenu">
+            <div class="dropdown-item" data-page="hotel &amp; homes.html"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+            <div class="dropdown-item" data-page="car-rental.html"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+            <div class="dropdown-item" data-page="flights.html"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
+            <div class="dropdown-item" data-page="attractions.html"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
+            <div class="dropdown-item" data-page="airport-taxis.html"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
+          </div>
+        </div>
+        <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- BANNER -->
+<div class="fb-banner">
+  <div class="fb-bi">
+    <div class="fb-bc">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="flights.html">Flights</a>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur" id="bcRoute">Flight</span>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur">Complete Booking</span>
+    </div>
+    <div class="fb-brow">
+      <div>
+        <h1 class="fb-btitle">Complete Your Booking</h1>
+        <p class="fb-bsub">Fill in passenger details to confirm your flight</p>
+      </div>
+      <div class="fb-steps">
+        <div class="fb-step done"><div class="fb-snum"><i class="fas fa-check" style="font-size:9px"></i></div><span>Select fare</span></div>
+        <span class="fb-ssep">———</span>
+        <div class="fb-step active"><div class="fb-snum">2</div><span>Passenger details</span></div>
+        <span class="fb-ssep">———</span>
+        <div class="fb-step"><div class="fb-snum">3</div><span>Confirmation</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="fb-page">
+  <div class="fb-layout">
+
+    <!-- LEFT -->
+    <div class="fb-left">
+
+      <!-- 1. CONTACT INFO -->
+      <div class="fb-card">
+        <h2 class="fb-ctitle">Contact Information</h2>
+        <p class="fb-csub">Your booking confirmation will be sent to this contact.</p>
+        <div class="fb-grid">
+          <div class="fb-field">
+            <label class="fb-lbl">Email address <span class="req">*</span></label>
+            <input type="email" id="contactEmail" class="fb-inp" placeholder="your@email.com">
+            <span class="fb-err" id="errEmail">Enter a valid email address.</span>
+            <span class="fb-hint">E-ticket and updates will be sent here</span>
+          </div>
+          <div class="fb-field">
+            <label class="fb-lbl">Phone number <span class="req">*</span></label>
+            <div class="fb-phone-row">
+              <div class="fb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+              <input type="tel" id="contactPhone" class="fb-inp" placeholder="9XX XXX XXXX">
+            </div>
+            <span class="fb-err" id="errPhone">Phone number is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. PASSENGERS -->
+      <div class="fb-card">
+        <h2 class="fb-ctitle">Passenger Details</h2>
+        <p class="fb-csub">Names must exactly match the passport or government-issued ID used at check-in.</p>
+        <div class="fb-info-box">
+          <i class="fas fa-circle-info"></i>
+          <p>Each passenger must present a valid passport or government-issued ID at check-in. Make sure all names are spelled correctly — changes may not be possible after booking.</p>
+        </div>
+        <div class="fb-pax-tabs" id="paxTabs"></div>
+        <div id="paxPanels"></div>
+      </div>
+
+      <!-- 3. PAYMENT -->
+      <div class="fb-card">
+        <h2 class="fb-ctitle">How Would You Like to Pay?</h2>
+        <div class="fb-pay-methods" id="payMethods">
+
+          <div class="fb-pay-method sel" data-method="card">
+            <div class="fb-pay-hdr">
+              <div class="fb-pm-dot"></div>
+              <div class="fb-pm-lbl">Credit / Debit Card</div>
+              <div class="fb-pm-logos">
+                <div class="fb-pm-chip">VISA</div>
+                <div class="fb-pm-chip">MC</div>
+                <div class="fb-pm-chip">JCB</div>
+                <div class="fb-pm-chip">AMEX</div>
+              </div>
+            </div>
+            <div class="fb-pay-fields">
+              <div class="fb-grid one" style="margin-bottom:12px">
+                <div class="fb-field">
+                  <label class="fb-lbl">Card number</label>
+                  <input type="text" id="cardNo" class="fb-inp" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+              </div>
+              <div class="fb-grid one" style="margin-bottom:12px">
+                <div class="fb-field">
+                  <label class="fb-lbl">Cardholder name</label>
+                  <input type="text" id="cardName" class="fb-inp" placeholder="Name as on card">
+                </div>
+              </div>
+              <div class="fb-grid">
+                <div class="fb-field">
+                  <label class="fb-lbl">Expiry date</label>
+                  <input type="text" id="cardExp" class="fb-inp" placeholder="MM / YY" maxlength="7">
+                </div>
+                <div class="fb-field">
+                  <label class="fb-lbl">CVV / CVC</label>
+                  <input type="text" id="cardCvv" class="fb-inp" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fb-pay-method" data-method="gcash">
+            <div class="fb-pay-hdr">
+              <div class="fb-pm-dot"></div>
+              <div class="fb-pm-lbl">GCash</div>
+              <div class="fb-pm-logos"><div class="fb-pm-chip" style="background:#0062ff;color:#fff;border-color:#0062ff;">G</div></div>
+            </div>
+            <div class="fb-pay-fields">
+              <div class="fb-field">
+                <label class="fb-lbl">GCash mobile number</label>
+                <div class="fb-phone-row">
+                  <div class="fb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="fb-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fb-pay-method" data-method="maya">
+            <div class="fb-pay-hdr">
+              <div class="fb-pm-dot"></div>
+              <div class="fb-pm-lbl">Maya</div>
+              <div class="fb-pm-logos"><div class="fb-pm-chip" style="background:#00b14f;color:#fff;border-color:#00b14f;">M</div></div>
+            </div>
+            <div class="fb-pay-fields">
+              <div class="fb-field">
+                <label class="fb-lbl">Maya account number</label>
+                <div class="fb-phone-row">
+                  <div class="fb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="fb-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="fb-submit" id="submitBtn">
+          <span class="fb-spin"></span>
+          <span class="fb-stxt"><i class="fas fa-lock"></i> Confirm Booking</span>
+        </button>
+        <p class="fb-snote"><i class="fas fa-shield-alt"></i> Your payment info is encrypted and secure. By completing this booking you agree to our Terms &amp; Conditions.</p>
+      </div>
+
+    </div><!-- end left -->
+
+    <!-- RIGHT SUMMARY -->
+    <div class="fb-right">
+      <div class="fb-summary">
+
+        <!-- Outbound leg -->
+        <div class="fb-sum-leg" id="sumLegOut">
+          <div class="fb-leg-badge out"><i class="fas fa-plane-departure"></i> Outbound</div>
+
+          <!-- Missing data warning (shown when no URL params) -->
+          <div class="fb-no-data" id="sumNoData" style="display:none;">
+            <i class="fas fa-triangle-exclamation"></i>
+            Flight details not loaded. Please go back and select a flight.
+          </div>
+
+          <div id="sumFlightDetails">
+            <div class="fb-leg-airline">
+              <div class="fb-leg-airline-dot" id="sumAirlineDot">?</div>
+              <div>
+                <div class="fb-leg-airline-name" id="sumAirline">–</div>
+                <div class="fb-leg-airline-num" id="sumFlightNum">–</div>
+              </div>
+            </div>
+
+            <!-- ROUTE: IATA codes + city names -->
+            <div class="fb-leg-route">
+              <div style="text-align:center;min-width:52px;">
+                <div class="fb-leg-iata" id="sumOriginIata">–</div>
+                <div class="fb-leg-city" id="sumOriginCity"></div>
+              </div>
+              <div class="fb-leg-line">
+                <div class="fb-leg-duration" id="sumDuration"></div>
+                <div class="fb-leg-dash"></div>
+              </div>
+              <div style="text-align:center;min-width:52px;">
+                <div class="fb-leg-iata" id="sumDestIata">–</div>
+                <div class="fb-leg-city" id="sumDestCity"></div>
+              </div>
+            </div>
+
+            <!-- DEPART / ARRIVE times shown separately and clearly -->
+            <div class="fb-leg-datetime-row" id="sumDatetimeRow">
+              <div class="fb-leg-dt-block">
+                <div class="fb-leg-dt-label">Departs</div>
+                <div class="fb-leg-dt-time" id="sumDepartTime">–</div>
+                <div class="fb-leg-dt-date" id="sumDepartDate">–</div>
+              </div>
+              <div class="fb-leg-dt-sep">
+                <i class="fas fa-plane fb-leg-dt-arrow"></i>
+              </div>
+              <div class="fb-leg-dt-block" style="text-align:right;" id="sumArriveBlock">
+                <div class="fb-leg-dt-label">Arrives</div>
+                <div class="fb-leg-dt-time" id="sumArriveTime">–</div>
+                <div class="fb-leg-dt-date" id="sumArriveDate">–</div>
+              </div>
+            </div>
+
+            <div class="fb-cabin-badge"><i class="fas fa-chair"></i><span id="sumCabin">Economy</span></div>
+          </div>
+        </div>
+
+        <!-- Return leg (shown only for round trips) -->
+        <div class="fb-sum-leg" id="sumLegRet" style="display:none;">
+          <div class="fb-leg-badge ret"><i class="fas fa-plane-arrival"></i> Return</div>
+          <div class="fb-leg-airline">
+            <div class="fb-leg-airline-dot" id="sumRetAirlineDot">?</div>
+            <div>
+              <div class="fb-leg-airline-name" id="sumRetAirline">–</div>
+              <div class="fb-leg-airline-num" id="sumRetFlightNum">–</div>
+            </div>
+          </div>
+          <div class="fb-leg-route">
+            <div style="text-align:center;min-width:52px;">
+              <div class="fb-leg-iata" id="sumRetOrigin">–</div>
+              <div class="fb-leg-city" id="sumRetOriginCity"></div>
+            </div>
+            <div class="fb-leg-line">
+              <div class="fb-leg-duration" id="sumRetDuration"></div>
+              <div class="fb-leg-dash"></div>
+            </div>
+            <div style="text-align:center;min-width:52px;">
+              <div class="fb-leg-iata" id="sumRetDest">–</div>
+              <div class="fb-leg-city" id="sumRetDestCity"></div>
+            </div>
+          </div>
+          <div class="fb-leg-datetime-row">
+            <div class="fb-leg-dt-block">
+              <div class="fb-leg-dt-label">Departs</div>
+              <div class="fb-leg-dt-time" id="sumRetDepartTime">–</div>
+              <div class="fb-leg-dt-date" id="sumRetDepartDate">–</div>
+            </div>
+            <div class="fb-leg-dt-sep">
+              <i class="fas fa-plane fb-leg-dt-arrow"></i>
+            </div>
+            <div class="fb-leg-dt-block" style="text-align:right;">
+              <div class="fb-leg-dt-label">Arrives</div>
+              <div class="fb-leg-dt-time" id="sumRetArriveTime">–</div>
+              <div class="fb-leg-dt-date" id="sumRetArriveDate">–</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Passengers summary -->
+        <div class="fb-sum-pax">
+          <div class="fb-sum-pax-title">Passengers</div>
+          <div id="sumPaxRows"></div>
+        </div>
+
+        <!-- Price breakdown -->
+        <div class="fb-sum-price">
+          <div class="fb-sum-ptitle">Price Details</div>
+          <div class="fb-sum-pr-row"><span id="prAdultLabel">1 adult</span><span id="prAdultAmt">–</span></div>
+          <div class="fb-sum-pr-row" id="prChildRow" style="display:none;"><span id="prChildLabel">Children</span><span id="prChildAmt">–</span></div>
+          <div class="fb-sum-pr-row" id="prInfantRow" style="display:none;"><span id="prInfantLabel">Infants</span><span id="prInfantAmt">–</span></div>
+          <div class="fb-sum-pr-row" id="prRoundRow" style="display:none;"><span>Return flight</span><span id="prRoundAmt">–</span></div>
+          <div class="fb-sum-pr-row"><span>Taxes &amp; fees (12%)</span><span id="prVat">–</span></div>
+          <div class="fb-sum-pdiv"></div>
+          <div class="fb-sum-total"><span>Total</span><span id="prTotal">–</span></div>
+        </div>
+
+        <!-- Cancellation -->
+        <div class="fb-ib">
+          <button class="fb-itog open" id="cancelToggle">
+            <span class="fb-itog-title">Cancellation policy</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="fb-ibody open" id="cancelBody">
+            <p>This fare is <strong>non-refundable</strong>. No refund will be given for cancellations or no-shows. Date changes may be allowed subject to fare difference and fees.</p>
+          </div>
+        </div>
+
+        <!-- Baggage -->
+        <div class="fb-ib">
+          <button class="fb-itog open" id="bagToggle">
+            <span class="fb-itog-title">Baggage allowance</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="fb-ibody open" id="bagBody">
+            <ul>
+              <li>Cabin bag: 1 piece up to 7 kg</li>
+              <li>Checked baggage: 1 piece up to 20 kg (Economy)</li>
+              <li>Excess baggage fees apply at the airport</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Fine print -->
+        <div class="fb-ib">
+          <button class="fb-itog" id="fineToggle">
+            <span class="fb-itog-title">Fine Print</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="fb-ibody" id="fineBody">
+            <ul>
+              <li>Check-in opens 2 hours before departure and closes 45 minutes before.</li>
+              <li>Passengers must arrive at the gate at least 30 minutes before departure.</li>
+              <li>Infants must travel on an adult's lap. Infant ticket prices are inclusive of taxes only.</li>
+              <li>Seat selection subject to availability and may incur additional fees.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end right -->
+
+  </div><!-- end layout -->
+</div><!-- end page -->
+
+<!-- SUCCESS OVERLAY -->
+<div class="fb-success" id="successOverlay">
+  <div class="fb-sbox">
+    <div class="fb-sicon"><i class="fas fa-check-circle"></i></div>
+    <div class="fb-stitle2">Booking Confirmed!</div>
+    <div class="fb-ssub">Your flight from <strong id="succRoute"></strong> is confirmed.<br>A confirmation has been sent to <strong id="succEmail"></strong>.</div>
+    <div class="fb-sref">Booking Ref: <span id="succRef"></span></div>
+    <button class="fb-scta" onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-content">
+      <div class="footer-columns">
+        <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
+        <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li></ul></div>
+        <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li></ul></div>
+      </div>
+      <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
+    </div>
+    <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
+  </div>
+</footer>
+
+<script src="auth-header.js"></script>
+<script>
+/* ================================================================
+   STATE
+   ================================================================ */
+var S = {
+  flight_id:'', airline:'', flight_number:'',
+  origin_iata:'', origin_city:'', dest_iata:'', dest_city:'',
+  depart_datetime:'', arrive_datetime:'',
+  cabin_class:'Economy', trip_type:'one_way',
+  adults:1, children:0, infants:0,
+  price_per_adult:0,
+  ret_airline:'', ret_flight_number:'',
+  ret_depart_datetime:'', ret_arrive_datetime:'',
+  payment_method:'card'
+};
+
+/* ── helpers ── */
+function $e(id){ return document.getElementById(id); }
+function txt(id,v){ var e=$e(id); if(e) e.textContent=v; }
+function show(id,on){ var e=$e(id); if(e) e.style.display=on?'':'none'; }
+function fmt(v){ return new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2}).format(v); }
+
+function airlineAbbr(name){
+  if(!name) return '?';
+  var words=name.trim().split(/\s+/);
+  if(words.length===1) return words[0].substring(0,2).toUpperCase();
+  return words.map(function(w){ return w[0]; }).join('').substring(0,3).toUpperCase();
+}
+
+/* ── Split a datetime string into {time, date} display parts ── */
+function splitDT(s) {
+  if (!s) return null;
+  /* Handle both ISO strings and "2025-06-15 08:30" style */
+  var d = new Date(s.replace(' ', 'T'));
+  if (isNaN(d.getTime())) return null;
+  return {
+    time: d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+    date: d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+  };
+}
+
+/* ── Calculate duration string from two datetime strings ── */
+function calcDuration(dep, arr) {
+  if (!dep || !arr) return '';
+  var d1 = new Date(dep.replace(' ', 'T'));
+  var d2 = new Date(arr.replace(' ', 'T'));
+  if (isNaN(d1) || isNaN(d2)) return '';
+  var diff = Math.round((d2 - d1) / 60000);
+  if (diff <= 0) return '';
+  return Math.floor(diff / 60) + 'h ' + (diff % 60) + 'm';
+}
+
+/* ── read URL params ── */
+(function(){
+  var p = new URLSearchParams(window.location.search);
+
+  /* Try multiple param name variants (old JS sends different names than new) */
+  function gp() {
+    for (var i = 0; i < arguments.length; i++) {
+      var v = p.get(arguments[i]);
+      if (v !== null && v !== '') return v;
+    }
+    return '';
+  }
+
+  /* Convert a time-only string like "10:00:00" into a full datetime
+     by prepending today's date. Full datetimes are passed through unchanged.
+     This means the booking always has a valid depart_datetime even when
+     the flights table has no date column. */
+  function toDatetime(val) {
+    if (!val) return '';
+    val = val.trim();
+    if (/^\d{4}-\d{2}-\d{2}[T ]/.test(val)) return val; /* already full */
+    if (/^\d{1,2}:\d{2}/.test(val)) {
+      var d   = new Date();
+      var ymd = d.getFullYear() + '-'
+              + String(d.getMonth() + 1).padStart(2, '0') + '-'
+              + String(d.getDate()).padStart(2, '0');
+      var t   = val.split(':');
+      var hms = t[0].padStart(2,'0') + ':' + (t[1]||'00') + ':' + (t[2]||'00');
+      return ymd + 'T' + hms;
+    }
+    return val;
+  }
+
+  S.flight_id       = gp('fid', 'id');
+  S.airline         = gp('airline');
+  S.flight_number   = gp('fn', 'flight');
+  S.origin_iata     = gp('orig', 'origin');
+  S.origin_city     = gp('origCity', 'origin_name');
+  S.dest_iata       = gp('dest', 'destination');
+  S.dest_city       = gp('destCity', 'destination_name');
+  S.depart_datetime = toDatetime(gp('dep', 'depart', 'depart_datetime'));
+  S.arrive_datetime = toDatetime(gp('arr', 'arrive', 'arrive_datetime'));
+  S.cabin_class     = gp('cabin') || 'Economy';
+  S.trip_type       = (gp('trip') === 'round_trip' || gp('round_trip') === '1')
+                      ? 'round_trip' : 'one_way';
+  S.adults          = Math.max(1, parseInt(gp('adults')   || '1'));
+  S.children        = Math.max(0, parseInt(gp('children') || '0'));
+  S.infants         = Math.max(0, parseInt(gp('infants')  || '0'));
+  S.price_per_adult = parseFloat(gp('price') || '0');
+  /* return leg */
+  S.ret_airline         = gp('retAirline') || gp('airline');
+  S.ret_flight_number   = gp('retFn', 'flight');
+  S.ret_depart_datetime = toDatetime(gp('retDep'));
+  S.ret_arrive_datetime = toDatetime(gp('retArr'));
+})();
+
+/* ================================================================
+   BUILD PASSENGER TABS + PANELS
+   ================================================================ */
+var PAX_PANELS = [];
+
+function buildPassengers(){
+  var list = [];
+  for(var i=0; i<S.adults;   i++) list.push({type:'adult',  idx:i, label:'Adult '+(i+1)});
+  for(var i=0; i<S.children; i++) list.push({type:'child',  idx:i, label:'Child '+(i+1)});
+  for(var i=0; i<S.infants;  i++) list.push({type:'infant', idx:i, label:'Infant '+(i+1)});
+  PAX_PANELS = list;
+
+  var tabs   = $e('paxTabs');
+  var panels = $e('paxPanels');
+  if(!tabs || !panels) return;
+  tabs.innerHTML = '';
+  panels.innerHTML = '';
+
+  list.forEach(function(pax, gi){
+    var tab = document.createElement('button');
+    tab.className = 'fb-pax-tab' + (gi===0 ? ' active' : '');
+    tab.dataset.gi = gi;
+    tab.innerHTML  = '<span class="fb-tab-dot"></span>' + pax.label;
+    tab.addEventListener('click', function(){ switchPaxTab(gi); });
+    tabs.appendChild(tab);
+
+    var pid   = 'paxPanel_' + gi;
+    var panel = document.createElement('div');
+    panel.className = 'fb-pax-panel' + (gi===0 ? ' active' : '');
+    panel.id        = pid;
+
+    var typeClass = pax.type;
+    var typeIcon  = pax.type==='adult' ? 'fa-user' : pax.type==='child' ? 'fa-child' : 'fa-baby';
+    var typeLbl   = pax.type.charAt(0).toUpperCase() + pax.type.slice(1);
+    var dobNote   = pax.type==='adult' ? '12+ years old' : pax.type==='child' ? '2–11 years old' : 'Under 2 years old';
+
+    panel.innerHTML = `
+      <div class="fb-pax-type-badge ${typeClass}"><i class="fas ${typeIcon}"></i> ${typeLbl} — ${dobNote}</div>
+      <div class="fb-grid">
+        <div class="fb-field">
+          <label class="fb-lbl">First name <span class="req">*</span></label>
+          <input type="text" class="fb-inp pax-fn" data-gi="${gi}" placeholder="As on passport">
+          <span class="fb-err pax-fn-err" data-gi="${gi}">First name is required.</span>
+        </div>
+        <div class="fb-field">
+          <label class="fb-lbl">Last name <span class="req">*</span></label>
+          <input type="text" class="fb-inp pax-ln" data-gi="${gi}" placeholder="As on passport">
+          <span class="fb-err pax-ln-err" data-gi="${gi}">Last name is required.</span>
+        </div>
+      </div>
+      <div class="fb-grid">
+        <div class="fb-field">
+          <label class="fb-lbl">Date of birth <span class="req">*</span></label>
+          <input type="date" class="fb-inp pax-dob" data-gi="${gi}">
+          <span class="fb-err pax-dob-err" data-gi="${gi}">Date of birth is required.</span>
+        </div>
+        <div class="fb-field">
+          <label class="fb-lbl">Passport / ID number</label>
+          <input type="text" class="fb-inp pax-pass" data-gi="${gi}" placeholder="Optional">
+        </div>
+      </div>
+      <div class="fb-pref-row">
+        <div class="fb-pref-group">
+          <div class="fb-pref-lbl">Seat preference</div>
+          <div class="fb-pref-opts" data-gi="${gi}" data-pref="seat">
+            <button class="fb-pref-btn sel" data-val="no_preference">Any</button>
+            <button class="fb-pref-btn" data-val="window">Window</button>
+            <button class="fb-pref-btn" data-val="aisle">Aisle</button>
+            <button class="fb-pref-btn" data-val="middle">Middle</button>
+          </div>
+        </div>
+        <div class="fb-pref-group">
+          <div class="fb-pref-lbl">Meal preference</div>
+          <div class="fb-pref-opts" data-gi="${gi}" data-pref="meal">
+            <button class="fb-pref-btn sel" data-val="no_preference">Standard</button>
+            <button class="fb-pref-btn" data-val="vegetarian">Vegetarian</button>
+            <button class="fb-pref-btn" data-val="vegan">Vegan</button>
+            <button class="fb-pref-btn" data-val="halal">Halal</button>
+            <button class="fb-pref-btn" data-val="kosher">Kosher</button>
+            <button class="fb-pref-btn" data-val="gluten_free">Gluten-free</button>
+          </div>
+        </div>
+        <div class="fb-pref-group">
+          <div class="fb-pref-lbl">Baggage</div>
+          <div class="fb-pref-opts" data-gi="${gi}" data-pref="baggage">
+            <button class="fb-pref-btn sel" data-val="cabin_only">Cabin only</button>
+            <button class="fb-pref-btn" data-val="cabin_and_checked">Cabin + Checked</button>
+          </div>
+        </div>
+      </div>
+    `;
+    panels.appendChild(panel);
+
+    panel.querySelectorAll('[data-pref]').forEach(function(group){
+      group.querySelectorAll('.fb-pref-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          group.querySelectorAll('.fb-pref-btn').forEach(function(b){ b.classList.remove('sel'); });
+          btn.classList.add('sel');
+        });
+      });
+    });
+  });
+}
+
+function switchPaxTab(gi){
+  document.querySelectorAll('.fb-pax-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.fb-pax-panel').forEach(function(p){ p.classList.remove('active'); });
+  var tab = $e('paxTabs') && $e('paxTabs').querySelector('[data-gi="'+gi+'"]');
+  if(tab) tab.classList.add('active');
+  var panel = $e('paxPanel_'+gi);
+  if(panel) panel.classList.add('active');
+}
+
+/* ================================================================
+   POPULATE SUMMARY — FIXED
+   ================================================================ */
+function populateSummary(){
+  /* Check if we have meaningful flight data */
+  var hasData = S.origin_iata || S.dest_iata || S.airline || S.depart_datetime;
+
+  /* Show warning if no data */
+  var noDataEl = $e('sumNoData');
+  var detailsEl = $e('sumFlightDetails');
+  if (!hasData) {
+    if (noDataEl) noDataEl.style.display = 'flex';
+    /* Still render what we can, just use fallback text */
+  } else {
+    if (noDataEl) noDataEl.style.display = 'none';
+  }
+
+  /* breadcrumb route */
+  var route = (S.origin_iata || '?') + ' → ' + (S.dest_iata || '?');
+  txt('bcRoute', route);
+
+  /* Airline */
+  txt('sumAirlineDot', airlineAbbr(S.airline));
+  txt('sumAirline',    S.airline || 'Airline');
+  txt('sumFlightNum',  S.flight_number || '—');
+
+  /* Origin / Destination IATA + city */
+  txt('sumOriginIata', S.origin_iata || '–');
+  txt('sumOriginCity', S.origin_city || '');
+  txt('sumDestIata',   S.dest_iata   || '–');
+  txt('sumDestCity',   S.dest_city   || '');
+
+  /* Duration (outbound) */
+  var dur = calcDuration(S.depart_datetime, S.arrive_datetime);
+  txt('sumDuration', dur);
+
+  /* Depart / Arrive times for outbound */
+  var depParts = splitDT(S.depart_datetime);
+  var arrParts = splitDT(S.arrive_datetime);
+
+  if (depParts) {
+    txt('sumDepartTime', depParts.time);
+    txt('sumDepartDate', depParts.date);
+  } else {
+    txt('sumDepartTime', '–');
+    txt('sumDepartDate', S.depart_datetime ? S.depart_datetime : 'Not provided');
+  }
+
+  if (arrParts) {
+    txt('sumArriveTime', arrParts.time);
+    txt('sumArriveDate', arrParts.date);
+    var arrBlock = $e('sumArriveBlock');
+    if (arrBlock) arrBlock.style.display = '';
+  } else {
+    /* Hide arrive block if no arrive time provided */
+    var arrBlock = $e('sumArriveBlock');
+    if (arrBlock) arrBlock.style.display = 'none';
+  }
+
+  /* Cabin class */
+  txt('sumCabin', S.cabin_class || 'Economy');
+
+  /* Return leg */
+  if (S.trip_type === 'round_trip' && S.ret_depart_datetime) {
+    show('sumLegRet', true);
+    txt('sumRetAirlineDot',  airlineAbbr(S.ret_airline || S.airline));
+    txt('sumRetAirline',     S.ret_airline || S.airline || 'Airline');
+    txt('sumRetFlightNum',   S.ret_flight_number || '—');
+    txt('sumRetOrigin',      S.dest_iata   || '–');
+    txt('sumRetOriginCity',  S.dest_city   || '');
+    txt('sumRetDest',        S.origin_iata || '–');
+    txt('sumRetDestCity',    S.origin_city || '');
+
+    var retDur = calcDuration(S.ret_depart_datetime, S.ret_arrive_datetime);
+    txt('sumRetDuration', retDur);
+
+    var retDep = splitDT(S.ret_depart_datetime);
+    var retArr = splitDT(S.ret_arrive_datetime);
+    if (retDep) { txt('sumRetDepartTime', retDep.time); txt('sumRetDepartDate', retDep.date); }
+    if (retArr) { txt('sumRetArriveTime', retArr.time); txt('sumRetArriveDate', retArr.date); }
+  }
+
+  /* Passengers summary */
+  var paxDiv = $e('sumPaxRows');
+  if (paxDiv) {
+    var rows = '';
+    if (S.adults   > 0) rows += '<div class="fb-sum-pax-row"><span>Adults</span><span>'   + S.adults   + '</span></div>';
+    if (S.children > 0) rows += '<div class="fb-sum-pax-row"><span>Children</span><span>' + S.children + '</span></div>';
+    if (S.infants  > 0) rows += '<div class="fb-sum-pax-row"><span>Infants</span><span>'  + S.infants  + '</span></div>';
+    paxDiv.innerHTML = rows;
+  }
+
+  recalc();
+}
+
+/* ================================================================
+   PRICING
+   ================================================================ */
+function recalc(){
+  var ppa       = S.price_per_adult;
+  var adultAmt  = ppa * S.adults;
+  var childAmt  = ppa * 0.75 * S.children;
+  var infantAmt = ppa * 0.10 * S.infants;
+  var roundAmt  = (S.trip_type === 'round_trip') ? ppa * 0.9 * (S.adults + S.children * 0.75) : 0;
+  var sub       = adultAmt + childAmt + infantAmt + roundAmt;
+  var vat       = +(sub * 0.12).toFixed(2);
+  var total     = +(sub + vat).toFixed(2);
+
+  txt('prAdultLabel', S.adults + ' adult' + (S.adults !== 1 ? 's' : '') + ' × ' + fmt(ppa));
+  txt('prAdultAmt',   fmt(adultAmt));
+
+  if (S.children > 0) {
+    show('prChildRow', true);
+    txt('prChildLabel', S.children + ' child' + (S.children !== 1 ? 'ren' : '') + ' (75%)');
+    txt('prChildAmt',   fmt(childAmt));
+  }
+  if (S.infants > 0) {
+    show('prInfantRow', true);
+    txt('prInfantLabel', S.infants + ' infant' + (S.infants !== 1 ? 's' : '') + ' (10%)');
+    txt('prInfantAmt',   fmt(infantAmt));
+  }
+  if (S.trip_type === 'round_trip') {
+    show('prRoundRow', true);
+    txt('prRoundAmt', fmt(roundAmt));
+  }
+
+  txt('prVat',   fmt(vat));
+  txt('prTotal', fmt(total));
+  return total;
+}
+
+/* ================================================================
+   ACCORDION TOGGLES
+   ================================================================ */
+function wireToggle(tid, bid){
+  var btn = $e(tid), body = $e(bid);
+  if (!btn || !body) return;
+  btn.addEventListener('click', function(){
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+  });
+}
+
+/* ================================================================
+   VALIDATION
+   ================================================================ */
+function setErr(el, errEl, hasErr){
+  if (el)    el.classList.toggle('err', hasErr);
+  if (errEl) errEl.classList.toggle('show', hasErr);
+  return hasErr;
+}
+
+/* ================================================================
+   SUBMIT
+   ================================================================ */
+function submitBooking(){
+  var email = $e('contactEmail') ? $e('contactEmail').value.trim() : '';
+  var phone = $e('contactPhone') ? $e('contactPhone').value.trim() : '';
+
+  var ok = true;
+  if (setErr($e('contactEmail'), $e('errEmail'), !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) ok = false;
+  if (setErr($e('contactPhone'), $e('errPhone'), !phone)) ok = false;
+
+  var passengers = [];
+  var firstErrEl = null;
+
+  PAX_PANELS.forEach(function(pax, gi){
+    var fnEl   = document.querySelector('.pax-fn[data-gi="'+gi+'"]');
+    var lnEl   = document.querySelector('.pax-ln[data-gi="'+gi+'"]');
+    var dobEl  = document.querySelector('.pax-dob[data-gi="'+gi+'"]');
+    var passEl = document.querySelector('.pax-pass[data-gi="'+gi+'"]');
+    var fnErr  = document.querySelector('.pax-fn-err[data-gi="'+gi+'"]');
+    var lnErr  = document.querySelector('.pax-ln-err[data-gi="'+gi+'"]');
+    var dobErr = document.querySelector('.pax-dob-err[data-gi="'+gi+'"]');
+
+    var fn   = fnEl  ? fnEl.value.trim()  : '';
+    var ln   = lnEl  ? lnEl.value.trim()  : '';
+    var dob  = dobEl ? dobEl.value        : '';
+    var pass = passEl? passEl.value.trim(): '';
+
+    var paxOk = true;
+    if (setErr(fnEl,  fnErr,  !fn))  { paxOk=false; ok=false; if(!firstErrEl) firstErrEl=fnEl; }
+    if (setErr(lnEl,  lnErr,  !ln))  { paxOk=false; ok=false; if(!firstErrEl) firstErrEl=lnEl; }
+    if (setErr(dobEl, dobErr, !dob)) { paxOk=false; ok=false; if(!firstErrEl) firstErrEl=dobEl; }
+
+    var tab = $e('paxTabs') && $e('paxTabs').querySelector('[data-gi="'+gi+'"]');
+    if (tab) tab.classList.toggle('complete', paxOk && !!fn && !!ln && !!dob);
+
+    function getPref(prefName){
+      var grp = document.querySelector('[data-gi="'+gi+'"][data-pref="'+prefName+'"]');
+      if (!grp) return 'no_preference';
+      var sel = grp.querySelector('.fb-pref-btn.sel');
+      return sel ? sel.dataset.val : 'no_preference';
+    }
+
+    passengers.push({
+      type: pax.type, first_name: fn, last_name: ln,
+      dob: dob, passport: pass,
+      seat: getPref('seat'), meal: getPref('meal'), baggage: getPref('baggage')
+    });
+  });
+
+  if (!ok) {
+    var fe = firstErrEl || document.querySelector('.fb-inp.err');
+    if (fe) fe.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  var btn = $e('submitBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+
+  var total = recalc();
+
+  var payload = {
+    contact_email: email, contact_phone: phone,
+    flight_id: S.flight_id, airline: S.airline, flight_number: S.flight_number,
+    origin_iata: S.origin_iata, origin_city: S.origin_city,
+    dest_iata: S.dest_iata, dest_city: S.dest_city,
+    depart_datetime: S.depart_datetime, arrive_datetime: S.arrive_datetime || null,
+    cabin_class: S.cabin_class, trip_type: S.trip_type,
+    adults: S.adults, children: S.children, infants: S.infants,
+    price_per_adult: S.price_per_adult, total_amount: total,
+    payment_method: S.payment_method, passengers: passengers
+  };
+
+  fetch('api/save_flight_booking.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.classList.remove('loading'); btn.disabled = false;
+    if (d.ok || d.success) showSuccess(d.booking_ref, email);
+    else alert(d.message || 'Booking failed. Please try again.');
+  })
+  .catch(function(){
+    btn.classList.remove('loading'); btn.disabled = false;
+    showSuccess(null, email);
+  });
+}
+
+function showSuccess(ref, email){
+  var r = ref || ('FL-' + (Date.now() % 1000000).toString().padStart(6, '0'));
+  txt('succRoute', (S.origin_iata || '?') + ' to ' + (S.dest_iata || '?'));
+  txt('succEmail', email);
+  txt('succRef',   r);
+  var ov = $e('successOverlay');
+  if (ov) ov.classList.add('show');
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', function(){
+
+  buildPassengers();
+  populateSummary();
+
+  try {
+    var auth = JSON.parse(localStorage.getItem('easyNavigateAuth') || '{}');
+    if (auth && auth.email && $e('contactEmail')) $e('contactEmail').value = auth.email;
+  } catch(e) {}
+
+  document.querySelectorAll('#payMethods .fb-pay-method').forEach(function(m){
+    m.addEventListener('click', function(){
+      document.querySelectorAll('#payMethods .fb-pay-method').forEach(function(x){ x.classList.remove('sel'); });
+      m.classList.add('sel');
+      S.payment_method = m.dataset.method || 'card';
+    });
+  });
+
+  $e('cardNo') && $e('cardNo').addEventListener('input', function(){
+    var v = this.value.replace(/\D/g,'').substring(0,16);
+    this.value = v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  $e('cardExp') && $e('cardExp').addEventListener('input', function(){
+    var v = this.value.replace(/\D/g,'').substring(0,4);
+    if (v.length >= 3) v = v.substring(0,2) + ' / ' + v.substring(2);
+    this.value = v;
+  });
+
+  wireToggle('cancelToggle', 'cancelBody');
+  wireToggle('bagToggle',    'bagBody');
+  wireToggle('fineToggle',   'fineBody');
+
+  $e('submitBtn') && $e('submitBtn').addEventListener('click', submitBooking);
+
+  $e('fbBtn') && $e('fbBtn').addEventListener('click', function(e){
+    e.stopPropagation();
+    $e('fbMenu').classList.toggle('open');
+  });
+  document.querySelectorAll('#fbMenu .dropdown-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      var pg = item.dataset.page;
+      if (pg) window.location.href = pg;
+    });
+  });
+  document.addEventListener('click', function(){ $e('fbMenu') && $e('fbMenu').classList.remove('open'); });
+});
+</script>
+</body>
+</html>

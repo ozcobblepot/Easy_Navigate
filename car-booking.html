@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Your Car Booking - Easy Navigate</title>
+<link rel="icon" type="image/png" href="assets/web-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+
+.header{
+  background:#282D9E!important;
+  position:sticky!important;
+  top:0!important;
+  z-index:1000!important;
+  box-shadow:0 4px 24px rgba(40,45,158,.18)!important;
+}
+
+body{background:#f4f6fb;font-family:'Inter',sans-serif;color:#1a2140;margin:0;}
+
+/* BANNER */
+.cb-banner{background:linear-gradient(135deg,#1a1f6e 0%,#282D9E 60%,#3b40b8 100%);padding:28px 24px 32px;position:relative;overflow:hidden;}
+.cb-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='%23fff' fill-opacity='.04'/%3E%3C/svg%3E");pointer-events:none;}
+.cb-bi{max-width:1160px;margin:0 auto;position:relative;z-index:1;}
+.cb-bc{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px;flex-wrap:wrap;}
+.cb-bc a{color:rgba(255,255,255,.85);text-decoration:none;font-weight:500;}
+.cb-bc a:hover{color:#fff;text-decoration:underline;}
+.cb-bc i{font-size:9px;color:rgba(255,255,255,.4);}
+.cb-bc .cur{color:rgba(255,255,255,.9);font-weight:600;}
+.cb-brow{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.cb-btitle{font-size:1.75rem;font-weight:800;color:#fff;margin:0 0 4px;letter-spacing:-.4px;}
+.cb-bsub{font-size:13px;color:rgba(255,255,255,.72);margin:0;}
+.cb-steps{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.cb-step{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.45);}
+.cb-step.active{color:#fff;}
+.cb-step.done{color:rgba(255,255,255,.65);}
+.cb-snum{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.cb-step.active .cb-snum{background:#fff;color:#282D9E;border-color:#fff;}
+.cb-step.done   .cb-snum{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);}
+.cb-ssep{color:rgba(255,255,255,.3);font-size:11px;}
+
+/* PAGE */
+.cb-page{max-width:1160px;margin:0 auto;padding:28px 24px 64px;}
+
+/* LAYOUT */
+.cb-layout{display:grid;grid-template-columns:1fr 370px;gap:24px;align-items:start;}
+.cb-left{display:flex;flex-direction:column;gap:20px;}
+
+/* CARD */
+.cb-card{background:#fff;border:1px solid #e5e8f0;border-radius:16px;padding:24px;}
+.cb-ctitle{font-size:1.1rem;font-weight:800;color:#1a2140;margin:0 0 4px;letter-spacing:-.2px;}
+.cb-csub{font-size:12.5px;color:#8892aa;margin:0 0 20px;}
+
+/* FORM */
+.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.cb-grid.one{grid-template-columns:1fr;}
+.cb-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.cb-field{display:flex;flex-direction:column;gap:5px;}
+.cb-lbl{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.5px;}
+.cb-lbl .req{color:#e53935;}
+.cb-inp{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13.5px;color:#1a2140;outline:none;background:#fff;width:100%;transition:border-color .2s,box-shadow .2s;}
+.cb-inp:focus{border-color:#282D9E;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+.cb-inp.err{border-color:#e53935!important;}
+.cb-err{font-size:11px;color:#e53935;font-weight:600;display:none;margin-top:2px;}
+.cb-err.show{display:block;}
+.cb-hint{font-size:11px;color:#a0aabb;margin-top:3px;}
+.cb-phone-row{display:grid;grid-template-columns:96px 1fr;gap:8px;}
+.cb-prefix{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 12px;font-size:13px;font-weight:700;background:#f8f9fc;color:#1a2140;display:flex;align-items:center;gap:6px;cursor:default;}
+.cb-prefix i{font-size:8px;margin-left:auto;color:#a0aabb;}
+
+/* RENTAL DETAILS */
+.cb-detail-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #f0f2f8;}
+.cb-detail-row:last-of-type{border-bottom:none;}
+.cb-detail-icon{width:36px;height:36px;border-radius:10px;background:#eff2ff;display:flex;align-items:center;justify-content:center;color:#282D9E;font-size:14px;flex-shrink:0;}
+.cb-detail-label{font-size:12px;font-weight:600;color:#8892aa;margin-bottom:2px;}
+.cb-detail-val{font-size:14px;font-weight:700;color:#1a2140;}
+
+/* LOCATION INPUT WITH ICON */
+.cb-loc-wrap{position:relative;}
+.cb-loc-wrap .cb-inp{padding-left:38px;}
+.cb-loc-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#282D9E;font-size:13px;pointer-events:none;}
+
+/* DATETIME */
+.cb-dt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+
+/* DRIVER INFO */
+.cb-info-box{background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;}
+.cb-info-box i{color:#282D9E;margin-top:2px;flex-shrink:0;}
+.cb-info-box p{font-size:12.5px;color:#3730a3;font-weight:500;margin:0;line-height:1.55;}
+
+/* VOUCHERS */
+.cb-promo-tog{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:#1a2140;cursor:pointer;background:none;border:none;padding:0;font-family:'Inter',sans-serif;margin-bottom:14px;}
+.cb-promo-tog i{font-size:11px;color:#8892aa;transition:transform .2s;}
+.cb-promo-tog.open i{transform:rotate(180deg);}
+.cb-promo-body{display:none;margin-bottom:16px;}
+.cb-promo-body.open{display:block;}
+.cb-promo-row{display:flex;gap:10px;margin-bottom:14px;}
+.cb-promo-row .cb-inp{flex:1;}
+.cb-apply-btn{padding:10px 20px;background:#282D9E;color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.cb-apply-btn:hover{background:#1F237E;}
+.cb-vouchers{display:flex;flex-direction:column;gap:10px;}
+.cb-voucher{border:1.5px solid #e5e8f0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.cb-voucher:hover{border-color:#282D9E;}
+.cb-voucher.sel{border-color:#282D9E;background:#f0f4ff;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+.cb-vi{width:40px;height:40px;border-radius:10px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.cb-vinfo{flex:1;min-width:0;}
+.cb-vname{font-size:13.5px;font-weight:700;color:#1a2140;margin-bottom:2px;}
+.cb-vdesc{font-size:12px;color:#8892aa;line-height:1.4;}
+.cb-vtnc{font-size:11px;color:#282D9E;font-weight:600;margin-top:4px;cursor:pointer;}
+.cb-vchk{width:22px;height:22px;border-radius:50%;border:2px solid #c8cee0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.cb-voucher.sel .cb-vchk{background:#282D9E;border-color:#282D9E;color:#fff;}
+.cb-vchk i{font-size:10px;display:none;}
+.cb-voucher.sel .cb-vchk i{display:block;}
+
+/* ADD-ONS */
+.cb-addon-opts{display:flex;flex-direction:column;gap:10px;}
+.cb-addon-opt{border:1.5px solid #e5e8f0;border-radius:10px;padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .18s,background .18s;user-select:none;}
+.cb-addon-opt:hover{border-color:#282D9E;}
+.cb-addon-opt.sel{border-color:#282D9E;background:#f0f4ff;}
+.cb-addon-chk{width:18px;height:18px;border-radius:4px;border:2px solid #c8cee0;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .15s,background .15s;}
+.cb-addon-opt.sel .cb-addon-chk{border-color:#282D9E;background:#282D9E;}
+.cb-addon-opt.sel .cb-addon-chk::after{content:'✓';color:#fff;font-size:11px;font-weight:700;}
+.cb-addon-icon{width:36px;height:36px;border-radius:9px;background:#eff2ff;display:flex;align-items:center;justify-content:center;color:#282D9E;font-size:15px;flex-shrink:0;}
+.cb-addon-name{font-size:14px;font-weight:700;color:#1a2140;}
+.cb-addon-desc{font-size:12px;color:#8892aa;margin-top:2px;}
+.cb-addon-price{font-size:13px;font-weight:700;color:#282D9E;white-space:nowrap;margin-left:auto;}
+
+/* PAYMENT */
+.cb-pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.cb-pay-method{border:1.5px solid #e5e8f0;border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.cb-pay-method:hover{border-color:#282D9E;}
+.cb-pay-method.sel{border-color:#282D9E;background:#f8faff;box-shadow:0 0 0 3px rgba(40,45,158,.07);}
+.cb-pay-hdr{display:flex;align-items:center;gap:12px;}
+.cb-pm-dot{width:18px;height:18px;border-radius:50%;border:2px solid #c8cee0;flex-shrink:0;position:relative;transition:border-color .15s;}
+.cb-pay-method.sel .cb-pm-dot{border-color:#282D9E;}
+.cb-pay-method.sel .cb-pm-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#282D9E;}
+.cb-pm-lbl{font-size:14px;font-weight:700;color:#1a2140;flex:1;}
+.cb-pm-logos{display:flex;align-items:center;gap:5px;}
+.cb-pm-chip{height:20px;min-width:30px;border-radius:3px;border:1px solid #e5e8f0;background:#fff;font-size:9px;font-weight:800;color:#6b7592;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.cb-pay-fields{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #f0f2f8;}
+.cb-pay-method.sel .cb-pay-fields{display:block;}
+
+/* SUBMIT */
+.cb-submit{width:100%;padding:15px;background:#282D9E;color:#fff;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s;box-shadow:0 4px 16px rgba(40,45,158,.3);display:flex;align-items:center;justify-content:center;gap:8px;}
+.cb-submit:hover{background:#1F237E;transform:translateY(-1px);}
+.cb-submit:active{transform:translateY(0);}
+.cb-spin{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+.cb-submit.loading .cb-spin{display:block;}
+.cb-submit.loading .cb-stxt{opacity:.65;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.cb-snote{font-size:12px;color:#a0aabb;text-align:center;margin-top:10px;line-height:1.5;}
+.cb-snote i{color:#282D9E;font-size:11px;}
+
+/* RIGHT SUMMARY */
+.cb-right{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+.cb-summary{background:#fff;border:1px solid #e5e8f0;border-radius:16px;overflow:hidden;}
+
+/* Car image header */
+.cb-ph{display:flex;gap:14px;padding:18px;border-bottom:1px solid #f0f2f8;align-items:center;}
+.cb-pimg{width:120px;height:72px;object-fit:contain;background:#f8f9fc;border-radius:10px;flex-shrink:0;padding:6px;}
+.cb-pimg-placeholder{width:120px;height:72px;background:#f0f2f8;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;}
+.cb-pinfo{flex:1;min-width:0;}
+.cb-pname{font-size:14.5px;font-weight:800;color:#1a2140;line-height:1.3;margin-bottom:2px;}
+.cb-pbrand{font-size:12px;color:#8892aa;font-weight:600;margin-bottom:5px;}
+.cb-prating{display:inline-flex;align-items:center;gap:5px;font-size:12px;}
+.cb-rnum{background:#282D9E;color:#fff;font-size:11px;font-weight:800;border-radius:6px;padding:2px 7px;}
+.cb-rrev{color:#8892aa;font-weight:500;}
+
+/* Spec tags */
+.cb-specs-row{display:flex;flex-wrap:wrap;gap:6px;padding:12px 18px;border-bottom:1px solid #f0f2f8;}
+.cb-spec-tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:#282D9E;font-weight:600;background:#eff2ff;border-radius:20px;padding:3px 9px;}
+.cb-spec-tag i{font-size:10px;}
+
+/* Dates block */
+.cb-db{padding:14px 18px;border-bottom:1px solid #f0f2f8;}
+.cb-dtitle{font-size:13px;font-weight:700;color:#1a2140;margin-bottom:10px;}
+.cb-drow{display:flex;align-items:flex-start;gap:10px;margin-bottom:9px;}
+.cb-drow:last-of-type{margin-bottom:0;}
+.cb-dlbl{font-size:11px;font-weight:700;color:#a0aabb;text-transform:uppercase;letter-spacing:.4px;min-width:72px;}
+.cb-dval{font-size:13px;font-weight:700;color:#1a2140;}
+.cb-dsub{font-size:11.5px;color:#8892aa;margin-top:1px;}
+.cb-dmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #f0f2f8;}
+.cb-dmitem{display:flex;align-items:center;gap:5px;font-size:12px;color:#6b7592;font-weight:600;}
+.cb-dmitem i{font-size:11px;color:#282D9E;}
+.cb-dmsep{color:#c8cee0;}
+
+/* Price block */
+.cb-pb{padding:14px 18px;border-bottom:1px solid #f0f2f8;}
+.cb-ptitle{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.cb-pr-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;color:#6b7592;font-weight:500;margin-bottom:8px;gap:8px;}
+.cb-pr-row span:last-child{font-weight:600;color:#1a2140;white-space:nowrap;}
+.cb-pr-row.disc span{color:#16a34a;}
+.cb-pdiv{height:1px;background:#e5e8f0;margin:10px 0;}
+.cb-ptotal{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:800;color:#1a2140;}
+.cb-ptotal span:last-child{color:#282D9E;}
+.cb-psaved{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#16a34a;margin-top:6px;}
+
+/* Info accordion */
+.cb-ib{padding:14px 18px;border-bottom:1px solid #f0f2f8;}
+.cb-ib:last-child{border-bottom:none;}
+.cb-itog{display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:none;border:none;padding:0;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.cb-itog-title{font-size:13.5px;font-weight:700;color:#1a2140;}
+.cb-itog i{font-size:12px;color:#a0aabb;transition:transform .2s;}
+.cb-itog.open i{transform:rotate(180deg);}
+.cb-ibody{display:none;padding-top:10px;}
+.cb-ibody.open{display:block;}
+.cb-ibody p{font-size:12.5px;color:#6b7592;line-height:1.6;margin:0 0 6px;}
+.cb-ibody ul{margin:0;padding-left:18px;}
+.cb-ibody li{font-size:12.5px;color:#6b7592;line-height:1.6;margin-bottom:4px;}
+.cb-cfee{font-size:13px;font-weight:700;color:#dc2626;margin-bottom:6px;}
+.cb-rew{font-size:13px;color:#6b7592;line-height:1.5;}
+.cb-rew span{color:#282D9E;font-weight:700;}
+
+/* SUCCESS */
+.cb-success{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;}
+.cb-success.show{display:flex;}
+.cb-sbox{background:#fff;border-radius:20px;padding:48px 52px;text-align:center;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.22);animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{transform:scale(.75);opacity:0;}to{transform:scale(1);opacity:1;}}
+.cb-sicon{font-size:3.8rem;color:#16a34a;margin-bottom:18px;}
+.cb-stitle2{font-size:1.6rem;font-weight:800;color:#1a2140;margin-bottom:8px;}
+.cb-ssub{font-size:.92rem;color:#8892aa;margin-bottom:18px;line-height:1.65;}
+.cb-sref{background:#f0f4ff;border-radius:10px;padding:14px 22px;font-size:.9rem;font-weight:700;color:#282D9E;margin-bottom:22px;}
+.cb-scta{background:#282D9E;color:#fff;border:none;border-radius:10px;padding:13px 38px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;}
+.cb-scta:hover{background:#1F237E;}
+
+/* RESPONSIVE */
+@media(max-width:960px){.cb-layout{grid-template-columns:1fr;}.cb-right{position:static;}.cb-steps{display:none;}}
+@media(max-width:600px){.cb-page{padding:20px 16px 48px;}.cb-grid{grid-template-columns:1fr;}.cb-dt-grid{grid-template-columns:1fr;}.cb-grid.three{grid-template-columns:1fr 1fr;}.cb-card{padding:18px 16px;}.cb-banner{padding:20px 16px 24px;}.cb-btitle{font-size:1.4rem;}}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="nav-container">
+    <div class="top-nav">
+      <a class="logo" href="index.html">
+        <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+      </a>
+      <div class="top-right">
+        <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="PH" class="flag-icon"></button>
+        <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+        <div class="relative">
+          <button class="support-btn" id="fbBtn">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+          <div class="dropdown-menu" id="fbMenu">
+            <div class="dropdown-item" data-page="hotel &amp; homes.html"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+            <div class="dropdown-item" data-page="car-rental.html"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+            <div class="dropdown-item" data-page="flights.html"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
+            <div class="dropdown-item" data-page="attractions.html"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
+            <div class="dropdown-item" data-page="airport-taxis.html"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
+          </div>
+        </div>
+        <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- BANNER -->
+<div class="cb-banner">
+  <div class="cb-bi">
+    <div class="cb-bc">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="car-rental.html">Car Rental</a>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur" id="bcCarName">Car</span>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur">Complete Booking</span>
+    </div>
+    <div class="cb-brow">
+      <div>
+        <h1 class="cb-btitle">Complete Your Booking</h1>
+        <p class="cb-bsub">Fill in your details to confirm your car rental</p>
+      </div>
+      <div class="cb-steps">
+        <div class="cb-step done"><div class="cb-snum"><i class="fas fa-check" style="font-size:9px"></i></div><span>Select car</span></div>
+        <span class="cb-ssep">———</span>
+        <div class="cb-step active"><div class="cb-snum">2</div><span>Your details</span></div>
+        <span class="cb-ssep">———</span>
+        <div class="cb-step"><div class="cb-snum">3</div><span>Confirmation</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="cb-page">
+  <div class="cb-layout">
+
+    <!-- LEFT -->
+    <div class="cb-left">
+
+      <!-- 1. RENTAL DETAILS -->
+      <div class="cb-card">
+        <h2 class="cb-ctitle">Rental Details</h2>
+        <p class="cb-csub">Set your pickup location, drop-off location, and rental dates.</p>
+
+        <div class="cb-grid one" style="margin-bottom:14px;">
+          <div class="cb-field">
+            <label class="cb-lbl">Pick-up Location <span class="req">*</span></label>
+            <div class="cb-loc-wrap">
+              <i class="fas fa-location-dot cb-loc-icon"></i>
+              <input type="text" id="pickupLocation" class="cb-inp" style="padding-left:38px;" placeholder="City, airport, or address">
+            </div>
+            <span class="cb-err" id="errPickup">Pick-up location is required.</span>
+          </div>
+        </div>
+
+        <div class="cb-grid one" style="margin-bottom:14px;">
+          <div class="cb-field">
+            <label class="cb-lbl">Drop-off Location <span class="req">*</span></label>
+            <div class="cb-loc-wrap">
+              <i class="fas fa-flag-checkered cb-loc-icon"></i>
+              <input type="text" id="dropoffLocation" class="cb-inp" style="padding-left:38px;" placeholder="Same as pick-up or different location">
+            </div>
+            <span class="cb-err" id="errDropoff">Drop-off location is required.</span>
+          </div>
+        </div>
+
+        <div class="cb-dt-grid">
+          <div class="cb-field">
+            <label class="cb-lbl">Pick-up Date &amp; Time <span class="req">*</span></label>
+            <input type="datetime-local" id="pickupDatetime" class="cb-inp">
+            <span class="cb-err" id="errPickupDate">Pick-up date and time is required.</span>
+          </div>
+          <div class="cb-field">
+            <label class="cb-lbl">Drop-off Date &amp; Time <span class="req">*</span></label>
+            <input type="datetime-local" id="dropoffDatetime" class="cb-inp">
+            <span class="cb-err" id="errDropoffDate">Drop-off date and time is required.</span>
+          </div>
+        </div>
+
+        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 13px;display:flex;gap:9px;align-items:flex-start;margin-top:4px;">
+          <i class="fas fa-moon" style="color:#d97706;margin-top:2px;flex-shrink:0;font-size:12px;"></i>
+          <span id="daysNote" style="font-size:12px;color:#92400e;font-weight:500;line-height:1.5;">Select dates to see your rental duration.</span>
+        </div>
+      </div>
+
+      <!-- 2. DRIVER DETAILS -->
+      <div class="cb-card">
+        <h2 class="cb-ctitle">Driver Details</h2>
+        <p class="cb-csub">Name must match the valid driver's license used at pick-up.</p>
+
+        <div class="cb-info-box">
+          <i class="fas fa-circle-info"></i>
+          <p>The main driver must present their original driver's license at pick-up. Electronic versions or temporary licenses will not be accepted.</p>
+        </div>
+
+        <div class="cb-grid">
+          <div class="cb-field">
+            <label class="cb-lbl">First name <span class="req">*</span></label>
+            <input type="text" id="firstName" class="cb-inp" placeholder="Use only English letters">
+            <span class="cb-err" id="errFirstName">First name is required.</span>
+          </div>
+          <div class="cb-field">
+            <label class="cb-lbl">Last name <span class="req">*</span></label>
+            <input type="text" id="lastName" class="cb-inp" placeholder="Use only English letters">
+            <span class="cb-err" id="errLastName">Last name is required.</span>
+          </div>
+        </div>
+
+        <div class="cb-grid">
+          <div class="cb-field">
+            <label class="cb-lbl">Email <span class="req">*</span></label>
+            <input type="email" id="guestEmail" class="cb-inp" placeholder="your@email.com">
+            <span class="cb-err" id="errEmail">Enter a valid email address.</span>
+            <span class="cb-hint">Confirmation will be sent to this email</span>
+          </div>
+          <div class="cb-field">
+            <label class="cb-lbl">Phone number <span class="req">*</span></label>
+            <div class="cb-phone-row">
+              <div class="cb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+              <input type="tel" id="guestPhone" class="cb-inp" placeholder="9XX XXX XXXX">
+            </div>
+            <span class="cb-err" id="errPhone">Phone number is required.</span>
+          </div>
+        </div>
+
+        <div class="cb-grid three">
+          <div class="cb-field">
+            <label class="cb-lbl">Driver age <span class="req">*</span></label>
+            <input type="number" id="driverAge" class="cb-inp" min="18" max="80" placeholder="25">
+            <span class="cb-err" id="errAge">Age must be 18–80.</span>
+          </div>
+          <div class="cb-field" style="grid-column:span 2;">
+            <label class="cb-lbl">License number <span class="req">*</span></label>
+            <input type="text" id="licenseNumber" class="cb-inp" placeholder="e.g. N01-23-456789">
+            <span class="cb-err" id="errLicense">License number is required.</span>
+          </div>
+        </div>
+
+        <div class="cb-grid one" style="margin-bottom:0;">
+          <div class="cb-field">
+            <label class="cb-lbl">License issuing country</label>
+            <select id="licenseCountry" class="cb-inp">
+              <option value="Philippines" selected>Philippines</option>
+              <option value="United States">United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Australia">Australia</option>
+              <option value="Canada">Canada</option>
+              <option value="Japan">Japan</option>
+              <option value="Singapore">Singapore</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. ADD-ONS -->
+      <div class="cb-card">
+        <h2 class="cb-ctitle">Add-ons <span style="font-size:13px;font-weight:400;color:#a0aabb;">(Optional)</span></h2>
+        <p class="cb-csub">Enhance your rental experience with these optional extras.</p>
+        <div class="cb-addon-opts" id="addonOpts">
+          <div class="cb-addon-opt" data-addon="gps" data-price="150">
+            <div class="cb-addon-chk"></div>
+            <div class="cb-addon-icon"><i class="fas fa-map-location-dot"></i></div>
+            <div style="flex:1;">
+              <div class="cb-addon-name">GPS Navigation</div>
+              <div class="cb-addon-desc">In-car GPS device with local maps preloaded</div>
+            </div>
+            <div class="cb-addon-price">+PHP 150/day</div>
+          </div>
+          <div class="cb-addon-opt" data-addon="insurance" data-price="500">
+            <div class="cb-addon-chk"></div>
+            <div class="cb-addon-icon"><i class="fas fa-shield-halved"></i></div>
+            <div style="flex:1;">
+              <div class="cb-addon-name">Full Coverage Insurance</div>
+              <div class="cb-addon-desc">Zero excess with comprehensive damage protection</div>
+            </div>
+            <div class="cb-addon-price">+PHP 500/day</div>
+          </div>
+          <div class="cb-addon-opt" data-addon="carseat" data-price="200">
+            <div class="cb-addon-chk"></div>
+            <div class="cb-addon-icon"><i class="fas fa-baby"></i></div>
+            <div style="flex:1;">
+              <div class="cb-addon-name">Child Seat</div>
+              <div class="cb-addon-desc">Approved safety seat for children (ages 0–7)</div>
+            </div>
+            <div class="cb-addon-price">+PHP 200/day</div>
+          </div>
+          <div class="cb-addon-opt" data-addon="driver" data-price="800">
+            <div class="cb-addon-chk"></div>
+            <div class="cb-addon-icon"><i class="fas fa-user-tie"></i></div>
+            <div style="flex:1;">
+              <div class="cb-addon-name">Professional Driver</div>
+              <div class="cb-addon-desc">Experienced local driver included for your trip</div>
+            </div>
+            <div class="cb-addon-price">+PHP 800/day</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. VOUCHERS -->
+      <div class="cb-card">
+        <h2 class="cb-ctitle">Available for This Booking</h2>
+        <button class="cb-promo-tog" id="promoTogBtn">Enter promo code <i class="fas fa-chevron-down"></i></button>
+        <div class="cb-promo-body" id="promoBody">
+          <div class="cb-promo-row">
+            <input type="text" id="promoInput" class="cb-inp" placeholder="Enter promo code">
+            <button class="cb-apply-btn" id="promoApplyBtn">Apply</button>
+          </div>
+        </div>
+        <div class="cb-vouchers">
+          <div class="cb-voucher sel" id="voucher1">
+            <div class="cb-vi">🚗</div>
+            <div class="cb-vinfo">
+              <div class="cb-vname">10% off — max discount PHP 300.00</div>
+              <div class="cb-vdesc">New user promo code (1st car booking)<br>Valid until 11:59 PM, Apr 4, 2026</div>
+              <div class="cb-vtnc">Terms and Conditions</div>
+            </div>
+            <div class="cb-vchk"><i class="fas fa-check"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. PAYMENT -->
+      <div class="cb-card">
+        <h2 class="cb-ctitle">How Would You Like to Pay?</h2>
+        <div class="cb-pay-methods" id="payMethods">
+
+          <div class="cb-pay-method sel" data-method="card">
+            <div class="cb-pay-hdr">
+              <div class="cb-pm-dot"></div>
+              <div class="cb-pm-lbl">Credit / Debit Card</div>
+              <div class="cb-pm-logos">
+                <div class="cb-pm-chip">VISA</div>
+                <div class="cb-pm-chip">MC</div>
+                <div class="cb-pm-chip">JCB</div>
+              </div>
+            </div>
+            <div class="cb-pay-fields">
+              <div class="cb-grid one" style="margin-bottom:12px">
+                <div class="cb-field">
+                  <label class="cb-lbl">Card number</label>
+                  <input type="text" id="cardNo" class="cb-inp" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+              </div>
+              <div class="cb-grid one" style="margin-bottom:12px">
+                <div class="cb-field">
+                  <label class="cb-lbl">Cardholder name</label>
+                  <input type="text" id="cardName" class="cb-inp" placeholder="Name as on card">
+                </div>
+              </div>
+              <div class="cb-grid">
+                <div class="cb-field">
+                  <label class="cb-lbl">Expiry date</label>
+                  <input type="text" id="cardExp" class="cb-inp" placeholder="MM / YY" maxlength="7">
+                </div>
+                <div class="cb-field">
+                  <label class="cb-lbl">CVV / CVC</label>
+                  <input type="text" id="cardCvv" class="cb-inp" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cb-pay-method" data-method="other">
+            <div class="cb-pay-hdr">
+              <div class="cb-pm-dot"></div>
+              <div class="cb-pm-lbl">GCash</div>
+              <div class="cb-pm-logos"><div class="cb-pm-chip" style="background:#0062ff;color:#fff;border-color:#0062ff;">G</div></div>
+            </div>
+            <div class="cb-pay-fields">
+              <div class="cb-field">
+                <label class="cb-lbl">GCash mobile number</label>
+                <div class="cb-phone-row">
+                  <div class="cb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="cb-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cb-pay-method" data-method="other">
+            <div class="cb-pay-hdr">
+              <div class="cb-pm-dot"></div>
+              <div class="cb-pm-lbl">Pay at Pick-up</div>
+              <div class="cb-pm-logos"><div class="cb-pm-chip"><i class="fas fa-car" style="font-size:10px"></i></div></div>
+            </div>
+            <div class="cb-pay-fields">
+              <p style="font-size:12.5px;color:#8892aa;margin:0;line-height:1.5;">Your card will not be charged now. You'll pay directly at the rental desk when you pick up your car.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="cb-submit" id="submitBtn">
+          <span class="cb-spin"></span>
+          <span class="cb-stxt"><i class="fas fa-lock"></i> Complete Booking</span>
+        </button>
+        <p class="cb-snote"><i class="fas fa-shield-alt"></i> Your payment info is encrypted and secure. By completing this booking you agree to our Terms &amp; Conditions.</p>
+      </div>
+
+    </div><!-- end left -->
+
+    <!-- RIGHT SUMMARY -->
+    <div class="cb-right">
+      <div class="cb-summary">
+
+        <!-- Car image + name -->
+        <div class="cb-ph">
+          <img class="cb-pimg" id="carSumImg" src="" alt="" onerror="this.style.display='none';document.getElementById('carSumImgPlaceholder').style.display='flex';">
+          <div class="cb-pimg-placeholder" id="carSumImgPlaceholder" style="display:none;">🚗</div>
+          <div class="cb-pinfo">
+            <div class="cb-pname" id="sumCarName">Car Name</div>
+            <div class="cb-pbrand" id="sumCarBrand">Brand</div>
+            <div class="cb-prating">
+              <span class="cb-rnum" id="sumCarRating">4.5</span>
+              <span class="cb-rrev" id="sumCarReviews">No reviews</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spec tags -->
+        <div class="cb-specs-row" id="sumSpecTags"></div>
+
+        <!-- Dates -->
+        <div class="cb-db">
+          <div class="cb-dtitle">Rental Period</div>
+          <div class="cb-drow">
+            <span class="cb-dlbl">Pick-up</span>
+            <div>
+              <div class="cb-dval" id="sumPickup">–</div>
+              <div class="cb-dsub" id="sumPickupLoc">–</div>
+            </div>
+          </div>
+          <div class="cb-drow">
+            <span class="cb-dlbl">Drop-off</span>
+            <div>
+              <div class="cb-dval" id="sumDropoff">–</div>
+              <div class="cb-dsub" id="sumDropoffLoc">–</div>
+            </div>
+          </div>
+          <div class="cb-dmeta">
+            <div class="cb-dmitem"><i class="fas fa-calendar-days"></i><span id="sumDays">– days</span></div>
+            <span class="cb-dmsep">|</span>
+            <div class="cb-dmitem"><i class="fas fa-user"></i><span id="sumDriver">1 driver</span></div>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="cb-pb">
+          <div class="cb-ptitle">Price Details</div>
+          <div class="cb-pr-row"><span id="prBaseLabel">1 day × PHP 0</span><span id="prBase">–</span></div>
+          <div class="cb-pr-row" id="prAddonRow" style="display:none;"><span>Add-ons:</span><span id="prAddon">–</span></div>
+          <div class="cb-pr-row disc" id="prPromoRow" style="display:none;"><span>New user promo:</span><span id="prPromo">–</span></div>
+          <div class="cb-pr-row"><span>VAT (12%)</span><span id="prVat">–</span></div>
+          <div class="cb-pdiv"></div>
+          <div class="cb-ptotal"><span>Total</span><span id="prTotal">–</span></div>
+          <div class="cb-psaved" id="prSavedRow" style="display:none;"><i class="fas fa-tag"></i><span id="prSaved">–</span></div>
+        </div>
+
+        <!-- Cancellation -->
+        <div class="cb-ib">
+          <button class="cb-itog open" id="cancelToggle">
+            <span class="cb-itog-title">Cancellation policy</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="cb-ibody open" id="cancelBody">
+            <div class="cb-cfee" id="cancelFee">Cancellation fee: –</div>
+            <p>Free cancellation up to 24 hours before pick-up. After that, the full amount will be charged.</p>
+          </div>
+        </div>
+
+        <!-- Rewards -->
+        <div class="cb-ib">
+          <button class="cb-itog open" id="rewardsToggle">
+            <span class="cb-itog-title">Rewards</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="cb-ibody open" id="rewardsBody">
+            <div class="cb-rew">Earn <span id="tripCoins">– Trip Coins</span> after your rental.</div>
+          </div>
+        </div>
+
+        <!-- Fine print -->
+        <div class="cb-ib">
+          <button class="cb-itog" id="fineToggle">
+            <span class="cb-itog-title">Fine Print</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="cb-ibody" id="fineBody">
+            <ul>
+              <li>A valid credit card in the driver's name is required at pick-up for the security deposit.</li>
+              <li>Minimum driver age is 18 years old. Drivers under 25 may incur a young driver surcharge.</li>
+              <li>Fuel policy: Full to Full. Return the car with a full tank to avoid extra charges.</li>
+              <li>Unlimited mileage included unless otherwise stated.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end right -->
+
+  </div><!-- end layout -->
+</div><!-- end page -->
+
+<!-- SUCCESS OVERLAY -->
+<div class="cb-success" id="successOverlay">
+  <div class="cb-sbox">
+    <div class="cb-sicon"><i class="fas fa-check-circle"></i></div>
+    <div class="cb-stitle2">Booking Confirmed!</div>
+    <div class="cb-ssub">Your <strong id="succCar"></strong> rental is confirmed.<br>A confirmation has been sent to <strong id="succEmail"></strong>.</div>
+    <div class="cb-sref">Booking Ref: <span id="succRef"></span></div>
+    <button class="cb-scta" onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-content">
+      <div class="footer-columns">
+        <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
+        <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li></ul></div>
+        <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li></ul></div>
+      </div>
+      <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
+    </div>
+    <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
+  </div>
+</footer>
+
+<script src="auth-header.js"></script>
+<script>
+/* ================================================================
+   STATE — maps to car_bookings table columns
+   ================================================================ */
+var S = {
+  car_id: 0, car_name:'', car_brand:'', car_category:'',
+  transmission:'', fuel_type:'', seats:5, doors:4, luggage_capacity:3,
+  rating:'4.5', reviews:'0', car_image:'',
+  price_per_day: 0, rental_days: 1,
+  addon_total: 0, promo_discount: 0, taxes_fees: 0, total_amount: 0,
+  payment_method: 'card'
+};
+
+/* ── helpers ── */
+function $(id){ return document.getElementById(id); }
+function txt(id,v){ var e=$(id); if(e) e.textContent=v; }
+function show(id,on){ var e=$(id); if(e) e.style.display=on?'':'none'; }
+function fmt(v){
+  return new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2}).format(v);
+}
+function fmtDT(s){
+  if(!s) return '–';
+  var d=new Date(s);
+  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})
+    +' · '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ── read URL params ── */
+(function(){
+  var p = new URLSearchParams(window.location.search);
+  S.car_id           = parseInt(p.get('id')||'0');
+  S.car_name         = p.get('name')     ||'Car';
+  S.car_brand        = p.get('brand')    ||'';
+  S.car_category     = p.get('category') ||'';
+  S.transmission     = p.get('trans')    ||'';
+  S.fuel_type        = p.get('fuel')     ||'';
+  S.seats            = parseInt(p.get('seats')  ||'5');
+  S.doors            = parseInt(p.get('doors')  ||'4');
+  S.luggage_capacity = parseInt(p.get('luggage')||'3');
+  S.rating           = p.get('rating')   ||'4.5';
+  S.reviews          = p.get('reviews')  ||'0';
+  S.price_per_day    = parseFloat(p.get('price')||'0');
+  S.rental_days      = parseInt(p.get('days')   ||'1')||1;
+  S.car_image        = p.get('image')    ||'';
+})();
+
+/* ================================================================
+   INIT
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', function(){
+
+  /* breadcrumb + title */
+  txt('bcCarName', S.car_name);
+  document.title = 'Complete Booking — '+S.car_name+' | Easy Navigate';
+
+  /* summary header */
+  txt('sumCarName',   S.car_name);
+  txt('sumCarBrand',  S.car_brand+' · '+S.car_category);
+  txt('sumCarRating', parseFloat(S.rating).toFixed(1));
+  txt('sumCarReviews', parseInt(S.reviews)>0 ? parseInt(S.reviews).toLocaleString()+' reviews' : 'No reviews yet');
+
+  /* car image */
+  if(S.car_image){
+    var img = $('carSumImg');
+    if(img){ img.src = S.car_image; img.alt = S.car_name; }
+  } else {
+    show('carSumImg', false);
+    show('carSumImgPlaceholder', true);
+  }
+
+  /* spec tags */
+  var tags = $('sumSpecTags');
+  if(tags){
+    var specs = [
+      {icon:'fa-user-friends', label: S.seats+' seats'},
+      {icon:'fa-suitcase',     label: S.luggage_capacity+' bags'},
+      {icon:'fa-door-open',   label: S.doors+' doors'},
+      {icon:'fa-gear',        label: S.transmission},
+      {icon:'fa-gas-pump',    label: S.fuel_type},
+    ];
+    tags.innerHTML = specs.filter(function(s){ return s.label && s.label!=' '; }).map(function(s){
+      return '<span class="cb-spec-tag"><i class="fas '+s.icon+'"></i> '+s.label+'</span>';
+    }).join('');
+  }
+
+  /* pre-fill email */
+  try{
+    var auth=JSON.parse(localStorage.getItem('easyNavigateAuth')||'{}');
+    if(auth&&auth.email&&$('guestEmail')) $('guestEmail').value=auth.email;
+  }catch(e){}
+
+  /* set default pickup datetime to now + 2 hours */
+  var now = new Date();
+  now.setHours(now.getHours()+2, 0, 0, 0);
+  var later = new Date(now); later.setDate(later.getDate()+S.rental_days);
+  if($('pickupDatetime'))  $('pickupDatetime').value  = toLocalISOString(now);
+  if($('dropoffDatetime')) $('dropoffDatetime').value = toLocalISOString(later);
+  onDateChange();
+
+  recalc();
+
+  /* ── WIRE EVENTS ── */
+
+  /* Dates */
+  $('pickupDatetime')  && $('pickupDatetime').addEventListener('change',  onDateChange);
+  $('dropoffDatetime') && $('dropoffDatetime').addEventListener('change', onDateChange);
+
+  /* Location summary update */
+  $('pickupLocation')  && $('pickupLocation').addEventListener('input', function(){ txt('sumPickupLoc',  this.value||'–'); });
+  $('dropoffLocation') && $('dropoffLocation').addEventListener('input', function(){ txt('sumDropoffLoc', this.value||'–'); });
+
+  /* Add-ons */
+  document.querySelectorAll('#addonOpts .cb-addon-opt').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      opt.classList.toggle('sel');
+      recalc();
+    });
+  });
+
+  /* Vouchers */
+  document.querySelectorAll('.cb-voucher').forEach(function(v){
+    v.addEventListener('click', function(){
+      document.querySelectorAll('.cb-voucher').forEach(function(x){ x.classList.remove('sel'); });
+      v.classList.add('sel');
+      recalc();
+    });
+  });
+
+  /* Payment methods */
+  document.querySelectorAll('#payMethods .cb-pay-method').forEach(function(m){
+    m.addEventListener('click', function(){
+      document.querySelectorAll('#payMethods .cb-pay-method').forEach(function(x){ x.classList.remove('sel'); });
+      m.classList.add('sel');
+      S.payment_method = m.dataset.method||'card';
+    });
+  });
+
+  /* Promo toggle */
+  $('promoTogBtn') && $('promoTogBtn').addEventListener('click', function(){
+    $('promoTogBtn').classList.toggle('open');
+    $('promoBody').classList.toggle('open');
+  });
+
+  /* Promo apply */
+  $('promoApplyBtn') && $('promoApplyBtn').addEventListener('click', function(){
+    var code = $('promoInput') && $('promoInput').value.trim();
+    if(!code) return;
+    alert('Promo code "'+code+'" applied! (Demo only)');
+  });
+
+  /* Info toggles */
+  wireToggle('cancelToggle',  'cancelBody');
+  wireToggle('rewardsToggle', 'rewardsBody');
+  wireToggle('fineToggle',    'fineBody');
+
+  /* Card formatters */
+  $('cardNo') && $('cardNo').addEventListener('input', function(){
+    var v=this.value.replace(/\D/g,'').substring(0,16);
+    this.value=v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  $('cardExp') && $('cardExp').addEventListener('input', function(){
+    var v=this.value.replace(/\D/g,'').substring(0,4);
+    if(v.length>=3) v=v.substring(0,2)+' / '+v.substring(2);
+    this.value=v;
+  });
+
+  /* Submit */
+  $('submitBtn') && $('submitBtn').addEventListener('click', submitBooking);
+
+  /* Header dropdown */
+  $('fbBtn') && $('fbBtn').addEventListener('click', function(e){
+    e.stopPropagation();
+    $('fbMenu').classList.toggle('open');
+  });
+  document.querySelectorAll('#fbMenu .dropdown-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      var pg=item.dataset.page; if(pg) window.location.href=pg;
+    });
+  });
+  document.addEventListener('click', function(){ $('fbMenu')&&$('fbMenu').classList.remove('open'); });
+
+});
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function toLocalISOString(d){
+  var pad=function(n){ return n<10?'0'+n:n; };
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+
+function onDateChange(){
+  var pv = $('pickupDatetime')  ? $('pickupDatetime').value  : '';
+  var dv = $('dropoffDatetime') ? $('dropoffDatetime').value : '';
+  if(pv && dv){
+    var diff = (new Date(dv) - new Date(pv)) / (1000*60*60*24);
+    if(diff > 0){
+      S.rental_days = Math.ceil(diff);
+      txt('daysNote', S.rental_days+' day'+(S.rental_days!==1?'s':'')+' rental · Pick-up '+fmtDT(pv));
+    } else {
+      S.rental_days = 1;
+      txt('daysNote', 'Drop-off must be after pick-up.');
+    }
+  } else {
+    txt('daysNote', 'Select dates to see your rental duration.');
+  }
+
+  txt('sumPickup',  fmtDT(pv));
+  txt('sumDropoff', fmtDT(dv));
+  txt('sumDays', S.rental_days+' day'+(S.rental_days!==1?'s':''));
+  recalc();
+}
+
+/* ================================================================
+   RECALCULATE PRICING
+   ================================================================ */
+function recalc(){
+  var days = Math.max(1, S.rental_days);
+
+  /* add-ons */
+  var addonTotal = 0;
+  document.querySelectorAll('#addonOpts .cb-addon-opt.sel').forEach(function(opt){
+    addonTotal += (parseInt(opt.dataset.price)||0) * days;
+  });
+  S.addon_total = addonTotal;
+
+  var base  = S.price_per_day * days;
+  var sub   = base + addonTotal;
+  var promo = +(Math.min(sub * 0.10, 300)).toFixed(2);
+  var voucherActive = document.querySelector('.cb-voucher.sel') !== null;
+  var promoAmt = voucherActive ? promo : 0;
+  var vat   = +((sub - promoAmt) * 0.12).toFixed(2);
+  var total = +((sub - promoAmt) + vat).toFixed(2);
+
+  S.promo_discount = promoAmt;
+  S.taxes_fees     = vat;
+  S.total_amount   = total;
+
+  /* price rows */
+  txt('prBaseLabel', days+' day'+(days!==1?'s':'')+' × '+fmt(S.price_per_day));
+  txt('prBase', fmt(base));
+
+  if(addonTotal > 0){
+    show('prAddonRow', true);
+    txt('prAddon', fmt(addonTotal));
+  } else {
+    show('prAddonRow', false);
+  }
+
+  if(voucherActive && promoAmt > 0){
+    show('prPromoRow', true);
+    txt('prPromo', '– '+fmt(promoAmt));
+    show('prSavedRow', true);
+    txt('prSaved', 'You saved '+fmt(promoAmt)+' on this booking');
+  } else {
+    show('prPromoRow', false);
+    show('prSavedRow', false);
+  }
+
+  txt('prVat',   fmt(vat));
+  txt('prTotal', fmt(total));
+  txt('cancelFee', 'Cancellation fee after 24 hrs: '+fmt(total));
+  var coins = Math.floor(total/10);
+  txt('tripCoins', coins+' Trip Coins (≈PHP '+(coins*0.606).toFixed(2)+')');
+  txt('sumDays', days+' day'+(days!==1?'s':''));
+}
+
+/* ================================================================
+   TOGGLE
+   ================================================================ */
+function wireToggle(toggleId, bodyId){
+  var btn=$(toggleId), body=$(bodyId);
+  if(!btn||!body) return;
+  btn.addEventListener('click', function(){
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+  });
+}
+
+/* ================================================================
+   VALIDATION
+   ================================================================ */
+function setErr(fieldId, errId, hasError){
+  var f=$(fieldId), e=$(errId);
+  if(f) f.classList.toggle('err', hasError);
+  if(e) e.classList.toggle('show', hasError);
+  return hasError;
+}
+
+/* ================================================================
+   SUBMIT
+   ================================================================ */
+function submitBooking(){
+  var fn      = $('firstName')       ? $('firstName').value.trim()       : '';
+  var ln      = $('lastName')        ? $('lastName').value.trim()        : '';
+  var email   = $('guestEmail')      ? $('guestEmail').value.trim()      : '';
+  var phone   = $('guestPhone')      ? $('guestPhone').value.trim()      : '';
+  var age     = $('driverAge')       ? parseInt($('driverAge').value)     : 0;
+  var license = $('licenseNumber')   ? $('licenseNumber').value.trim()   : '';
+  var country = $('licenseCountry')  ? $('licenseCountry').value         : 'Philippines';
+  var pickup  = $('pickupLocation')  ? $('pickupLocation').value.trim()  : '';
+  var dropoff = $('dropoffLocation') ? $('dropoffLocation').value.trim() : '';
+  var pdt     = $('pickupDatetime')  ? $('pickupDatetime').value         : '';
+  var ddt     = $('dropoffDatetime') ? $('dropoffDatetime').value        : '';
+
+  var ok = true;
+  if(setErr('firstName',      'errFirstName', !fn))   ok=false;
+  if(setErr('lastName',       'errLastName',  !ln))   ok=false;
+  if(setErr('guestEmail',     'errEmail',     !email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) ok=false;
+  if(setErr('guestPhone',     'errPhone',     !phone)) ok=false;
+  if(setErr('driverAge',      'errAge',       !age||age<18||age>80)) ok=false;
+  if(setErr('licenseNumber',  'errLicense',   !license)) ok=false;
+  if(setErr('pickupLocation', 'errPickup',    !pickup)) ok=false;
+  if(setErr('dropoffLocation','errDropoff',   !dropoff)) ok=false;
+  if(setErr('pickupDatetime', 'errPickupDate',!pdt)) ok=false;
+  if(setErr('dropoffDatetime','errDropoffDate',!ddt)) ok=false;
+
+  if(!ok){
+    var first = document.querySelector('.cb-inp.err');
+    if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  var btn = $('submitBtn');
+  btn.classList.add('loading'); btn.disabled=true;
+
+  /* build selected add-ons string */
+  var addons = [];
+  document.querySelectorAll('#addonOpts .cb-addon-opt.sel').forEach(function(opt){
+    addons.push(opt.dataset.addon);
+  });
+
+  /* payload — keys match car_bookings columns exactly */
+  var payload = {
+    first_name:       fn,
+    last_name:        ln,
+    email:            email,
+    phone:            phone,
+    driver_age:       age,
+    license_number:   license,
+    license_country:  country,
+    car_id:           S.car_id,
+    car_name:         S.car_name,
+    car_brand:        S.car_brand,
+    car_category:     S.car_category,
+    transmission:     S.transmission,
+    fuel_type:        S.fuel_type,
+    seats:            S.seats,
+    pickup_location:  pickup,
+    dropoff_location: dropoff,
+    pickup_datetime:  pdt,
+    dropoff_datetime: ddt,
+    rental_days:      S.rental_days,
+    price_per_day:    S.price_per_day,
+    total_amount:     S.total_amount,
+    payment_method:   S.payment_method,
+    booking_status:   'confirmed',
+    other_notes:      addons.length ? 'Add-ons: '+addons.join(', ') : ''
+  };
+
+  fetch('api/save_car_booking.php', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.classList.remove('loading'); btn.disabled=false;
+    if(d.ok||d.success) showSuccess(d.booking_ref, email);
+    else alert(d.message||'Booking failed. Please try again.');
+  })
+  .catch(function(){
+    btn.classList.remove('loading'); btn.disabled=false;
+    showSuccess(null, email); /* demo fallback */
+  });
+}
+
+function showSuccess(ref, email){
+  var r = ref || ('CR-'+(Date.now()%1000000).toString().padStart(6,'0'));
+  txt('succCar',   S.car_name);
+  txt('succEmail', email);
+  txt('succRef',   r);
+  var ov = $('successOverlay'); if(ov) ov.classList.add('show');
+}
+</script>
+</body>
+</html>

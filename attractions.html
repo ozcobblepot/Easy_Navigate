@@ -190,6 +190,16 @@
 
     .att-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 56px 24px; text-align: center; }
 
+    /* ── Image placeholder while loading ── */
+    .att-card-img-wrap::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+        z-index: 0;
+    }
+    .att-card-img { position: relative; z-index: 1; }
+
     @media (max-width: 1100px) { .att-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 760px) {
         .att-wrapper { flex-direction: column; }
@@ -698,7 +708,7 @@
         </div>
     </div>
 
-    <!-- ══ SCRIPTS — loaded at end of body in correct order ══ -->
+    <!-- ══ SCRIPTS ══ -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="auth-header.js"></script>
     <script src="db-search-tracker.js"></script>
@@ -759,18 +769,90 @@
     }
 
     // ════════════════════════════════════════════════════════════
-    //  ATTRACTIONS DATA
+    //  ATTRACTIONS DATA  ← FIXED: all paths now use attractions/
     // ════════════════════════════════════════════════════════════
     const ATT_DATA = [
-        { id:1, name:'Bohol Chocolate Hills',             location:'Chocolate Hills Complex', city:'Bohol',            country:'Philippines', images:['assets/attractions_tours/bohol_1.png','assets/attractions_tours/bohol_2.png','assets/attractions_tours/bohol_3.png'],                                                                                                             price:1500, rating:4.7, reviews:5400,  duration:'4 hours',   category:'Nature',      is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1, snippet:'Marvel at over 1,700 perfectly cone-shaped hills blanketed in chocolate-brown grass during the dry season.',              tripbest:'No. 1 of Best Things to Do in Bohol',          instant:true  },
-        { id:2, name:'Coron Island Hopping',              location:'Coron Bay',                city:'Coron',            country:'Philippines', images:['assets/attractions_tours/coron_1.png','assets/attractions_tours/coron_2.png','assets/attractions_tours/coron_3.png'],                                                                                                             price:2800, rating:4.9, reviews:6200,  duration:'Full day',   category:'Island Tour', is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Explore crystal-clear lagoons, WWII wrecks, and pristine beaches in one of the world's top dive destinations.",          tripbest:'No. 1 of Best Things to Do in Coron',          instant:true  },
-        { id:3, name:'El Nido Island Hopping',            location:'Bacuit Bay',               city:'El Nido',          country:'Philippines', images:['assets/attractions_tours/elnido_1.png','assets/attractions_tours/elnido_2.png','assets/attractions_tours/elnido_3.png','assets/attractions_tours/elnido_4.png','assets/attractions_tours/elnido_5.png'],                         price:2500, rating:4.9, reviews:8800,  duration:'Full day',   category:'Island Tour', is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1, snippet:'Navigate towering limestone karsts, secret lagoons, and hidden beaches across the Bacuit Archipelago.',              tripbest:'No. 1 of Best Things to Do in El Nido',        instant:true  },
-        { id:4, name:'Manila Bay Sunset Walk',            location:'Roxas Boulevard',          city:'Manila',           country:'Philippines', images:['assets/attractions_tours/manila_bay_1.png'],                                                                                                                                                                                        price:0,    rating:4.5, reviews:3100,  duration:'1-2 hours',  category:'Scenic',      is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:0, snippet:"Stroll along the iconic Roxas Boulevard boardwalk and witness Manila's legendary golden sunsets over the bay.",          tripbest:'No. 3 of Best Things to Do in Manila',         instant:false },
-        { id:5, name:'Pandin Lake',                       location:'San Pablo',                city:'Laguna',           country:'Philippines', images:['assets/attractions_tours/pandin_lake_laguna_1.png'],                                                                                                                                                                                price:360,  rating:4.8, reviews:2700,  duration:'2 hours',   category:'Nature',      is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:1, snippet:'Drift across the serene twin crater lakes on a bamboo raft while local boatmen share stories of the area.',              tripbest:null,                                            instant:true  },
-        { id:6, name:'Puerto Princesa Underground River', location:'Sabang',                   city:'Puerto Princesa',  country:'Philippines', images:['assets/attractions_tours/puerto_princesa_1.png','assets/attractions_tours/puerto_princesa_2.png','assets/attractions_tours/puerto_princesa_3.png'],                                                                               price:2200, rating:4.8, reviews:7500,  duration:'Full day',   category:'Nature',      is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Paddle through a UNESCO World Heritage cave system, one of the world's longest navigable underground rivers.",            tripbest:'No. 1 of Best Things to Do in Puerto Princesa', instant:true  },
-        { id:7, name:'Sto. Niño Cold Springs',            location:'Catarman',                 city:'Camiguin',         country:'Philippines', images:['assets/attractions_tours/sto_nino_cold_springs_1.png'],                                                                                                                                                                             price:50,   rating:4.6, reviews:1800,  duration:'Half day',   category:'Relaxation',  is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:0, snippet:'Soak in naturally cold freshwater springs surrounded by lush volcanic island greenery at an unbeatable price.',           tripbest:null,                                            instant:false },
-        { id:8, name:'Taal Volcano Tour',                 location:'Tagaytay Ridge',           city:'Tagaytay',         country:'Philippines', images:['assets/attractions_tours/taal_volcano_1.png'],                                                                                                                                                                                      price:1200, rating:4.7, reviews:4300,  duration:'3 hours',   category:'Nature',      is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Hike or ride to the crater of one of the world's smallest active volcanoes set within a lake inside a lake.",               tripbest:'No. 2 of Best Things to Do in Tagaytay',       instant:true  },
-        { id:9, name:'White Water Kayaking',              location:'Cagayan River',            city:'Cagayan de Oro',   country:'Philippines', images:['assets/attractions_tours/white_water_kayaking_cagayan_1.png'],                                                                                                                                                                      price:1800, rating:4.9, reviews:5100,  duration:'3-4 hours', category:'Adventure',   is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Paddle through thrilling rapids on the legendary Cagayan River — the Philippines' most exciting whitewater run.",          tripbest:'No. 1 of Best Things to Do in CDO',            instant:true  },
+        {
+            id:1, name:'Bohol Chocolate Hills',
+            location:'Chocolate Hills Complex', city:'Bohol', country:'Philippines',
+            images:['attractions/bohol_1.png','attractions/bohol_2.png','attractions/bohol_3.png'],
+            price:1500, rating:4.7, reviews:5400, duration:'4 hours', category:'Nature',
+            is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1,
+            snippet:'Marvel at over 1,700 perfectly cone-shaped hills blanketed in chocolate-brown grass during the dry season.',
+            tripbest:'No. 1 of Best Things to Do in Bohol', instant:true
+        },
+        {
+            id:2, name:'Coron Island Hopping',
+            location:'Coron Bay', city:'Coron', country:'Philippines',
+            images:['attractions/coron_1.png','attractions/coron_2.png','attractions/coron_3.png'],
+            price:2800, rating:4.9, reviews:6200, duration:'Full day', category:'Island Tour',
+            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
+            snippet:"Explore crystal-clear lagoons, WWII wrecks, and pristine beaches in one of the world's top dive destinations.",
+            tripbest:'No. 1 of Best Things to Do in Coron', instant:true
+        },
+        {
+            id:3, name:'El Nido Island Hopping',
+            location:'Bacuit Bay', city:'El Nido', country:'Philippines',
+            images:['attractions/elnido_1.png','attractions/elnido_2.png','attractions/elnido_3.png','attractions/elnido_4.png','attractions/elnido_5.png'],
+            price:2500, rating:4.9, reviews:8800, duration:'Full day', category:'Island Tour',
+            is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1,
+            snippet:'Navigate towering limestone karsts, secret lagoons, and hidden beaches across the Bacuit Archipelago.',
+            tripbest:'No. 1 of Best Things to Do in El Nido', instant:true
+        },
+        {
+            id:4, name:'Manila Bay Sunset Walk',
+            location:'Roxas Boulevard', city:'Manila', country:'Philippines',
+            images:['attractions/manila_bay_1.png'],
+            price:0, rating:4.5, reviews:3100, duration:'1-2 hours', category:'Scenic',
+            is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:0,
+            snippet:"Stroll along the iconic Roxas Boulevard boardwalk and witness Manila's legendary golden sunsets over the bay.",
+            tripbest:'No. 3 of Best Things to Do in Manila', instant:false
+        },
+        {
+            id:5, name:'Pandin Lake',
+            location:'San Pablo', city:'Laguna', country:'Philippines',
+            images:['attractions/pandin_lake_laguna_1.png'],
+            price:360, rating:4.8, reviews:2700, duration:'2 hours', category:'Nature',
+            is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:1,
+            snippet:'Drift across the serene twin crater lakes on a bamboo raft while local boatmen share stories of the area.',
+            tripbest:null, instant:true
+        },
+        {
+            id:6, name:'Puerto Princesa Underground River',
+            location:'Sabang', city:'Puerto Princesa', country:'Philippines',
+            images:['attractions/puerto_princesa_1.png','attractions/puerto_princesa_2.png','attractions/puerto_princesa_3.png'],
+            price:2200, rating:4.8, reviews:7500, duration:'Full day', category:'Nature',
+            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
+            snippet:"Paddle through a UNESCO World Heritage cave system, one of the world's longest navigable underground rivers.",
+            tripbest:'No. 1 of Best Things to Do in Puerto Princesa', instant:true
+        },
+        {
+            id:7, name:'Sto. Niño Cold Springs',
+            location:'Catarman', city:'Camiguin', country:'Philippines',
+            images:['attractions/sto_nino_cold_springs_1.png'],
+            price:50, rating:4.6, reviews:1800, duration:'Half day', category:'Relaxation',
+            is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:0,
+            snippet:'Soak in naturally cold freshwater springs surrounded by lush volcanic island greenery at an unbeatable price.',
+            tripbest:null, instant:false
+        },
+        {
+            id:8, name:'Taal Volcano Tour',
+            location:'Tagaytay Ridge', city:'Tagaytay', country:'Philippines',
+            images:['attractions/taal_volcano_1.png'],
+            price:1200, rating:4.7, reviews:4300, duration:'3 hours', category:'Nature',
+            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
+            snippet:"Hike or ride to the crater of one of the world's smallest active volcanoes set within a lake inside a lake.",
+            tripbest:'No. 2 of Best Things to Do in Tagaytay', instant:true
+        },
+        {
+            id:9, name:'White Water Kayaking',
+            location:'Cagayan River', city:'Cagayan de Oro', country:'Philippines',
+            images:['attractions/white_water_kayaking_cagayan_1.png'],
+            price:1800, rating:4.9, reviews:5100, duration:'3-4 hours', category:'Adventure',
+            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
+            snippet:"Paddle through thrilling rapids on the legendary Cagayan River — the Philippines' most exciting whitewater run.",
+            tripbest:'No. 1 of Best Things to Do in CDO', instant:true
+        },
     ];
 
     // ════════════════════════════════════════════════════════════
@@ -898,7 +980,7 @@
             return `
             <div class="att-card" data-id="${a.id}">
                 <div class="att-card-img-wrap">
-                    <img class="att-card-img" id="attImg-${a.id}" src="${imgs[idx]}" alt="${a.name}" onerror="attImgFallback(this,'${imgs[idx]}')">
+                    <img class="att-card-img" id="attImg-${a.id}" src="${imgs[idx]}" alt="${a.name}" loading="lazy">
                     ${arrowsHTML}
                     <button class="att-card-wishlist ${isWished?'active':''}" onclick="attToggleWishlist(event,${a.id})" title="Save to wishlist">${isWished?'❤️':'🤍'}</button>
                     ${dotsHTML}
@@ -926,23 +1008,11 @@
     }
 
     // ════════════════════════════════════════════════════════════
-    //  IMAGE FALLBACK
+    //  IMAGE FALLBACK  ← simplified, no more wrong paths to try
     // ════════════════════════════════════════════════════════════
     function attImgFallback(el, originalSrc) {
         el.onerror = null;
-        const filename = originalSrc.split('/').pop();
-        const fallbacks = [
-            'attractions_tours/' + filename,
-            'assets/attractions_tours/' + filename,
-            'assets/attractions tours/' + filename,
-        ].filter(p => p !== originalSrc);
-        let tried = 0;
-        function tryNext() {
-            if (tried >= fallbacks.length) { el.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80'; return; }
-            el.onerror = () => { tried++; tryNext(); };
-            el.src = fallbacks[tried++];
-        }
-        tryNext();
+        el.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80';
     }
 
     // ════════════════════════════════════════════════════════════
@@ -965,7 +1035,7 @@
         const img = document.getElementById(`attImg-${id}`);
         if (img) {
             img.style.opacity='0'; img.style.transition='opacity 0.22s ease';
-            setTimeout(() => { img.onerror=()=>attImgFallback(img,imgs[idx]); img.src=imgs[idx]; img.style.opacity='1'; }, 120);
+            setTimeout(() => { img.src=imgs[idx]; img.style.opacity='1'; }, 120);
         }
         const wrap = img ? img.closest('.att-card-img-wrap') : null;
         if (wrap) wrap.querySelectorAll('.att-carousel-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
@@ -1092,7 +1162,6 @@
     if (document.readyState !== 'loading') attRender();
     </script>
 
-    <!-- service-search-suggestions loads AFTER inline script so attFilterData/attRender are already defined -->
     <script src="service-search-suggestions.js"></script>
 
 </body>

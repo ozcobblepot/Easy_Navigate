@@ -1,1528 +1,1104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Your Booking - Easy Navigate</title>
-    <link rel="icon" type="image/png" href="assets/web-icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Your Booking - Easy Navigate</title>
+<link rel="icon" type="image/png" href="assets/web-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;}
 
-    <style>
-        /* ══════════════════════════════════════════════
-           PAGE LAYOUT
-           ══════════════════════════════════════════════ */
-        * { box-sizing: border-box; }
+/* FIX: styles.css has .service-page .header{position:absolute;background:transparent}
+   We don't put .service-page on body here, so the base .header rule applies normally.
+   These declarations lock in the correct style regardless. */
+.header{
+  background:#282D9E!important;
+  position:sticky!important;
+  top:0!important;
+  z-index:1000!important;
+  box-shadow:0 4px 24px rgba(40,45,158,.18)!important;
+}
 
-        body {
-            background: #f4f6fb;
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            margin: 0;
-        }
+body{background:#f4f6fb;font-family:'Inter',sans-serif;color:#1a2140;margin:0;}
 
-        .hb-page {
-            max-width: 1160px;
-            margin: 0 auto;
-            padding: 32px 24px 64px;
-        }
+/* BANNER */
+.hb-banner{background:linear-gradient(135deg,#1a1f6e 0%,#282D9E 60%,#3b40b8 100%);padding:28px 24px 32px;position:relative;overflow:hidden;}
+.hb-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='%23fff' fill-opacity='.04'/%3E%3C/svg%3E");pointer-events:none;}
+.hb-bi{max-width:1160px;margin:0 auto;position:relative;z-index:1;}
+.hb-bc{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px;flex-wrap:wrap;}
+.hb-bc a{color:rgba(255,255,255,.85);text-decoration:none;font-weight:500;}
+.hb-bc a:hover{color:#fff;text-decoration:underline;}
+.hb-bc i{font-size:9px;color:rgba(255,255,255,.4);}
+.hb-bc .cur{color:rgba(255,255,255,.9);font-weight:600;}
+.hb-brow{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.hb-btitle{font-size:1.75rem;font-weight:800;color:#fff;margin:0 0 4px;letter-spacing:-.4px;}
+.hb-bsub{font-size:13px;color:rgba(255,255,255,.72);margin:0;}
+.hb-steps{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.hb-step{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.45);}
+.hb-step.active{color:#fff;}
+.hb-snum{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.hb-step.active .hb-snum{background:#fff;color:#282D9E;border-color:#fff;}
+.hb-step.done  .hb-snum{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);}
+.hb-ssep{color:rgba(255,255,255,.3);font-size:11px;}
 
-        /* Breadcrumb */
-        .hb-breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--gray-500);
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .hb-breadcrumb a {
-            color: var(--blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .hb-breadcrumb a:hover { text-decoration: underline; }
-        .hb-breadcrumb i { font-size: 10px; color: var(--gray-400); }
+/* PAGE */
+.hb-page{max-width:1160px;margin:0 auto;padding:28px 24px 64px;}
 
-        /* Page title */
-        .hb-page-title {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--text);
-            margin: 0 0 6px;
-            letter-spacing: -0.3px;
-        }
-        .hb-page-sub {
-            font-size: 13.5px;
-            color: var(--gray-500);
-            margin: 0 0 28px;
-        }
+/* SAVINGS */
+.hb-savings{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #6ee7b7;border-radius:12px;padding:14px 18px;margin-bottom:24px;display:none;flex-direction:column;gap:4px;}
+.hb-savings.show{display:flex;}
+.hb-sav-row{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#065f46;}
+.hb-sav-row i{color:#10b981;}
 
-        /* Savings banner */
-        .hb-savings-banner {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            border: 1px solid #6ee7b7;
-            border-radius: 12px;
-            padding: 14px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 24px;
-        }
-        .hb-savings-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #065f46;
-        }
-        .hb-savings-row i { font-size: 13px; color: #10b981; }
+/* LAYOUT */
+.hb-layout{display:grid;grid-template-columns:1fr 370px;gap:24px;align-items:start;}
+.hb-left{display:flex;flex-direction:column;gap:20px;}
 
-        /* Two-column layout */
-        .hb-layout {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 24px;
-            align-items: start;
-        }
+/* CARD */
+.hb-card{background:#fff;border:1px solid #e5e8f0;border-radius:16px;padding:24px;}
+.hb-ctitle{font-size:1.1rem;font-weight:800;color:#1a2140;margin:0 0 4px;letter-spacing:-.2px;}
+.hb-csub{font-size:12.5px;color:#8892aa;margin:0 0 20px;}
 
-        /* ══════════════════════════════════════════════
-           LEFT COLUMN — form sections
-           ══════════════════════════════════════════════ */
-        .hb-left { display: flex; flex-direction: column; gap: 20px; }
+/* FORM */
+.hb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.hb-grid.one{grid-template-columns:1fr;}
+.hb-field{display:flex;flex-direction:column;gap:5px;}
+.hb-lbl{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.5px;}
+.hb-lbl .req{color:#e53935;}
+.hb-inp{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13.5px;color:#1a2140;outline:none;background:#fff;width:100%;transition:border-color .2s,box-shadow .2s;}
+.hb-inp:focus{border-color:#282D9E;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+.hb-inp.err{border-color:#e53935!important;}
+.hb-err{font-size:11px;color:#e53935;font-weight:600;display:none;margin-top:2px;}
+.hb-err.show{display:block;}
+.hb-hint{font-size:11px;color:#a0aabb;margin-top:3px;}
+.hb-phone-row{display:grid;grid-template-columns:96px 1fr;gap:8px;}
+.hb-prefix{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 12px;font-size:13px;font-weight:700;background:#f8f9fc;color:#1a2140;display:flex;align-items:center;gap:6px;cursor:default;}
+.hb-prefix i{font-size:8px;margin-left:auto;color:#a0aabb;}
 
-        .hb-card {
-            background: #fff;
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 24px;
-        }
+/* COUNTERS */
+.hb-ctr-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #f0f2f8;}
+.hb-ctr-row:last-of-type{border-bottom:none;}
+.hb-ctr-name{font-size:14px;font-weight:700;color:#1a2140;}
+.hb-ctr-desc{font-size:12px;color:#8892aa;margin-top:2px;}
+.hb-ctrls{display:flex;align-items:center;gap:14px;}
+.hb-cbtn{width:34px;height:34px;border-radius:50%;border:1.5px solid #c8cee0;background:#fff;font-size:20px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#6b7592;transition:border-color .15s,color .15s;user-select:none;}
+.hb-cbtn:hover:not([disabled]){border-color:#282D9E;color:#282D9E;}
+.hb-cbtn[disabled]{color:#c8cee0;border-color:#e5e8f0;cursor:default;}
+.hb-cval{font-size:17px;font-weight:800;color:#1a2140;min-width:26px;text-align:center;}
 
-        .hb-card-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--text);
-            margin: 0 0 4px;
-            letter-spacing: -0.2px;
-        }
-        .hb-card-sub {
-            font-size: 12.5px;
-            color: var(--gray-500);
-            margin: 0 0 20px;
-        }
+/* DATES */
+.hb-sep{height:1px;background:#f0f2f8;margin:16px 0;}
+.hb-slbl{font-size:13px;font-weight:700;color:#1a2140;margin:0 0 10px;}
+.hb-nights-note{display:flex;align-items:flex-start;gap:9px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 13px;font-size:12px;color:#92400e;font-weight:500;margin-top:10px;line-height:1.5;}
+.hb-nights-note i{color:#d97706;margin-top:1px;flex-shrink:0;}
 
-        /* Form fields */
-        .hb-form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-        .hb-form-grid.single { grid-template-columns: 1fr; }
-        .hb-form-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+/* ROOM OPTIONS */
+.hb-room-opts{display:flex;flex-direction:column;gap:10px;}
+.hb-room-opt{border:1.5px solid #e5e8f0;border-radius:10px;padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .18s,background .18s;user-select:none;}
+.hb-room-opt:hover{border-color:#282D9E;}
+.hb-room-opt.sel{border-color:#282D9E;background:#f0f4ff;}
+.hb-room-radio{width:18px;height:18px;border-radius:50%;border:2px solid #c8cee0;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .15s;}
+.hb-room-opt.sel .hb-room-radio{border-color:#282D9E;}
+.hb-room-opt.sel .hb-room-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#282D9E;}
+.hb-rname{font-size:14px;font-weight:700;color:#1a2140;}
+.hb-rdesc{font-size:12px;color:#8892aa;margin-top:2px;}
+.hb-rprice{font-size:13px;font-weight:700;color:#282D9E;white-space:nowrap;margin-left:auto;}
 
-        .hb-field { display: flex; flex-direction: column; gap: 5px; }
-        .hb-field-lbl {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gray-500);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .hb-field-lbl .req { color: #e53935; }
-        .hb-field-inp {
-            border: 1.5px solid var(--gray-200);
-            border-radius: 8px;
-            padding: 10px 13px;
-            font-family: 'Inter', sans-serif;
-            font-size: 13.5px;
-            color: var(--text);
-            outline: none;
-            background: #fff;
-            width: 100%;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .hb-field-inp:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(40,45,158,0.08);
-        }
-        .hb-field-inp.invalid { border-color: #e53935 !important; }
-        .hb-field-err {
-            font-size: 11px; color: #e53935;
-            font-weight: 600; display: none;
-        }
-        .hb-field-err.show { display: block; }
+/* BED / ELEV */
+.hb-radio-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.hb-radio-opt{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#1a2140;font-weight:500;cursor:pointer;}
+.hb-radio-opt input{accent-color:#282D9E;width:16px;height:16px;cursor:pointer;}
+.hb-elev-opts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+.hb-elev-btn{padding:8px 16px;border:1.5px solid #e5e8f0;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#6b7592;background:#fff;cursor:pointer;transition:border-color .15s,background .15s,color .15s;}
+.hb-elev-btn:hover{border-color:#282D9E;color:#282D9E;}
+.hb-elev-btn.sel{border-color:#282D9E;background:#eff2ff;color:#282D9E;}
 
-        .hb-phone-row { display: grid; grid-template-columns: 96px 1fr; gap: 8px; }
-        .hb-phone-prefix {
-            border: 1.5px solid var(--gray-200);
-            border-radius: 8px;
-            padding: 10px 12px;
-            font-size: 13px;
-            font-weight: 700;
-            background: var(--gray-50);
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .hb-phone-prefix i { font-size: 8px; margin-left: auto; color: var(--gray-400); }
+/* TOGGLES */
+.hb-tog-btn{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:#1a2140;cursor:pointer;background:none;border:none;padding:0;font-family:'Inter',sans-serif;}
+.hb-tog-btn i{font-size:11px;color:#8892aa;transition:transform .2s;}
+.hb-tog-btn.open i{transform:rotate(180deg);}
+.hb-tog-body{display:none;margin-top:14px;}
+.hb-tog-body.open{display:block;}
+textarea.hb-inp{resize:vertical;min-height:90px;line-height:1.5;}
 
-        /* Add guest link */
-        .hb-add-guest {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--blue);
-            cursor: pointer;
-            margin-top: 4px;
-            text-decoration: none;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-        .hb-add-guest:hover { text-decoration: underline; }
+/* ADD GUEST */
+.hb-add-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#282D9E;cursor:pointer;background:none;border:none;padding:0;font-family:'Inter',sans-serif;margin-top:6px;}
+.hb-add-btn:hover{text-decoration:underline;}
 
-        /* ── Special Requests ── */
-        .hb-bed-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-        .hb-radio-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13.5px;
-            color: var(--text);
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .hb-radio-label input[type="radio"] { accent-color: var(--blue); width: 16px; height: 16px; }
+/* VOUCHERS */
+.hb-promo-tog{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:#1a2140;cursor:pointer;background:none;border:none;padding:0;font-family:'Inter',sans-serif;margin-bottom:14px;}
+.hb-promo-tog i{font-size:11px;color:#8892aa;transition:transform .2s;}
+.hb-promo-tog.open i{transform:rotate(180deg);}
+.hb-promo-body{display:none;margin-bottom:16px;}
+.hb-promo-body.open{display:block;}
+.hb-promo-row{display:flex;gap:10px;margin-bottom:14px;}
+.hb-promo-row .hb-inp{flex:1;}
+.hb-apply-btn{padding:10px 20px;background:#282D9E;color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.hb-apply-btn:hover{background:#1F237E;}
+.hb-vouchers{display:flex;flex-direction:column;gap:10px;}
+.hb-voucher{border:1.5px solid #e5e8f0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.hb-voucher:hover{border-color:#282D9E;}
+.hb-voucher.sel{border-color:#282D9E;background:#f0f4ff;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+.hb-vi{width:40px;height:40px;border-radius:10px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.hb-vinfo{flex:1;min-width:0;}
+.hb-vname{font-size:13.5px;font-weight:700;color:#1a2140;margin-bottom:2px;}
+.hb-vdesc{font-size:12px;color:#8892aa;line-height:1.4;}
+.hb-vtnc{font-size:11px;color:#282D9E;font-weight:600;margin-top:4px;cursor:pointer;}
+.hb-vchk{width:22px;height:22px;border-radius:50%;border:2px solid #c8cee0;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.hb-voucher.sel .hb-vchk{background:#282D9E;border-color:#282D9E;color:#fff;}
+.hb-vchk i{font-size:10px;display:none;}
+.hb-voucher.sel .hb-vchk i{display:block;}
 
-        .hb-other-requests-toggle {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--text);
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-        .hb-other-requests-toggle i { font-size: 11px; color: var(--gray-500); transition: transform 0.2s; }
-        .hb-other-requests-toggle.open i { transform: rotate(180deg); }
+/* PAYMENT */
+.hb-pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.hb-pay-method{border:1.5px solid #e5e8f0;border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.hb-pay-method:hover{border-color:#282D9E;}
+.hb-pay-method.sel{border-color:#282D9E;background:#f8faff;box-shadow:0 0 0 3px rgba(40,45,158,.07);}
+.hb-pay-hdr{display:flex;align-items:center;gap:12px;}
+.hb-pm-dot{width:18px;height:18px;border-radius:50%;border:2px solid #c8cee0;flex-shrink:0;position:relative;transition:border-color .15s;}
+.hb-pay-method.sel .hb-pm-dot{border-color:#282D9E;}
+.hb-pay-method.sel .hb-pm-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#282D9E;}
+.hb-pm-lbl{font-size:14px;font-weight:700;color:#1a2140;flex:1;}
+.hb-pm-logos{display:flex;align-items:center;gap:5px;}
+.hb-pm-chip{height:20px;min-width:30px;border-radius:3px;border:1px solid #e5e8f0;background:#fff;font-size:9px;font-weight:800;color:#6b7592;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.hb-pm-more{font-size:11px;font-weight:700;color:#8892aa;background:#f0f2f8;border-radius:4px;padding:2px 6px;}
+.hb-pay-fields{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #f0f2f8;}
+.hb-pay-method.sel .hb-pay-fields{display:block;}
 
-        .hb-other-requests-body {
-            display: none;
-            margin-top: 14px;
-        }
-        .hb-other-requests-body.open { display: block; }
+/* SUBMIT */
+.hb-submit{width:100%;padding:15px;background:#282D9E;color:#fff;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s;box-shadow:0 4px 16px rgba(40,45,158,.3);display:flex;align-items:center;justify-content:center;gap:8px;}
+.hb-submit:hover{background:#1F237E;transform:translateY(-1px);}
+.hb-submit:active{transform:translateY(0);}
+.hb-spin{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+.hb-submit.loading .hb-spin{display:block;}
+.hb-submit.loading .hb-stxt{opacity:.65;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hb-snote{font-size:12px;color:#a0aabb;text-align:center;margin-top:10px;line-height:1.5;}
+.hb-snote i{color:#282D9E;font-size:11px;}
 
-        textarea.hb-field-inp {
-            resize: vertical;
-            min-height: 90px;
-            line-height: 1.5;
-        }
+/* RIGHT / SUMMARY */
+.hb-right{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+.hb-summary{background:#fff;border:1px solid #e5e8f0;border-radius:16px;overflow:hidden;}
+.hb-ph{display:flex;gap:14px;padding:18px;border-bottom:1px solid #f0f2f8;}
+.hb-pimg{width:72px;height:72px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#f0f2f8;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.hb-pinfo{flex:1;min-width:0;}
+.hb-pname{font-size:14.5px;font-weight:800;color:#1a2140;line-height:1.3;margin-bottom:4px;}
+.hb-pstars{color:#f59e0b;font-size:12px;margin-bottom:6px;}
+.hb-pscore{display:inline-flex;align-items:center;gap:6px;font-size:12px;}
+.hb-scnum{background:#282D9E;color:#fff;font-size:11px;font-weight:800;border-radius:6px;padding:2px 7px;}
+.hb-screv{color:#8892aa;font-weight:500;}
+.hb-rb{padding:16px 18px;border-bottom:1px solid #f0f2f8;}
+.hb-rbn{font-size:14px;font-weight:700;color:#1a2140;margin-bottom:10px;}
+.hb-rtags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.hb-rtag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:#282D9E;font-weight:600;background:#eff2ff;border-radius:20px;padding:3px 9px;}
+.hb-rtag i{font-size:10px;}
+.hb-rbadge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:#7c3aed;font-weight:600;background:#ede9fe;border-radius:20px;padding:3px 9px;}
+.hb-rnr{font-size:11.5px;color:#8892aa;}
+.hb-db{padding:16px 18px;border-bottom:1px solid #f0f2f8;}
+.hb-dtitle{font-size:13px;font-weight:700;color:#1a2140;margin-bottom:12px;}
+.hb-drow{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.hb-drow:last-of-type{margin-bottom:0;}
+.hb-dlbl{font-size:11px;font-weight:700;color:#a0aabb;text-transform:uppercase;letter-spacing:.4px;min-width:72px;}
+.hb-dval{font-size:13px;font-weight:700;color:#1a2140;}
+.hb-dsub{font-size:11.5px;color:#8892aa;margin-top:1px;}
+.hb-dmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid #f0f2f8;}
+.hb-dmitem{display:flex;align-items:center;gap:5px;font-size:12px;color:#6b7592;font-weight:600;}
+.hb-dmitem i{font-size:11px;color:#282D9E;}
+.hb-dmsep{color:#c8cee0;}
+.hb-pb{padding:16px 18px;border-bottom:1px solid #f0f2f8;}
+.hb-ptitle{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
+.hb-pr-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;color:#6b7592;font-weight:500;margin-bottom:8px;gap:8px;}
+.hb-pr-row span:last-child{font-weight:600;color:#1a2140;white-space:nowrap;}
+.hb-pr-row.disc span{color:#16a34a;}
+.hb-pdiv{height:1px;background:#e5e8f0;margin:12px 0;}
+.hb-ptotal{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:800;color:#1a2140;}
+.hb-ptotal span:last-child{color:#282D9E;}
+.hb-psaved{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#16a34a;margin-top:8px;}
+.hb-pmatch{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#282D9E;margin-top:6px;cursor:pointer;}
+.hb-pmatch:hover{text-decoration:underline;}
+.hb-ib{padding:16px 18px;border-bottom:1px solid #f0f2f8;}
+.hb-ib:last-child{border-bottom:none;}
+.hb-itog{display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:none;border:none;padding:0;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.hb-itog-title{font-size:13.5px;font-weight:700;color:#1a2140;}
+.hb-itog i{font-size:12px;color:#a0aabb;transition:transform .2s;}
+.hb-itog.open i{transform:rotate(180deg);}
+.hb-ibody{display:none;padding-top:12px;}
+.hb-ibody.open{display:block;}
+.hb-ibody p{font-size:12.5px;color:#6b7592;line-height:1.6;margin:0 0 8px;}
+.hb-ibody p:last-child{margin:0;}
+.hb-ibody ul{margin:0;padding-left:18px;}
+.hb-ibody li{font-size:12.5px;color:#6b7592;line-height:1.6;margin-bottom:4px;}
+.hb-cfee{font-size:13px;font-weight:700;color:#dc2626;margin-bottom:8px;}
+.hb-rew{font-size:13px;color:#6b7592;line-height:1.5;}
+.hb-rew span{color:#282D9E;font-weight:700;}
 
-        /* ── Promo Code ── */
-        .hb-promo-toggle {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--text);
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            margin-bottom: 14px;
-        }
-        .hb-promo-toggle i { font-size: 11px; color: var(--gray-500); transition: transform 0.2s; }
-        .hb-promo-toggle.open i { transform: rotate(180deg); }
+/* SUCCESS */
+.hb-success{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;}
+.hb-success.show{display:flex;}
+.hb-sbox{background:#fff;border-radius:20px;padding:48px 52px;text-align:center;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.22);animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{transform:scale(.75);opacity:0;}to{transform:scale(1);opacity:1;}}
+.hb-sicon{font-size:3.8rem;color:#16a34a;margin-bottom:18px;}
+.hb-stitle2{font-size:1.6rem;font-weight:800;color:#1a2140;margin-bottom:8px;}
+.hb-ssub{font-size:.92rem;color:#8892aa;margin-bottom:18px;line-height:1.65;}
+.hb-sref{background:#f0f4ff;border-radius:10px;padding:14px 22px;font-size:.9rem;font-weight:700;color:#282D9E;margin-bottom:22px;}
+.hb-scta{background:#282D9E;color:#fff;border:none;border-radius:10px;padding:13px 38px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;}
+.hb-scta:hover{background:#1F237E;}
 
-        .hb-promo-body { display: none; margin-bottom: 16px; }
-        .hb-promo-body.open { display: block; }
-
-        .hb-promo-input-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        .hb-promo-input-row .hb-field-inp { flex: 1; }
-        .hb-promo-apply {
-            padding: 10px 20px;
-            background: var(--blue);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: background 0.15s;
-        }
-        .hb-promo-apply:hover { background: var(--blue-dark); }
-
-        /* Voucher cards */
-        .hb-vouchers { display: flex; flex-direction: column; gap: 10px; }
-        .hb-voucher {
-            border: 1.5px solid var(--gray-200);
-            border-radius: 12px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
-            transition: border-color 0.18s, box-shadow 0.18s;
-            position: relative;
-        }
-        .hb-voucher:hover { border-color: var(--blue); }
-        .hb-voucher.selected {
-            border-color: var(--blue);
-            background: #f0f4ff;
-            box-shadow: 0 0 0 3px rgba(40,45,158,0.08);
-        }
-        .hb-voucher-icon {
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            background: #fef3c7;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .hb-voucher-info { flex: 1; min-width: 0; }
-        .hb-voucher-name {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 2px;
-        }
-        .hb-voucher-desc {
-            font-size: 12px;
-            color: var(--gray-500);
-            line-height: 1.4;
-        }
-        .hb-voucher-check {
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            border: 2px solid var(--gray-300);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.15s;
-        }
-        .hb-voucher.selected .hb-voucher-check {
-            background: var(--blue);
-            border-color: var(--blue);
-            color: #fff;
-        }
-        .hb-voucher-check i { font-size: 10px; display: none; }
-        .hb-voucher.selected .hb-voucher-check i { display: block; }
-
-        /* ── Payment ── */
-        .hb-payment-methods {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .hb-payment-method {
-            border: 1.5px solid var(--gray-200);
-            border-radius: 12px;
-            padding: 14px 16px;
-            cursor: pointer;
-            transition: border-color 0.18s, box-shadow 0.18s;
-        }
-        .hb-payment-method.selected {
-            border-color: var(--blue);
-            background: #f8faff;
-            box-shadow: 0 0 0 3px rgba(40,45,158,0.07);
-        }
-        .hb-payment-method-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .hb-pm-radio {
-            width: 18px; height: 18px;
-            border-radius: 50%;
-            border: 2px solid var(--gray-300);
-            flex-shrink: 0;
-            position: relative;
-            transition: border-color 0.15s;
-        }
-        .hb-payment-method.selected .hb-pm-radio { border-color: var(--blue); }
-        .hb-payment-method.selected .hb-pm-radio::after {
-            content: '';
-            position: absolute;
-            inset: 3px;
-            border-radius: 50%;
-            background: var(--blue);
-        }
-        .hb-pm-label {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text);
-            flex: 1;
-        }
-        .hb-pm-logos {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .hb-pm-logo {
-            height: 20px;
-            width: auto;
-            border-radius: 3px;
-            border: 1px solid var(--gray-200);
-            padding: 2px 4px;
-            background: #fff;
-            font-size: 9px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-600);
-            min-width: 30px;
-        }
-        .hb-pm-more {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gray-500);
-            background: var(--gray-100);
-            border-radius: 4px;
-            padding: 2px 6px;
-        }
-
-        .hb-payment-fields {
-            display: none;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--gray-100);
-        }
-        .hb-payment-method.selected .hb-payment-fields { display: block; }
-
-        /* ── Submit button ── */
-        .hb-submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--blue);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-            box-shadow: 0 4px 16px rgba(40,45,158,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .hb-submit-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
-        .hb-submit-btn:active { transform: translateY(0); }
-        .hb-submit-spinner {
-            display: none;
-            width: 17px; height: 17px;
-            border: 2px solid rgba(255,255,255,.35);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: hbSpin .7s linear infinite;
-        }
-        .hb-submit-btn.loading .hb-submit-spinner { display: block; }
-        .hb-submit-btn.loading .hb-submit-text { opacity: 0.65; }
-        @keyframes hbSpin { to { transform: rotate(360deg); } }
-
-        .hb-submit-note {
-            font-size: 12px;
-            color: var(--gray-400);
-            text-align: center;
-            margin-top: 10px;
-            line-height: 1.5;
-        }
-        .hb-submit-note i { color: var(--blue); font-size: 11px; }
-
-        /* ══════════════════════════════════════════════
-           RIGHT COLUMN — sticky summary
-           ══════════════════════════════════════════════ */
-        .hb-right {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: sticky;
-            top: 24px;
-        }
-
-        .hb-summary-card {
-            background: #fff;
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        /* Property photo + name */
-        .hb-property-header {
-            display: flex;
-            gap: 14px;
-            padding: 18px 18px 16px;
-            border-bottom: 1px solid var(--gray-100);
-        }
-        .hb-property-img {
-            width: 72px;
-            height: 72px;
-            border-radius: 10px;
-            object-fit: cover;
-            flex-shrink: 0;
-            background: var(--gray-100);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-        .hb-property-info { flex: 1; min-width: 0; }
-        .hb-property-name {
-            font-size: 14.5px;
-            font-weight: 800;
-            color: var(--text);
-            line-height: 1.3;
-            margin-bottom: 4px;
-        }
-        .hb-property-stars { color: #f59e0b; font-size: 12px; margin-bottom: 6px; }
-        .hb-property-score {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-        }
-        .hb-score-badge {
-            background: var(--blue);
-            color: #fff;
-            font-size: 11px;
-            font-weight: 800;
-            border-radius: 6px;
-            padding: 2px 7px;
-        }
-        .hb-score-reviews { color: var(--gray-500); font-weight: 500; }
-
-        /* Room detail block */
-        .hb-room-block {
-            padding: 16px 18px;
-            border-bottom: 1px solid var(--gray-100);
-        }
-        .hb-room-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 10px;
-        }
-        .hb-room-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 10px;
-        }
-        .hb-room-feature {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11.5px;
-            color: var(--blue);
-            font-weight: 600;
-            background: #eff2ff;
-            border-radius: 20px;
-            padding: 3px 9px;
-        }
-        .hb-room-feature i { font-size: 10px; }
-        .hb-room-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11.5px;
-            color: #7c3aed;
-            font-weight: 600;
-            background: #ede9fe;
-            border-radius: 20px;
-            padding: 3px 9px;
-        }
-        .hb-room-nr {
-            font-size: 11.5px;
-            color: var(--gray-500);
-            font-weight: 500;
-        }
-
-        /* Date block */
-        .hb-dates-block {
-            padding: 16px 18px;
-            border-bottom: 1px solid var(--gray-100);
-        }
-        .hb-dates-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .hb-dates-row:last-child { margin-bottom: 0; }
-        .hb-date-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gray-400);
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            min-width: 72px;
-        }
-        .hb-date-val {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text);
-        }
-        .hb-date-sub {
-            font-size: 11.5px;
-            color: var(--gray-500);
-            font-weight: 400;
-            margin-top: 1px;
-        }
-        .hb-dates-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--gray-100);
-        }
-        .hb-dates-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12.5px;
-            color: var(--gray-600);
-            font-weight: 600;
-        }
-        .hb-dates-meta-item i { font-size: 11px; color: var(--blue); }
-        .hb-dates-meta-sep { color: var(--gray-200); }
-
-        /* Price detail block */
-        .hb-price-block {
-            padding: 16px 18px;
-            border-bottom: 1px solid var(--gray-100);
-        }
-        .hb-price-block-title {
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--text);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 14px;
-        }
-        .hb-pr-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            font-size: 13px;
-            color: var(--gray-600);
-            font-weight: 500;
-            margin-bottom: 8px;
-            gap: 8px;
-        }
-        .hb-pr-row span:last-child { font-weight: 600; color: var(--text); white-space: nowrap; }
-        .hb-pr-row.discount span:last-child { color: #16a34a; }
-        .hb-pr-row.discount span:first-child { color: #16a34a; }
-        .hb-pr-divider { height: 1px; background: var(--gray-200); margin: 12px 0; }
-        .hb-pr-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 17px;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .hb-pr-total span:last-child { color: var(--blue); }
-        .hb-pr-savings {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #16a34a;
-            margin-top: 8px;
-        }
-        .hb-pr-savings i { font-size: 12px; }
-        .hb-price-match {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--blue);
-            margin-top: 6px;
-            cursor: pointer;
-        }
-        .hb-price-match:hover { text-decoration: underline; }
-
-        /* Cancellation, Rewards, Fine Print */
-        .hb-info-block {
-            padding: 16px 18px;
-            border-bottom: 1px solid var(--gray-100);
-        }
-        .hb-info-block:last-child { border-bottom: none; }
-        .hb-info-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            width: 100%;
-            text-align: left;
-        }
-        .hb-info-toggle-title {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--text);
-        }
-        .hb-info-toggle i { font-size: 12px; color: var(--gray-400); transition: transform 0.2s; }
-        .hb-info-toggle.open i { transform: rotate(180deg); }
-        .hb-info-body {
-            display: none;
-            padding-top: 12px;
-        }
-        .hb-info-body.open { display: block; }
-        .hb-info-body p {
-            font-size: 12.5px;
-            color: var(--gray-600);
-            line-height: 1.6;
-            margin: 0 0 8px;
-        }
-        .hb-info-body p:last-child { margin-bottom: 0; }
-        .hb-info-body ul {
-            margin: 0;
-            padding-left: 18px;
-        }
-        .hb-info-body ul li {
-            font-size: 12.5px;
-            color: var(--gray-600);
-            line-height: 1.6;
-            margin-bottom: 4px;
-        }
-        .hb-cancel-fee {
-            font-size: 13px;
-            font-weight: 700;
-            color: #dc2626;
-            margin-bottom: 8px;
-        }
-        .hb-rewards-earn {
-            font-size: 13px;
-            color: var(--gray-600);
-            line-height: 1.5;
-        }
-        .hb-rewards-earn span { color: var(--blue); font-weight: 700; }
-
-        /* ── Success overlay ── */
-        .hb-success {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,.55);
-            backdrop-filter: blur(4px);
-            z-index: 99999;
-            align-items: center;
-            justify-content: center;
-        }
-        .hb-success.show { display: flex; }
-        .hb-success-box {
-            background: #fff;
-            border-radius: 20px;
-            padding: 48px 52px;
-            text-align: center;
-            max-width: 480px;
-            width: 90%;
-            box-shadow: 0 24px 64px rgba(0,0,0,.22);
-            animation: hbPopIn .4s cubic-bezier(.34,1.56,.64,1) both;
-        }
-        @keyframes hbPopIn {
-            from { transform: scale(.75); opacity: 0; }
-            to   { transform: scale(1);   opacity: 1; }
-        }
-        .hb-success-icon  { font-size: 3.8rem; color: #16a34a; margin-bottom: 18px; }
-        .hb-success-title { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-        .hb-success-sub   { font-size: .92rem; color: var(--gray-500); margin-bottom: 18px; line-height: 1.65; }
-        .hb-success-ref   {
-            background: #f0f4ff;
-            border-radius: 10px;
-            padding: 14px 22px;
-            font-size: .9rem;
-            font-weight: 700;
-            color: var(--blue);
-            margin-bottom: 22px;
-        }
-        .hb-success-cta {
-            background: var(--blue);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 13px 38px;
-            font-family: 'Inter', sans-serif;
-            font-size: .95rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        .hb-success-cta:hover { background: var(--blue-dark); }
-
-        /* ── Responsive ── */
-        @media (max-width: 900px) {
-            .hb-layout { grid-template-columns: 1fr; }
-            .hb-right { position: static; }
-        }
-        @media (max-width: 600px) {
-            .hb-page { padding: 20px 16px 48px; }
-            .hb-form-grid { grid-template-columns: 1fr; }
-            .hb-form-grid.triple { grid-template-columns: 1fr 1fr; }
-            .hb-card { padding: 18px 16px; }
-        }
-    </style>
+/* RESPONSIVE */
+@media(max-width:960px){.hb-layout{grid-template-columns:1fr;}.hb-right{position:static;}.hb-steps{display:none;}}
+@media(max-width:600px){.hb-page{padding:20px 16px 48px;}.hb-grid{grid-template-columns:1fr;}.hb-card{padding:18px 16px;}.hb-banner{padding:20px 16px 24px;}.hb-btitle{font-size:1.4rem;}}
+</style>
 </head>
 
-<body class="service-page service-hotel">
+<!-- NO .service-page on body — that CSS class makes header transparent/absolute -->
+<body>
 
-    <!-- ══ HEADER ══ -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="top-nav">
-                <a class="logo" href="index.html">
-                    <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
-                </a>
-                <div class="top-right">
-                    <button class="currency-btn">
-                        PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon">
-                    </button>
-                    <button class="support-btn">
-                        Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i>
-                    </button>
-                    <div class="relative">
-                        <button class="support-btn" onclick="toggleDropdown('findBookingsMenu', event)">
-                            Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i>
-                        </button>
-                        <div class="dropdown-menu" id="findBookingsMenu">
-                            <div class="dropdown-item" onclick="selectFindBooking('hotel')">
-                                <i class="fas fa-bed fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Hotel &amp; Homes</span>
-                                    <span class="fb-desc">Book hotels, rooms, and homes for your stay.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('car')">
-                                <i class="fas fa-car fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Car Rental</span>
-                                    <span class="fb-desc">Find and reserve cars for flexible local travel.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('flights')">
-                                <i class="fas fa-plane fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Flights</span>
-                                    <span class="fb-desc">Search flights and manage your air bookings fast.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('attractions')">
-                                <i class="fas fa-ticket-alt fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Attraction &amp; Tours</span>
-                                    <span class="fb-desc">Discover tickets, tours, and activities in one place.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('taxi')">
-                                <i class="fas fa-taxi fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Airport Taxis</span>
-                                    <span class="fb-desc">Pre-book airport transfers and private taxi rides.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
-                </div>
-            </div>
+<!-- HEADER -->
+<header class="header">
+  <div class="nav-container">
+    <div class="top-nav">
+      <a class="logo" href="index.html">
+        <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+      </a>
+      <div class="top-right">
+        <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="PH" class="flag-icon"></button>
+        <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+        <div class="relative">
+          <button class="support-btn" id="fbBtn">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+          <div class="dropdown-menu" id="fbMenu">
+            <div class="dropdown-item" data-page="hotel &amp; homes.html"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+            <div class="dropdown-item" data-page="car-rental.html"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+            <div class="dropdown-item" data-page="flights.html"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
+            <div class="dropdown-item" data-page="attractions.html"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
+            <div class="dropdown-item" data-page="airport-taxis.html"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
+          </div>
         </div>
-    </header>
-
-    <!-- ══ BOOKING PAGE ══ -->
-    <div class="hb-page">
-
-        <!-- Breadcrumb -->
-        <div class="hb-breadcrumb">
-            <a href="index.html"><i class="fas fa-home"></i> Home</a>
-            <i class="fas fa-chevron-right"></i>
-            <a href="hotel.html">Hotel &amp; Homes</a>
-            <i class="fas fa-chevron-right"></i>
-            <span id="hbBreadcrumbHotel">Hotel</span>
-            <i class="fas fa-chevron-right"></i>
-            <span>Complete Booking</span>
-        </div>
-
-        <!-- Page heading -->
-        <h1 class="hb-page-title">Complete Your Booking</h1>
-        <p class="hb-page-sub">Fill in your details to confirm your reservation</p>
-
-        <!-- Savings banner -->
-        <div class="hb-savings-banner" id="hbSavingsBanner" style="display:none">
-            <div class="hb-savings-row">
-                <i class="fas fa-gem"></i>
-                <span id="hbSavingsText">You've saved a total of PHP 0!</span>
-            </div>
-            <div class="hb-savings-row">
-                <i class="fas fa-thumbs-up"></i>
-                <span>This property's best price is yours</span>
-            </div>
-        </div>
-
-        <div class="hb-layout">
-
-            <!-- ════ LEFT ════ -->
-            <div class="hb-left">
-
-                <!-- Who's staying -->
-                <div class="hb-card">
-                    <h2 class="hb-card-title">Who's staying?</h2>
-                    <p class="hb-card-sub">Guest names must match the valid ID which will be used at check-in.</p>
-
-                    <div class="hb-form-grid">
-                        <div class="hb-field">
-                            <label class="hb-field-lbl">First name <span class="req">*</span></label>
-                            <input id="hbFirstName" type="text" class="hb-field-inp" placeholder="Use only English letters">
-                            <span class="hb-field-err" id="hb-err-firstName">First name is required.</span>
-                        </div>
-                        <div class="hb-field">
-                            <label class="hb-field-lbl">Last name <span class="req">*</span></label>
-                            <input id="hbLastName" type="text" class="hb-field-inp" placeholder="Use only English letters">
-                            <span class="hb-field-err" id="hb-err-lastName">Last name is required.</span>
-                        </div>
-                    </div>
-
-                    <div class="hb-form-grid">
-                        <div class="hb-field">
-                            <label class="hb-field-lbl">Email <span class="req">*</span></label>
-                            <input id="hbEmail" type="email" class="hb-field-inp" placeholder="your@email.com">
-                            <span class="hb-field-err" id="hb-err-email">Enter a valid email.</span>
-                            <span style="font-size:11px;color:var(--gray-400);margin-top:3px;">Booking confirmation will be sent to this email</span>
-                        </div>
-                        <div class="hb-field">
-                            <label class="hb-field-lbl">Phone number <span class="req">*</span></label>
-                            <div class="hb-phone-row">
-                                <div class="hb-phone-prefix">+63 <i class="fas fa-chevron-down"></i></div>
-                                <input id="hbPhone" type="tel" class="hb-field-inp" placeholder="Phone number">
-                            </div>
-                            <span class="hb-field-err" id="hb-err-phone">Phone number is required.</span>
-                        </div>
-                    </div>
-
-                    <button class="hb-add-guest" onclick="toggleAddGuest()">
-                        <i class="fas fa-plus-circle"></i>
-                        <span id="hbAddGuestLabel">+ Add New Guest (Optional)</span>
-                    </button>
-
-                    <div id="hbGuestFields" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid var(--gray-100);">
-                        <div class="hb-form-grid">
-                            <div class="hb-field">
-                                <label class="hb-field-lbl">Guest first name</label>
-                                <input type="text" class="hb-field-inp" placeholder="Use only English letters">
-                            </div>
-                            <div class="hb-field">
-                                <label class="hb-field-lbl">Guest last name</label>
-                                <input type="text" class="hb-field-inp" placeholder="Use only English letters">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Special Requests -->
-                <div class="hb-card">
-                    <h2 class="hb-card-title">Special Requests <span style="font-size:13px;font-weight:400;color:var(--gray-400)">(Optional)</span></h2>
-                    <p class="hb-card-sub">The property will do its best, but cannot guarantee to fulfill all requests.</p>
-
-                    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px;">Bed type preference</div>
-                    <div class="hb-bed-options">
-                        <label class="hb-radio-label">
-                            <input type="radio" name="bedPref" value="double" checked>
-                            1 double bed preferred
-                        </label>
-                        <label class="hb-radio-label">
-                            <input type="radio" name="bedPref" value="twin">
-                            2 single beds preferred
-                        </label>
-                    </div>
-
-                    <button class="hb-other-requests-toggle" id="otherReqToggle" onclick="toggleOtherRequests()">
-                        Other requests <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="hb-other-requests-body" id="otherReqBody">
-                        <div class="hb-field">
-                            <label class="hb-field-lbl">Additional requests</label>
-                            <textarea class="hb-field-inp" placeholder="E.g. early check-in, high floor, quiet room..."></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Promo / Vouchers -->
-                <div class="hb-card">
-                    <h2 class="hb-card-title">Available for This Booking</h2>
-
-                    <button class="hb-promo-toggle" id="promoToggle" onclick="togglePromo()">
-                        Enter promo code <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="hb-promo-body" id="promoBody">
-                        <div class="hb-promo-input-row">
-                            <input type="text" class="hb-field-inp" placeholder="Enter promo code" id="hbPromoInput">
-                            <button class="hb-promo-apply" onclick="applyPromo()">Apply</button>
-                        </div>
-                    </div>
-
-                    <div class="hb-vouchers" id="hbVouchers">
-                        <div class="hb-voucher selected" onclick="selectVoucher(this, 192.42)">
-                            <div class="hb-voucher-icon">🎫</div>
-                            <div class="hb-voucher-info">
-                                <div class="hb-voucher-name">10% off max discount PHP 300.00</div>
-                                <div class="hb-voucher-desc">New user promo code (1st booking)<br>Valid until 11:59 PM, Apr 4, 2026</div>
-                                <div style="font-size:11px;color:var(--blue);font-weight:600;margin-top:4px;cursor:pointer;">Terms and Conditions</div>
-                            </div>
-                            <div class="hb-voucher-check"><i class="fas fa-check"></i></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment -->
-                <div class="hb-card">
-                    <h2 class="hb-card-title">How would you like to pay?</h2>
-
-                    <div class="hb-payment-methods">
-                        <!-- Credit/Debit Card -->
-                        <div class="hb-payment-method selected" onclick="selectPayment(this)">
-                            <div class="hb-payment-method-header">
-                                <div class="hb-pm-radio"></div>
-                                <div class="hb-pm-label">Credit / Debit Card</div>
-                                <div class="hb-pm-logos">
-                                    <div class="hb-pm-logo">VISA</div>
-                                    <div class="hb-pm-logo">MC</div>
-                                    <div class="hb-pm-logo">JCB</div>
-                                    <div class="hb-pm-more">+2</div>
-                                </div>
-                            </div>
-                            <div class="hb-payment-fields">
-                                <div class="hb-form-grid single" style="margin-bottom:12px">
-                                    <div class="hb-field">
-                                        <label class="hb-field-lbl">Bank card no.</label>
-                                        <input id="hbCardNo" type="text" class="hb-field-inp" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
-                                    </div>
-                                </div>
-                                <div class="hb-form-grid single" style="margin-bottom:12px">
-                                    <div class="hb-field">
-                                        <label class="hb-field-lbl">Cardholder name</label>
-                                        <input id="hbCardName" type="text" class="hb-field-inp" placeholder="Name as on card">
-                                    </div>
-                                </div>
-                                <div class="hb-form-grid">
-                                    <div class="hb-field">
-                                        <label class="hb-field-lbl">Expiration date</label>
-                                        <input id="hbCardExp" type="text" class="hb-field-inp" placeholder="MM / YY" maxlength="7" oninput="formatExp(this)">
-                                    </div>
-                                    <div class="hb-field">
-                                        <label class="hb-field-lbl">CVV / CVC <i class="fas fa-circle-info" style="color:var(--gray-400);font-size:11px;" title="3 or 4 digit security code on your card"></i></label>
-                                        <input id="hbCardCvv" type="text" class="hb-field-inp" placeholder="•••" maxlength="4">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- GCash -->
-                        <div class="hb-payment-method" onclick="selectPayment(this)">
-                            <div class="hb-payment-method-header">
-                                <div class="hb-pm-radio"></div>
-                                <div class="hb-pm-label">GCash</div>
-                                <div class="hb-pm-logos">
-                                    <div class="hb-pm-logo" style="background:#0062ff;color:#fff;border-color:#0062ff;">G</div>
-                                </div>
-                            </div>
-                            <div class="hb-payment-fields">
-                                <div class="hb-field">
-                                    <label class="hb-field-lbl">GCash mobile number</label>
-                                    <div class="hb-phone-row">
-                                        <div class="hb-phone-prefix">+63 <i class="fas fa-chevron-down"></i></div>
-                                        <input type="tel" class="hb-field-inp" placeholder="9XX XXX XXXX">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pay at Property -->
-                        <div class="hb-payment-method" onclick="selectPayment(this)">
-                            <div class="hb-payment-method-header">
-                                <div class="hb-pm-radio"></div>
-                                <div class="hb-pm-label">Pay at Property</div>
-                                <div class="hb-pm-logos">
-                                    <div class="hb-pm-logo"><i class="fas fa-hotel" style="font-size:10px;"></i></div>
-                                </div>
-                            </div>
-                            <div class="hb-payment-fields">
-                                <p style="font-size:12.5px;color:var(--gray-500);margin:0;line-height:1.5;">
-                                    Your card will not be charged now. You'll pay directly at the property during check-in.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Submit -->
-                    <button class="hb-submit-btn" id="hbSubmitBtn" onclick="submitBooking()">
-                        <span class="hb-submit-spinner"></span>
-                        <span class="hb-submit-text"><i class="fas fa-lock"></i> Complete Booking</span>
-                    </button>
-                    <p class="hb-submit-note">
-                        <i class="fas fa-shield-alt"></i> Your payment info is encrypted and secure.
-                        By completing this booking you agree to our Terms &amp; Conditions.
-                    </p>
-                </div>
-
-            </div><!-- end .hb-left -->
-
-            <!-- ════ RIGHT ════ -->
-            <div class="hb-right">
-
-                <div class="hb-summary-card">
-
-                    <!-- Property header -->
-                    <div class="hb-property-header">
-                        <div class="hb-property-img" id="hbPropertyImg">🏨</div>
-                        <div class="hb-property-info">
-                            <div class="hb-property-name" id="hbPropertyName">Hotel Name</div>
-                            <div class="hb-property-stars" id="hbPropertyStars">★★★</div>
-                            <div class="hb-property-score">
-                                <span class="hb-score-badge" id="hbScore">7.5</span>
-                                <span class="hb-score-reviews" id="hbReviews">— reviews</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Room -->
-                    <div class="hb-room-block">
-                        <div class="hb-room-name" id="hbRoomName">Room Type</div>
-                        <div class="hb-room-features" id="hbRoomFeatures"></div>
-                        <div class="hb-room-nr" id="hbRoomNr"></div>
-                    </div>
-
-                    <!-- Dates -->
-                    <div class="hb-dates-block">
-                        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;" id="hbDatesTitle">Check-in — Check-out</div>
-                        <div class="hb-dates-row">
-                            <span class="hb-date-label">Check-in</span>
-                            <div>
-                                <div class="hb-date-val" id="hbCheckin">–</div>
-                                <div class="hb-date-sub">From 15:00–06:00</div>
-                            </div>
-                        </div>
-                        <div class="hb-dates-row">
-                            <span class="hb-date-label">Check-out</span>
-                            <div>
-                                <div class="hb-date-val" id="hbCheckout">–</div>
-                                <div class="hb-date-sub">Before 12:00</div>
-                            </div>
-                        </div>
-                        <div class="hb-dates-meta">
-                            <div class="hb-dates-meta-item">
-                                <i class="fas fa-moon"></i>
-                                <span id="hbNights">1 night</span>
-                            </div>
-                            <span class="hb-dates-meta-sep">|</span>
-                            <div class="hb-dates-meta-item">
-                                <i class="fas fa-door-open"></i>
-                                <span id="hbRooms">1 room</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Price Details -->
-                    <div class="hb-price-block">
-                        <div class="hb-price-block-title">Price Details</div>
-
-                        <div class="hb-pr-row">
-                            <span id="hbPrRoomLabel">1 room × 1 night</span>
-                            <span id="hbPrBase">–</span>
-                        </div>
-                        <div class="hb-pr-row" id="hbPrDiscountRow" style="display:none">
-                            <span id="hbPrDiscountLabel">Price before discount:</span>
-                            <span id="hbPrBeforeDiscount" style="color:var(--gray-400);text-decoration:line-through;font-weight:500;">–</span>
-                        </div>
-                        <div class="hb-pr-row discount" id="hbPrPromoRow" style="display:none">
-                            <span id="hbPrPromoLabel">New user promo code:–</span>
-                            <span id="hbPrPromo">–</span>
-                        </div>
-                        <div class="hb-pr-row discount" id="hbPrSpecialRow" style="display:none">
-                            <span>Special Discount:–</span>
-                            <span id="hbPrSpecial">–</span>
-                        </div>
-                        <div class="hb-pr-row">
-                            <span>VAT</span>
-                            <span id="hbPrVat">–</span>
-                        </div>
-                        <div class="hb-pr-divider"></div>
-                        <div class="hb-pr-total">
-                            <span>Total</span>
-                            <span id="hbPrTotal">–</span>
-                        </div>
-                        <div class="hb-pr-savings" id="hbPrSavingsRow" style="display:none">
-                            <i class="fas fa-gem"></i>
-                            <span id="hbPrSavings">You saved PHP 0 on this booking</span>
-                        </div>
-                        <div class="hb-price-match">
-                            <i class="fas fa-heart"></i> We Price Match
-                        </div>
-                    </div>
-
-                    <!-- Cancellation Policy -->
-                    <div class="hb-info-block">
-                        <button class="hb-info-toggle open" id="cancelToggle" onclick="toggleInfo('cancelToggle','cancelBody')">
-                            <span class="hb-info-toggle-title">Cancellation policy</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="hb-info-body open" id="cancelBody">
-                            <div class="hb-cancel-fee" id="hbCancelFee">Cancellation fee: –</div>
-                            <p>This booking cannot be modified, and no refund will be given if you cancel it. You'll be charged the cancellation fee if you don't check in. If you apply a discount to your booking, the cancellation fee will be based on the total you paid.</p>
-                        </div>
-                    </div>
-
-                    <!-- Rewards -->
-                    <div class="hb-info-block">
-                        <button class="hb-info-toggle open" id="rewardsToggle" onclick="toggleInfo('rewardsToggle','rewardsBody')">
-                            <span class="hb-info-toggle-title">Rewards</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="hb-info-body open" id="rewardsBody">
-                            <div class="hb-rewards-earn">
-                                Earn <span id="hbTripCoins">15 Trip Coins (≈PHP 9.10)</span> after your stay.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Fine Print -->
-                    <div class="hb-info-block">
-                        <button class="hb-info-toggle" id="fineToggle" onclick="toggleInfo('fineToggle','fineBody')">
-                            <span class="hb-info-toggle-title">Fine Print</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="hb-info-body" id="fineBody">
-                            <ul>
-                                <li>This property requires a deposit at check-in. The deposit costs PHP 1,000.00 per day. Refunds for deposits not paid in cash may take 2–4 weeks to process.</li>
-                                <li>Guests under the age of 18 can only check in with a parent or legal guardian.</li>
-                                <li>The property has connecting/adjoining rooms, available on request.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                </div><!-- end .hb-summary-card -->
-
-            </div><!-- end .hb-right -->
-
-        </div><!-- end .hb-layout -->
-
-    </div><!-- end .hb-page -->
-
-    <!-- ══ SUCCESS ══ -->
-    <div class="hb-success" id="hbSuccess">
-        <div class="hb-success-box">
-            <div class="hb-success-icon"><i class="fas fa-check-circle"></i></div>
-            <div class="hb-success-title">Booking Confirmed!</div>
-            <div class="hb-success-sub">
-                Your stay at <strong id="hbSuccessHotel"></strong> is confirmed.<br>
-                A confirmation has been sent to <strong id="hbSuccessEmail"></strong>.
-            </div>
-            <div class="hb-success-ref">Booking Ref: <span id="hbSuccessRef"></span></div>
-            <button class="hb-success-cta" onclick="window.location.href='index.html'">Back to Home</button>
-        </div>
+        <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+      </div>
     </div>
+  </div>
+</header>
 
-    <!-- ══ FOOTER ══ -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-content">
-                <div class="footer-columns">
-                    <div class="footer-column">
-                        <h4>Contact Us</h4>
-                        <ul>
-                            <li><a href="#">Customer Support</a></li>
-                            <li><a href="#">Service Guarantee</a></li>
-                            <li><a href="#">More Service Info</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>About</h4>
-                        <ul>
-                            <li><a href="#">About Easy Navigate</a></li>
-                            <li><a href="#">News</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Terms &amp; Condition</a></li>
-                            <li><a href="#">Privacy Statement</a></li>
-                            <li><a href="#">Accessibility Statement</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Other Services</h4>
-                        <ul>
-                            <li><a href="#">Investor Relations</a></li>
-                            <li><a href="#">Affiliate Program</a></li>
-                            <li><a href="#">List Your Property</a></li>
-                            <li><a href="#">Become Supplier</a></li>
-                            <li><a href="#">Security</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="footer-logo">
-                    <img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
-                </div>
-            </div>
-            <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved Site Operator: Easy Navigate Travel</p>
+<!-- BANNER -->
+<div class="hb-banner">
+  <div class="hb-bi">
+    <div class="hb-bc">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="hotel &amp; homes.html">Hotel &amp; Homes</a>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur" id="bcHotel">Hotel</span>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur">Complete Booking</span>
+    </div>
+    <div class="hb-brow">
+      <div>
+        <h1 class="hb-btitle">Complete Your Booking</h1>
+        <p class="hb-bsub">Fill in your details to confirm your reservation</p>
+      </div>
+      <div class="hb-steps">
+        <div class="hb-step done"><div class="hb-snum"><i class="fas fa-check" style="font-size:9px"></i></div><span>Choose room</span></div>
+        <span class="hb-ssep">———</span>
+        <div class="hb-step active"><div class="hb-snum">2</div><span>Your details</span></div>
+        <span class="hb-ssep">———</span>
+        <div class="hb-step"><div class="hb-snum">3</div><span>Confirmation</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="hb-page">
+
+  <div class="hb-savings" id="savingsBanner">
+    <div class="hb-sav-row"><i class="fas fa-gem"></i><span id="savingsText">You've saved PHP 0!</span></div>
+    <div class="hb-sav-row"><i class="fas fa-thumbs-up"></i><span>This property's best price is yours</span></div>
+  </div>
+
+  <div class="hb-layout">
+
+    <!-- LEFT -->
+    <div class="hb-left">
+
+      <!-- 1. BOOKING DETAILS -->
+      <div class="hb-card">
+        <h2 class="hb-ctitle">Booking Details</h2>
+        <p class="hb-csub">Select rooms, guests, and your stay dates.</p>
+
+        <div class="hb-ctr-row">
+          <div><div class="hb-ctr-name">Rooms</div><div class="hb-ctr-desc">Number of rooms needed</div></div>
+          <div class="hb-ctrls">
+            <button class="hb-cbtn" id="roomsMinus">−</button>
+            <span class="hb-cval" id="roomsVal">1</span>
+            <button class="hb-cbtn" id="roomsPlus">+</button>
+          </div>
         </div>
-    </footer>
+        <div class="hb-ctr-row">
+          <div><div class="hb-ctr-name">Adults</div><div class="hb-ctr-desc">Ages 18 and above</div></div>
+          <div class="hb-ctrls">
+            <button class="hb-cbtn" id="adultsMinus">−</button>
+            <span class="hb-cval" id="adultsVal">2</span>
+            <button class="hb-cbtn" id="adultsPlus">+</button>
+          </div>
+        </div>
+        <div class="hb-ctr-row">
+          <div><div class="hb-ctr-name">Children</div><div class="hb-ctr-desc">Ages 0–17</div></div>
+          <div class="hb-ctrls">
+            <button class="hb-cbtn" id="childrenMinus">−</button>
+            <span class="hb-cval" id="childrenVal">0</span>
+            <button class="hb-cbtn" id="childrenPlus">+</button>
+          </div>
+        </div>
 
-    <script src="auth-header.js"></script>
+        <div class="hb-sep"></div>
+        <div class="hb-slbl">Stay Dates</div>
+        <div class="hb-grid">
+          <div class="hb-field">
+            <label class="hb-lbl">Check-in <span class="req">*</span></label>
+            <input type="date" id="checkinDate" class="hb-inp">
+            <span class="hb-err" id="errCheckin">Check-in date is required.</span>
+          </div>
+          <div class="hb-field">
+            <label class="hb-lbl">Check-out <span class="req">*</span></label>
+            <input type="date" id="checkoutDate" class="hb-inp">
+            <span class="hb-err" id="errCheckout">Check-out date is required.</span>
+          </div>
+        </div>
+        <div class="hb-nights-note"><i class="fas fa-moon"></i><span id="nightsNote">Select dates to see your stay duration.</span></div>
+      </div>
 
-    <script>
-    (function () {
+      <!-- 2. ROOM TYPE -->
+      <div class="hb-card">
+        <h2 class="hb-ctitle">Room Type</h2>
+        <p class="hb-csub">Choose the type of room that suits your needs.</p>
+        <div class="hb-room-opts" id="roomOpts">
+          <div class="hb-room-opt sel" data-name="Standard Room" data-addon="0">
+            <div class="hb-room-radio"></div>
+            <div style="flex:1"><div class="hb-rname">Standard Room</div><div class="hb-rdesc">1 double bed · City view · 28 m²</div></div>
+            <div class="hb-rprice">Base price</div>
+          </div>
+          <div class="hb-room-opt" data-name="Deluxe Room" data-addon="500">
+            <div class="hb-room-radio"></div>
+            <div style="flex:1"><div class="hb-rname">Deluxe Room</div><div class="hb-rdesc">1 king bed · Garden view · 35 m² · Balcony</div></div>
+            <div class="hb-rprice">+PHP 500/night</div>
+          </div>
+          <div class="hb-room-opt" data-name="Suite" data-addon="1200">
+            <div class="hb-room-radio"></div>
+            <div style="flex:1"><div class="hb-rname">Suite</div><div class="hb-rdesc">King bed + living area · Sea view · 55 m²</div></div>
+            <div class="hb-rprice">+PHP 1,200/night</div>
+          </div>
+          <div class="hb-room-opt" data-name="Family Room" data-addon="800">
+            <div class="hb-room-radio"></div>
+            <div style="flex:1"><div class="hb-rname">Family Room</div><div class="hb-rdesc">2 queen beds · Fits up to 4 guests · 42 m²</div></div>
+            <div class="hb-rprice">+PHP 800/night</div>
+          </div>
+        </div>
+      </div>
 
-        /* ── Read URL params ── */
-        const p           = new URLSearchParams(window.location.search);
-        const hotelName   = p.get('hotel')    || 'Hotel';
-        const roomName    = p.get('room')     || 'Standard Room';
-        const checkin     = p.get('checkin')  || '';
-        const checkout    = p.get('checkout') || '';
-        const nights      = parseInt(p.get('nights')  || '1');
-        const rooms       = parseInt(p.get('rooms')   || '1');
-        const stars       = parseInt(p.get('stars')   || '3');
-        const score       = p.get('score')    || '7.5';
-        const reviews     = p.get('reviews')  || '0';
-        const basePrice   = parseFloat(p.get('price') || '1500');
-        const image       = p.get('image')    || '';
+      <!-- 3. WHO'S STAYING -->
+      <div class="hb-card">
+        <h2 class="hb-ctitle">Who's Staying?</h2>
+        <p class="hb-csub">Guest names must match the valid ID used at check-in.</p>
+        <div class="hb-grid">
+          <div class="hb-field">
+            <label class="hb-lbl">First name <span class="req">*</span></label>
+            <input type="text" id="firstName" class="hb-inp" placeholder="Use only English letters">
+            <span class="hb-err" id="errFirstName">First name is required.</span>
+          </div>
+          <div class="hb-field">
+            <label class="hb-lbl">Last name <span class="req">*</span></label>
+            <input type="text" id="lastName" class="hb-inp" placeholder="Use only English letters">
+            <span class="hb-err" id="errLastName">Last name is required.</span>
+          </div>
+        </div>
+        <div class="hb-grid">
+          <div class="hb-field">
+            <label class="hb-lbl">Email <span class="req">*</span></label>
+            <input type="email" id="guestEmail" class="hb-inp" placeholder="your@email.com">
+            <span class="hb-err" id="errEmail">Enter a valid email address.</span>
+            <span class="hb-hint">Confirmation will be sent to this email</span>
+          </div>
+          <div class="hb-field">
+            <label class="hb-lbl">Phone number <span class="req">*</span></label>
+            <div class="hb-phone-row">
+              <div class="hb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+              <input type="tel" id="guestPhone" class="hb-inp" placeholder="9XX XXX XXXX">
+            </div>
+            <span class="hb-err" id="errPhone">Phone number is required.</span>
+          </div>
+        </div>
+        <button class="hb-add-btn" id="addGuestBtn">
+          <i class="fas fa-plus-circle"></i> <span id="addGuestLbl">Add Additional Guest (Optional)</span>
+        </button>
+        <div id="guestExtra" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid #f0f2f8;">
+          <div class="hb-grid">
+            <div class="hb-field">
+              <label class="hb-lbl">Guest first name</label>
+              <input type="text" class="hb-inp" placeholder="Use only English letters">
+            </div>
+            <div class="hb-field">
+              <label class="hb-lbl">Guest last name</label>
+              <input type="text" class="hb-inp" placeholder="Use only English letters">
+            </div>
+          </div>
+        </div>
+      </div>
 
-        /* ── Populate breadcrumb ── */
-        document.getElementById('hbBreadcrumbHotel').textContent = hotelName;
-        document.title = `Complete Booking — ${hotelName} | Easy Navigate`;
+      <!-- 4. SPECIAL REQUESTS -->
+      <div class="hb-card">
+        <h2 class="hb-ctitle">Special Requests <span style="font-size:13px;font-weight:400;color:#a0aabb">(Optional)</span></h2>
+        <p class="hb-csub">The property will do its best but cannot guarantee all requests.</p>
+        <div class="hb-slbl" style="margin-top:0">Bed type preference</div>
+        <div class="hb-radio-opts">
+          <label class="hb-radio-opt"><input type="radio" name="bedPref" value="double" checked> 1 double bed preferred</label>
+          <label class="hb-radio-opt"><input type="radio" name="bedPref" value="twin"> 2 single beds preferred</label>
+        </div>
+        <div class="hb-slbl">Elevator preference</div>
+        <div class="hb-elev-opts" id="elevOpts">
+          <button class="hb-elev-btn sel" data-val="none">No preference</button>
+          <button class="hb-elev-btn" data-val="near">Near elevator</button>
+          <button class="hb-elev-btn" data-val="away">Away from elevator</button>
+        </div>
+        <div style="margin-top:16px;">
+          <button class="hb-tog-btn" id="otherReqBtn">Other requests <i class="fas fa-chevron-down"></i></button>
+          <div class="hb-tog-body" id="otherReqBody">
+            <div class="hb-field" style="margin-top:12px;">
+              <label class="hb-lbl">Additional requests</label>
+              <textarea id="otherRequests" class="hb-inp" placeholder="E.g. early check-in, high floor, quiet room..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        /* ── Property header ── */
-        document.getElementById('hbPropertyName').textContent = hotelName;
-        document.getElementById('hbPropertyStars').textContent = '★'.repeat(Math.max(1, Math.min(5, stars))) + '☆'.repeat(5 - Math.max(1, Math.min(5, stars)));
-        document.getElementById('hbScore').textContent   = score;
-        document.getElementById('hbReviews').textContent = reviews > 0 ? `${reviews} reviews` : 'No reviews yet';
+      <!-- 5. VOUCHERS -->
+      <div class="hb-card">
+        <h2 class="hb-ctitle">Available for This Booking</h2>
+        <button class="hb-promo-tog" id="promoTogBtn">Enter promo code <i class="fas fa-chevron-down"></i></button>
+        <div class="hb-promo-body" id="promoBody">
+          <div class="hb-promo-row">
+            <input type="text" id="promoInput" class="hb-inp" placeholder="Enter promo code">
+            <button class="hb-apply-btn" id="promoApplyBtn">Apply</button>
+          </div>
+        </div>
+        <div class="hb-vouchers">
+          <div class="hb-voucher sel" id="voucher1">
+            <div class="hb-vi">🎫</div>
+            <div class="hb-vinfo">
+              <div class="hb-vname">10% off — max discount PHP 300.00</div>
+              <div class="hb-vdesc">New user promo code (1st booking)<br>Valid until 11:59 PM, Apr 4, 2026</div>
+              <div class="hb-vtnc">Terms and Conditions</div>
+            </div>
+            <div class="hb-vchk"><i class="fas fa-check"></i></div>
+          </div>
+        </div>
+      </div>
 
-        if (image) {
-            const img = document.createElement('img');
-            img.src = image;
-            img.alt = hotelName;
-            img.className = 'hb-property-img';
-            img.style.width = '72px';
-            img.style.height = '72px';
-            img.style.borderRadius = '10px';
-            img.style.objectFit = 'cover';
-            img.onerror = function () { this.style.display = 'none'; };
-            document.getElementById('hbPropertyImg').replaceWith(img);
-        }
+      <!-- 6. PAYMENT -->
+      <div class="hb-card">
+        <h2 class="hb-ctitle">How Would You Like to Pay?</h2>
+        <div class="hb-pay-methods" id="payMethods">
 
-        /* ── Room ── */
-        document.getElementById('hbRoomName').textContent = roomName;
+          <div class="hb-pay-method sel" data-method="card">
+            <div class="hb-pay-hdr">
+              <div class="hb-pm-dot"></div>
+              <div class="hb-pm-lbl">Credit / Debit Card</div>
+              <div class="hb-pm-logos">
+                <div class="hb-pm-chip">VISA</div>
+                <div class="hb-pm-chip">MC</div>
+                <div class="hb-pm-chip">JCB</div>
+                <div class="hb-pm-more">+2</div>
+              </div>
+            </div>
+            <div class="hb-pay-fields">
+              <div class="hb-grid one" style="margin-bottom:12px">
+                <div class="hb-field">
+                  <label class="hb-lbl">Card number</label>
+                  <input type="text" id="cardNo" class="hb-inp" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+              </div>
+              <div class="hb-grid one" style="margin-bottom:12px">
+                <div class="hb-field">
+                  <label class="hb-lbl">Cardholder name</label>
+                  <input type="text" id="cardName" class="hb-inp" placeholder="Name as on card">
+                </div>
+              </div>
+              <div class="hb-grid">
+                <div class="hb-field">
+                  <label class="hb-lbl">Expiry date</label>
+                  <input type="text" id="cardExp" class="hb-inp" placeholder="MM / YY" maxlength="7">
+                </div>
+                <div class="hb-field">
+                  <label class="hb-lbl">CVV / CVC</label>
+                  <input type="text" id="cardCvv" class="hb-inp" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+            </div>
+          </div>
 
-        const features = ['Free Wi-Fi', 'Non-smoking', 'Has window(s)'];
-        const featureHTML = features.map(f =>
-            `<span class="hb-room-feature"><i class="fas fa-check"></i> ${f}</span>`
-        ).join('');
-        document.getElementById('hbRoomFeatures').innerHTML =
-            featureHTML + `<span class="hb-room-badge"><i class="fas fa-info-circle"></i> Non-refundable</span>`;
-        document.getElementById('hbRoomNr').textContent = `${rooms} room${rooms > 1 ? 's' : ''} selected`;
+          <div class="hb-pay-method" data-method="other">
+            <div class="hb-pay-hdr">
+              <div class="hb-pm-dot"></div>
+              <div class="hb-pm-lbl">GCash</div>
+              <div class="hb-pm-logos"><div class="hb-pm-chip" style="background:#0062ff;color:#fff;border-color:#0062ff;">G</div></div>
+            </div>
+            <div class="hb-pay-fields">
+              <div class="hb-field">
+                <label class="hb-lbl">GCash mobile number</label>
+                <div class="hb-phone-row">
+                  <div class="hb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="hb-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
 
-        /* ── Dates ── */
-        function fmtDate(str) {
-            if (!str) return '–';
-            const d = new Date(str + 'T00:00:00');
-            return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-        }
-        document.getElementById('hbCheckin').textContent   = fmtDate(checkin);
-        document.getElementById('hbCheckout').textContent  = fmtDate(checkout);
-        document.getElementById('hbNights').textContent    = `${nights} night${nights !== 1 ? 's' : ''}`;
-        document.getElementById('hbRooms').textContent     = `${rooms} room${rooms !== 1 ? 's' : ''}`;
-        document.getElementById('hbDatesTitle').textContent =
-            (checkin && checkout) ? `${fmtDate(checkin)} — ${fmtDate(checkout)}` : 'Check-in — Check-out';
+          <div class="hb-pay-method" data-method="other">
+            <div class="hb-pay-hdr">
+              <div class="hb-pm-dot"></div>
+              <div class="hb-pm-lbl">Pay at Property</div>
+              <div class="hb-pm-logos"><div class="hb-pm-chip"><i class="fas fa-hotel" style="font-size:10px"></i></div></div>
+            </div>
+            <div class="hb-pay-fields">
+              <p style="font-size:12.5px;color:#8892aa;margin:0;line-height:1.5;">Your card will not be charged now. You'll pay directly at the property during check-in.</p>
+            </div>
+          </div>
 
-        /* ── Pricing ── */
-        function fmt(v) {
-            return new Intl.NumberFormat('en-PH', {
-                style: 'currency', currency: 'PHP',
-                minimumFractionDigits: 2, maximumFractionDigits: 2
-            }).format(v);
-        }
+        </div>
 
-        const totalBase     = basePrice * nights * rooms;
-        const originalPrice = +(totalBase * 1.176).toFixed(2);   // simulate before-discount
-        const promoDiscount = +(Math.min(originalPrice * 0.10, 300)).toFixed(2);
-        const specialDisc   = +(originalPrice * 0.044).toFixed(2);
-        const vatRate       = 0.12;
-        const afterDiscounts= totalBase;
-        const vat           = +(afterDiscounts * vatRate).toFixed(2);
-        const total         = +(afterDiscounts + vat).toFixed(2);
-        const totalSaved    = +(originalPrice - total + vat).toFixed(2);
+        <button class="hb-submit" id="submitBtn">
+          <span class="hb-spin"></span>
+          <span class="hb-stxt"><i class="fas fa-lock"></i> Complete Booking</span>
+        </button>
+        <p class="hb-snote"><i class="fas fa-shield-alt"></i> Your payment info is encrypted and secure. By completing this booking you agree to our Terms &amp; Conditions.</p>
+      </div>
 
-        document.getElementById('hbPrRoomLabel').textContent     = `${rooms} room${rooms>1?'s':''} × ${nights} night${nights>1?'s':''}`;
-        document.getElementById('hbPrBase').textContent          = fmt(totalBase);
-        document.getElementById('hbPrBeforeDiscount').textContent= fmt(originalPrice);
-        document.getElementById('hbPrPromoLabel').textContent    = `New user promo code:–`;
-        document.getElementById('hbPrPromo').textContent         = `– ${fmt(promoDiscount)}`;
-        document.getElementById('hbPrSpecial').textContent       = `– ${fmt(specialDisc)}`;
-        document.getElementById('hbPrVat').textContent           = fmt(vat);
-        document.getElementById('hbPrTotal').textContent         = fmt(total);
-        document.getElementById('hbPrSavings').textContent       = `You saved ${fmt(totalSaved)} on this booking`;
+    </div><!-- end left -->
 
-        if (totalSaved > 0) {
-            document.getElementById('hbPrDiscountRow').style.display = '';
-            document.getElementById('hbPrPromoRow').style.display    = '';
-            document.getElementById('hbPrSpecialRow').style.display  = '';
-            document.getElementById('hbPrSavingsRow').style.display  = '';
+    <!-- RIGHT -->
+    <div class="hb-right">
+      <div class="hb-summary">
 
-            const banner = document.getElementById('hbSavingsBanner');
-            banner.style.display = '';
-            document.getElementById('hbSavingsText').textContent =
-                `You've saved a total of ${fmt(totalSaved)}!`;
-        }
+        <div class="hb-ph">
+          <div class="hb-pimg" id="propImg">🏨</div>
+          <div class="hb-pinfo">
+            <div class="hb-pname" id="propName">Hotel Name</div>
+            <div class="hb-pstars" id="propStars">★★★</div>
+            <div class="hb-pscore">
+              <span class="hb-scnum" id="propScore">7.5</span>
+              <span class="hb-screv" id="propReviews">No reviews yet</span>
+            </div>
+          </div>
+        </div>
 
-        /* ── Cancellation fee ── */
-        document.getElementById('hbCancelFee').textContent = `Cancellation fee: ${fmt(total * 1.11)}`;
+        <div class="hb-rb">
+          <div class="hb-rbn" id="sumRoomName">Standard Room</div>
+          <div class="hb-rtags" id="sumRoomTags"></div>
+          <div class="hb-rnr" id="sumRoomNr">1 room selected</div>
+        </div>
 
-        /* ── Trip Coins ── */
-        const coins = Math.floor(total / 10);
-        const coinsPhp = (coins * 0.606).toFixed(2);
-        document.getElementById('hbTripCoins').textContent = `${coins} Trip Coins (≈PHP ${coinsPhp})`;
+        <div class="hb-db">
+          <div class="hb-dtitle" id="sumDatesTitle">Check-in — Check-out</div>
+          <div class="hb-drow">
+            <span class="hb-dlbl">Check-in</span>
+            <div><div class="hb-dval" id="sumCheckin">–</div><div class="hb-dsub">From 15:00</div></div>
+          </div>
+          <div class="hb-drow">
+            <span class="hb-dlbl">Check-out</span>
+            <div><div class="hb-dval" id="sumCheckout">–</div><div class="hb-dsub">Before 12:00</div></div>
+          </div>
+          <div class="hb-dmeta">
+            <div class="hb-dmitem"><i class="fas fa-moon"></i><span id="sumNights">–</span></div>
+            <span class="hb-dmsep">|</span>
+            <div class="hb-dmitem"><i class="fas fa-door-open"></i><span id="sumRooms">1 room</span></div>
+            <span class="hb-dmsep">|</span>
+            <div class="hb-dmitem"><i class="fas fa-user"></i><span id="sumGuests">2 guests</span></div>
+          </div>
+        </div>
 
-        /* ── Pre-fill email from auth ── */
-        try {
-            const auth = JSON.parse(localStorage.getItem('easyNavigateAuth') || '{}');
-            if (auth && auth.email) {
-                document.getElementById('hbEmail').value = auth.email;
-            }
-        } catch(e) {}
+        <div class="hb-pb">
+          <div class="hb-ptitle">Price Details</div>
+          <div class="hb-pr-row"><span id="prBaseLabel">1 room × 1 night</span><span id="prBase">–</span></div>
+          <div class="hb-pr-row" id="prAddonRow" style="display:none"><span id="prAddonLabel">Room upgrade</span><span id="prAddon">–</span></div>
+          <div class="hb-pr-row" id="prOrigRow" style="display:none"><span>Before discount:</span><span id="prOrig" style="color:#a0aabb;text-decoration:line-through;font-weight:500">–</span></div>
+          <div class="hb-pr-row disc" id="prPromoRow" style="display:none"><span>New user promo:</span><span id="prPromo">–</span></div>
+          <div class="hb-pr-row disc" id="prDiscRow" style="display:none"><span>Special discount:</span><span id="prDisc">–</span></div>
+          <div class="hb-pr-row"><span>VAT (12%)</span><span id="prVat">–</span></div>
+          <div class="hb-pdiv"></div>
+          <div class="hb-ptotal"><span>Total</span><span id="prTotal">–</span></div>
+          <div class="hb-psaved" id="prSavedRow" style="display:none"><i class="fas fa-gem"></i><span id="prSaved">–</span></div>
+          <div class="hb-pmatch"><i class="fas fa-heart"></i> We Price Match</div>
+        </div>
 
-        /* ══ UI interactions ══ */
+        <div class="hb-ib">
+          <button class="hb-itog open" id="cancelToggle"><span class="hb-itog-title">Cancellation policy</span><i class="fas fa-chevron-down"></i></button>
+          <div class="hb-ibody open" id="cancelBody">
+            <div class="hb-cfee" id="cancelFee">Cancellation fee: –</div>
+            <p>This booking cannot be modified. No refund will be given if cancelled. You'll be charged the cancellation fee if you don't check in.</p>
+          </div>
+        </div>
 
-        window.toggleAddGuest = function () {
-            const el  = document.getElementById('hbGuestFields');
-            const lbl = document.getElementById('hbAddGuestLabel');
-            const open = el.style.display === 'none';
-            el.style.display   = open ? 'block' : 'none';
-            lbl.textContent    = open ? '− Remove Additional Guest' : '+ Add New Guest (Optional)';
-        };
+        <div class="hb-ib">
+          <button class="hb-itog open" id="rewardsToggle"><span class="hb-itog-title">Rewards</span><i class="fas fa-chevron-down"></i></button>
+          <div class="hb-ibody open" id="rewardsBody">
+            <div class="hb-rew">Earn <span id="tripCoins">– Trip Coins</span> after your stay.</div>
+          </div>
+        </div>
 
-        window.toggleOtherRequests = function () {
-            const btn  = document.getElementById('otherReqToggle');
-            const body = document.getElementById('otherReqBody');
-            btn.classList.toggle('open');
-            body.classList.toggle('open');
-        };
+        <div class="hb-ib">
+          <button class="hb-itog" id="fineToggle"><span class="hb-itog-title">Fine Print</span><i class="fas fa-chevron-down"></i></button>
+          <div class="hb-ibody" id="fineBody">
+            <ul>
+              <li>This property requires a deposit at check-in of PHP 1,000.00 per day.</li>
+              <li>Guests under 18 can only check in with a parent or legal guardian.</li>
+              <li>The property has connecting/adjoining rooms, available on request.</li>
+            </ul>
+          </div>
+        </div>
 
-        window.togglePromo = function () {
-            const btn  = document.getElementById('promoToggle');
-            const body = document.getElementById('promoBody');
-            btn.classList.toggle('open');
-            body.classList.toggle('open');
-        };
+      </div>
+    </div><!-- end right -->
 
-        window.applyPromo = function () {
-            const code = document.getElementById('hbPromoInput').value.trim();
-            if (!code) return;
-            alert(`Promo code "${code}" applied! (Demo only)`);
-        };
+  </div><!-- end layout -->
+</div><!-- end page -->
 
-        window.selectVoucher = function (el, amount) {
-            document.querySelectorAll('.hb-voucher').forEach(v => v.classList.remove('selected'));
-            el.classList.add('selected');
-        };
+<!-- SUCCESS -->
+<div class="hb-success" id="successOverlay">
+  <div class="hb-sbox">
+    <div class="hb-sicon"><i class="fas fa-check-circle"></i></div>
+    <div class="hb-stitle2">Booking Confirmed!</div>
+    <div class="hb-ssub">Your stay at <strong id="succHotel"></strong> is confirmed.<br>A confirmation has been sent to <strong id="succEmail"></strong>.</div>
+    <div class="hb-sref">Booking Ref: <span id="succRef"></span></div>
+    <button class="hb-scta" onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
+</div>
 
-        window.selectPayment = function (el) {
-            document.querySelectorAll('.hb-payment-method').forEach(m => m.classList.remove('selected'));
-            el.classList.add('selected');
-        };
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-content">
+      <div class="footer-columns">
+        <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
+        <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li></ul></div>
+        <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li></ul></div>
+      </div>
+      <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
+    </div>
+    <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
+  </div>
+</footer>
 
-        window.toggleInfo = function (toggleId, bodyId) {
-            document.getElementById(toggleId).classList.toggle('open');
-            document.getElementById(bodyId).classList.toggle('open');
-        };
+<script src="auth-header.js"></script>
+<script>
+/* ================================================================
+   GLOBAL STATE — every property maps to a hotel_bookings DB column
+   ================================================================ */
+var S = {
+  hotel_name:'', hotel_city:'', hotel_address:'',
+  stars:3, score:'7.5', reviews:'0', image:'',
+  checkin_date:'', checkout_date:'', nights:1,
+  rooms:1, adults:2, children:0,
+  room_type:'Standard Room', room_addon:0,
+  price_per_night:1500,
+  discount_amount:0, promo_discount:0, taxes_fees:0, total_amount:0,
+  elevator_pref:'none', other_requests:'',
+  payment_method:'card', booking_status:'confirmed'
+};
 
-        /* Card number formatter */
-        window.formatCard = function (el) {
-            let v = el.value.replace(/\D/g,'').substring(0,16);
-            el.value = v.replace(/(.{4})/g,'$1 ').trim();
-        };
+/* ── helpers ── */
+function $(id){ return document.getElementById(id); }
+function txt(id,v){ var e=$(id); if(e) e.textContent=v; }
+function show(id,v){ var e=$(id); if(e) e.style.display=v?'':'none'; }
+function fmt(v){
+  return new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2}).format(v);
+}
+function fmtDate(s){
+  if(!s) return '–';
+  return new Date(s+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
 
-        /* Expiry formatter */
-        window.formatExp = function (el) {
-            let v = el.value.replace(/\D/g,'').substring(0,4);
-            if (v.length >= 3) v = v.substring(0,2) + ' / ' + v.substring(2);
-            el.value = v;
-        };
+/* ── read URL params ── */
+(function(){
+  var p=new URLSearchParams(window.location.search);
+  S.hotel_name    = p.get('hotel')   ||'Hotel';
+  S.hotel_city    = p.get('city')    ||'';
+  S.hotel_address = p.get('address') ||'';
+  S.checkin_date  = p.get('checkin') ||'';
+  S.checkout_date = p.get('checkout')||'';
+  S.nights        = parseInt(p.get('nights') ||'1')||1;
+  S.rooms         = parseInt(p.get('rooms')  ||'1')||1;
+  S.adults        = parseInt(p.get('guests') ||'2')||2;
+  S.stars         = parseInt(p.get('stars')  ||'3');
+  S.score         = p.get('score')  ||'7.5';
+  S.reviews       = p.get('reviews')||'0';
+  S.price_per_night = parseFloat(p.get('price')||'1500');
+  S.image         = p.get('image')  ||'';
+  S.room_type     = p.get('room')   ||'Standard Room';
+})();
 
-        /* ── Validation ── */
-        function showErr(id) {
-            document.getElementById('hb-err-' + id)?.classList.add('show');
-            document.getElementById('hb' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.add('invalid');
-        }
-        function clearErr(id) {
-            document.getElementById('hb-err-' + id)?.classList.remove('show');
-            document.getElementById('hb' + id.charAt(0).toUpperCase() + id.slice(1))?.classList.remove('invalid');
-        }
+/* ================================================================
+   INIT — runs after DOM is ready
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', function(){
 
-        window.submitBooking = async function () {
-            let valid = true;
+  /* ── property info ── */
+  txt('bcHotel', S.hotel_name);
+  document.title = 'Complete Booking — '+S.hotel_name+' | Easy Navigate';
+  txt('propName', S.hotel_name);
+  txt('propScore', S.score);
+  txt('propReviews', parseInt(S.reviews)>0 ? parseInt(S.reviews).toLocaleString()+' reviews' : 'No reviews yet');
+  var st=Math.max(1,Math.min(5,S.stars));
+  txt('propStars','★'.repeat(st)+'☆'.repeat(5-st));
 
-            const firstName = document.getElementById('hbFirstName').value.trim();
-            const lastName  = document.getElementById('hbLastName').value.trim();
-            const phone     = document.getElementById('hbPhone').value.trim();
-            const email     = document.getElementById('hbEmail').value.trim();
+  if(S.image){
+    var im=document.createElement('img');
+    im.src=decodeURIComponent(S.image); im.alt=S.hotel_name;
+    im.style.cssText='width:72px;height:72px;border-radius:10px;object-fit:cover;flex-shrink:0;';
+    var pi=$('propImg'); if(pi) pi.parentNode.replaceChild(im,pi);
+  }
 
-            if (!firstName) { showErr('firstName'); valid = false; } else clearErr('firstName');
-            if (!lastName)  { showErr('lastName');  valid = false; } else clearErr('lastName');
-            if (!phone)     { showErr('phone');      valid = false; } else clearErr('phone');
-            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showErr('email'); valid = false;
-            } else clearErr('email');
+  /* ── room tags in summary ── */
+  var tg=$('sumRoomTags');
+  if(tg) tg.innerHTML=['Free Wi-Fi','Non-smoking','Has window(s)'].map(function(t){
+    return '<span class="hb-rtag"><i class="fas fa-check"></i> '+t+'</span>';
+  }).join('')+'<span class="hb-rbadge"><i class="fas fa-info-circle"></i> Non-refundable</span>';
 
-            if (!valid) {
-                document.querySelector('.hb-field-err.show')
-                    ?.closest('.hb-card')
-                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                return;
-            }
+  /* ── set inputs from URL ── */
+  if(S.checkin_date  && $('checkinDate'))  $('checkinDate').value  = S.checkin_date;
+  if(S.checkout_date && $('checkoutDate')) $('checkoutDate').value = S.checkout_date;
+  txt('roomsVal',S.rooms); txt('adultsVal',S.adults); txt('childrenVal',S.children);
+  updateCounterBtns();
 
-            const btn = document.getElementById('hbSubmitBtn');
-            btn.classList.add('loading'); btn.disabled = true;
+  /* ── pre-select room type from URL ── */
+  document.querySelectorAll('#roomOpts .hb-room-opt').forEach(function(opt){
+    opt.classList.remove('sel');
+    if(opt.dataset.name===S.room_type){
+      opt.classList.add('sel');
+      S.room_addon=parseInt(opt.dataset.addon)||0;
+    }
+  });
 
-            await new Promise(r => setTimeout(r, 1200));
+  /* ── pre-fill email ── */
+  try{
+    var auth=JSON.parse(localStorage.getItem('easyNavigateAuth')||'{}');
+    if(auth&&auth.email&&$('guestEmail')) $('guestEmail').value=auth.email;
+  }catch(e){}
 
-            btn.classList.remove('loading'); btn.disabled = false;
+  recalc();
 
-            const ref = 'HB-' + (Date.now() % 1000000).toString().padStart(6, '0');
-            document.getElementById('hbSuccessHotel').textContent = hotelName;
-            document.getElementById('hbSuccessEmail').textContent = email;
-            document.getElementById('hbSuccessRef').textContent   = ref;
-            document.getElementById('hbSuccess').classList.add('show');
-        };
+  /* ────────────────────────────────────────────────────────────────
+     WIRE ALL EVENTS HERE — using addEventListener, not onclick attrs
+     ──────────────────────────────────────────────────────────────── */
 
-    })();
-    </script>
+  /* Counters */
+  wireCounter('rooms',    1, 10);
+  wireCounter('adults',   1, 20);
+  wireCounter('children', 0, 10);
 
+  /* Dates */
+  $('checkinDate')  && $('checkinDate').addEventListener('change',  onDateChange);
+  $('checkoutDate') && $('checkoutDate').addEventListener('change', onDateChange);
+
+  /* Room type options */
+  document.querySelectorAll('#roomOpts .hb-room-opt').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      document.querySelectorAll('#roomOpts .hb-room-opt').forEach(function(o){ o.classList.remove('sel'); });
+      opt.classList.add('sel');
+      S.room_type  = opt.dataset.name;
+      S.room_addon = parseInt(opt.dataset.addon)||0;
+      txt('sumRoomName', S.room_type);
+      recalc();
+    });
+  });
+
+  /* Elevator preference */
+  document.querySelectorAll('#elevOpts .hb-elev-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#elevOpts .hb-elev-btn').forEach(function(b){ b.classList.remove('sel'); });
+      btn.classList.add('sel');
+      S.elevator_pref = btn.dataset.val;
+    });
+  });
+
+  /* Payment methods */
+  document.querySelectorAll('#payMethods .hb-pay-method').forEach(function(m){
+    m.addEventListener('click', function(){
+      document.querySelectorAll('#payMethods .hb-pay-method').forEach(function(x){ x.classList.remove('sel'); });
+      m.classList.add('sel');
+      S.payment_method = m.dataset.method||'card';
+    });
+  });
+
+  /* Vouchers */
+  document.querySelectorAll('.hb-voucher').forEach(function(v){
+    v.addEventListener('click', function(){
+      document.querySelectorAll('.hb-voucher').forEach(function(x){ x.classList.remove('sel'); });
+      v.classList.add('sel');
+    });
+  });
+
+  /* Add guest toggle */
+  $('addGuestBtn') && $('addGuestBtn').addEventListener('click', function(){
+    var ext=$('guestExtra'), lbl=$('addGuestLbl');
+    var opening = ext.style.display==='none'||ext.style.display==='';
+    ext.style.display = opening?'block':'none';
+    lbl.textContent   = opening?'Remove Additional Guest':'Add Additional Guest (Optional)';
+  });
+
+  /* Other requests toggle */
+  $('otherReqBtn') && $('otherReqBtn').addEventListener('click', function(){
+    $('otherReqBtn').classList.toggle('open');
+    $('otherReqBody').classList.toggle('open');
+  });
+
+  /* Promo toggle */
+  $('promoTogBtn') && $('promoTogBtn').addEventListener('click', function(){
+    $('promoTogBtn').classList.toggle('open');
+    $('promoBody').classList.toggle('open');
+  });
+
+  /* Promo apply */
+  $('promoApplyBtn') && $('promoApplyBtn').addEventListener('click', function(){
+    var code = $('promoInput').value.trim();
+    if(!code) return;
+    alert('Promo code "'+code+'" applied! (Demo only)');
+  });
+
+  /* Info section toggles */
+  wireToggle('cancelToggle',  'cancelBody');
+  wireToggle('rewardsToggle', 'rewardsBody');
+  wireToggle('fineToggle',    'fineBody');
+
+  /* Card formatters */
+  $('cardNo') && $('cardNo').addEventListener('input', function(){
+    var v=this.value.replace(/\D/g,'').substring(0,16);
+    this.value=v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  $('cardExp') && $('cardExp').addEventListener('input', function(){
+    var v=this.value.replace(/\D/g,'').substring(0,4);
+    if(v.length>=3) v=v.substring(0,2)+' / '+v.substring(2);
+    this.value=v;
+  });
+
+  /* Submit */
+  $('submitBtn') && $('submitBtn').addEventListener('click', submitBooking);
+
+  /* Header find-bookings dropdown */
+  $('fbBtn') && $('fbBtn').addEventListener('click', function(e){
+    e.stopPropagation();
+    $('fbMenu').classList.toggle('open');
+  });
+  document.querySelectorAll('#fbMenu .dropdown-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      var pg=item.dataset.page; if(pg) window.location.href=pg;
+    });
+  });
+  document.addEventListener('click', function(){ $('fbMenu')&&$('fbMenu').classList.remove('open'); });
+
+}); /* end DOMContentLoaded */
+
+/* ================================================================
+   COUNTER WIRING
+   ================================================================ */
+function wireCounter(type, min, max){
+  var minus=$(type+'Minus'), plus=$(type+'Plus');
+  if(minus) minus.addEventListener('click', function(){
+    if(S[type]>min){ S[type]--; txt(type+'Val',S[type]); updateCounterBtns(); recalc(); }
+  });
+  if(plus) plus.addEventListener('click', function(){
+    if(S[type]<max){ S[type]++; txt(type+'Val',S[type]); updateCounterBtns(); recalc(); }
+  });
+}
+function updateCounterBtns(){
+  var cfg={rooms:{min:1,max:10},adults:{min:1,max:20},children:{min:0,max:10}};
+  ['rooms','adults','children'].forEach(function(t){
+    var m=$(t+'Minus'), p=$(t+'Plus');
+    if(m) m.disabled = S[t]<=cfg[t].min;
+    if(p) p.disabled = S[t]>=cfg[t].max;
+  });
+}
+
+/* ================================================================
+   DATE CHANGE
+   ================================================================ */
+function onDateChange(){
+  S.checkin_date  = $('checkinDate').value;
+  S.checkout_date = $('checkoutDate').value;
+  if(S.checkin_date&&S.checkout_date){
+    var diff=Math.round((new Date(S.checkout_date+'T00:00:00')-new Date(S.checkin_date+'T00:00:00'))/86400000);
+    if(diff>0){
+      S.nights=diff;
+      txt('nightsNote', diff+' night'+(diff!==1?'s':'')+' · Check-in '+fmtDate(S.checkin_date)+', Check-out '+fmtDate(S.checkout_date));
+    } else {
+      S.nights=1;
+      txt('nightsNote','Check-out must be after check-in.');
+    }
+  } else {
+    txt('nightsNote','Select dates to see your stay duration.');
+  }
+  recalc();
+}
+
+/* ================================================================
+   PRICING RECALCULATION — all values map to hotel_bookings columns
+   ================================================================ */
+function recalc(){
+  var nights  = Math.max(1,S.nights);
+  var rooms   = Math.max(1,S.rooms);
+  var guests  = Math.max(1,S.adults)+Math.max(0,S.children);
+  var addon   = S.room_addon||0;
+  var base    = (S.price_per_night+addon)*nights*rooms;
+  var origP   = +(base*1.176).toFixed(2);
+  var promo   = +(Math.min(base*0.10,300)).toFixed(2);
+  var disc    = +(base*0.044).toFixed(2);
+  var vat     = +(base*0.12).toFixed(2);
+  var total   = +(base+vat).toFixed(2);
+  var saved   = +(origP-total+vat).toFixed(2);
+
+  S.discount_amount=disc; S.promo_discount=promo;
+  S.taxes_fees=vat;       S.total_amount=total;
+
+  /* sidebar summary */
+  txt('sumRoomName',S.room_type);
+  txt('sumRoomNr',  rooms+' room'+(rooms!==1?'s':'')+' · '+guests+' guest'+(guests!==1?'s':''));
+  txt('sumRooms',   rooms+' room'+(rooms!==1?'s':''));
+  txt('sumGuests',  guests+' guest'+(guests!==1?'s':''));
+  txt('sumNights',  nights+' night'+(nights!==1?'s':''));
+  txt('sumCheckin',  fmtDate(S.checkin_date));
+  txt('sumCheckout', fmtDate(S.checkout_date));
+  txt('sumDatesTitle', (S.checkin_date&&S.checkout_date)
+    ? fmtDate(S.checkin_date)+' — '+fmtDate(S.checkout_date)
+    : 'Check-in — Check-out');
+
+  /* price rows */
+  txt('prBaseLabel', rooms+' room'+(rooms!==1?'s':'')+' × '+nights+' night'+(nights!==1?'s':''));
+  txt('prBase', fmt(base));
+  if(addon>0){
+    show('prAddonRow',true);
+    txt('prAddonLabel',S.room_type+' upgrade');
+    txt('prAddon', fmt(+(addon*nights*rooms).toFixed(2)));
+  } else { show('prAddonRow',false); }
+  if(saved>0){
+    show('prOrigRow',true); show('prPromoRow',true);
+    show('prDiscRow',true); show('prSavedRow',true);
+    txt('prOrig',  fmt(origP));
+    txt('prPromo', '– '+fmt(promo));
+    txt('prDisc',  '– '+fmt(disc));
+    txt('prSaved', 'You saved '+fmt(saved)+' on this booking');
+    var sb=$('savingsBanner'); if(sb) sb.classList.add('show');
+    txt('savingsText',"You've saved a total of "+fmt(saved)+'!');
+  }
+  txt('prVat',   fmt(vat));
+  txt('prTotal', fmt(total));
+  txt('cancelFee','Cancellation fee: '+fmt(total*1.11));
+  var coins=Math.floor(total/10);
+  txt('tripCoins',coins+' Trip Coins (≈PHP '+(coins*0.606).toFixed(2)+')');
+}
+
+/* ================================================================
+   INFO SECTION TOGGLE
+   ================================================================ */
+function wireToggle(toggleId, bodyId){
+  var btn=$(toggleId), body=$(bodyId);
+  if(!btn||!body) return;
+  btn.addEventListener('click', function(){
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+  });
+}
+
+/* ================================================================
+   VALIDATION
+   ================================================================ */
+function setErr(fieldId, errId, hasError){
+  var f=$(fieldId), e=$(errId);
+  if(f) f.classList.toggle('err', hasError);
+  if(e) e.classList.toggle('show', hasError);
+  return hasError;
+}
+
+/* ================================================================
+   SUBMIT
+   ================================================================ */
+function submitBooking(){
+  var fn    = $('firstName')   ? $('firstName').value.trim()   : '';
+  var ln    = $('lastName')    ? $('lastName').value.trim()    : '';
+  var email = $('guestEmail')  ? $('guestEmail').value.trim()  : '';
+  var phone = $('guestPhone')  ? $('guestPhone').value.trim()  : '';
+  var ci    = $('checkinDate') ? $('checkinDate').value         : '';
+  var co    = $('checkoutDate')? $('checkoutDate').value        : '';
+
+  var ok=true;
+  if(setErr('firstName',  'errFirstName', !fn))   ok=false;
+  if(setErr('lastName',   'errLastName',  !ln))   ok=false;
+  if(setErr('guestEmail', 'errEmail',     !email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) ok=false;
+  if(setErr('guestPhone', 'errPhone',     !phone)) ok=false;
+  if(setErr('checkinDate',  'errCheckin',  !ci))  ok=false;
+  if(setErr('checkoutDate', 'errCheckout', !co))  ok=false;
+
+  if(!ok){
+    var first=document.querySelector('.hb-inp.err');
+    if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  var btn=$('submitBtn');
+  btn.classList.add('loading'); btn.disabled=true;
+
+  var otherReq = ($('otherRequests')&&$('otherRequests').value.trim())||'';
+  var guests   = Math.max(1,S.adults)+Math.max(0,S.children);
+
+  /* payload keys = exact hotel_bookings column names */
+  var payload={
+    first_name:      fn,
+    last_name:       ln,
+    email:           email,
+    phone:           phone,
+    hotel_name:      S.hotel_name,
+    hotel_city:      S.hotel_city,
+    hotel_address:   S.hotel_address,
+    checkin_date:    ci,
+    checkout_date:   co,
+    nights:          S.nights,
+    rooms:           S.rooms,
+    guests:          guests,
+    price_per_night: S.price_per_night,
+    discount_amount: S.discount_amount,
+    promo_discount:  S.promo_discount,
+    taxes_fees:      S.taxes_fees,
+    total_amount:    S.total_amount,
+    elevator_pref:   S.elevator_pref,
+    other_requests:  '[Room: '+S.room_type+'] '+otherReq,
+    payment_method:  S.payment_method,
+    booking_status:  'confirmed'
+  };
+
+  fetch('api/save_booking.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.classList.remove('loading'); btn.disabled=false;
+    if(d.ok||d.success) showSuccess(d.booking_ref, email);
+    else alert(d.message||'Booking failed. Please try again.');
+  })
+  .catch(function(){
+    btn.classList.remove('loading'); btn.disabled=false;
+    showSuccess(null, email); /* demo fallback */
+  });
+}
+
+function showSuccess(ref, email){
+  var r=ref||('HB-'+(Date.now()%1000000).toString().padStart(6,'0'));
+  txt('succHotel',S.hotel_name);
+  txt('succEmail',email);
+  txt('succRef',r);
+  var ov=$('successOverlay'); if(ov) ov.classList.add('show');
+}
+</script>
 </body>
 </html>

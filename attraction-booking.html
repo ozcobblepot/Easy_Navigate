@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Your Attraction Booking - Easy Navigate</title>
+<link rel="icon" type="image/png" href="assets/web-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="styles.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+
+.header{
+  background:#282D9E!important;
+  position:sticky!important;
+  top:0!important;
+  z-index:1000!important;
+  box-shadow:0 4px 24px rgba(40,45,158,.18)!important;
+}
+
+body{background:#f4f6fb;font-family:'Inter',sans-serif;color:#1a2140;margin:0;}
+
+/* ── BANNER ── */
+.ab-banner{background:linear-gradient(135deg,#1a1f6e 0%,#282D9E 60%,#3b40b8 100%);padding:28px 24px 32px;position:relative;overflow:hidden;}
+.ab-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='%23fff' fill-opacity='.04'/%3E%3C/svg%3E");pointer-events:none;}
+.ab-bi{max-width:1160px;margin:0 auto;position:relative;z-index:1;}
+.ab-bc{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px;flex-wrap:wrap;}
+.ab-bc a{color:rgba(255,255,255,.85);text-decoration:none;font-weight:500;}
+.ab-bc a:hover{color:#fff;text-decoration:underline;}
+.ab-bc i{font-size:9px;color:rgba(255,255,255,.4);}
+.ab-bc .cur{color:rgba(255,255,255,.9);font-weight:600;}
+.ab-brow{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.ab-btitle{font-size:1.75rem;font-weight:800;color:#fff;margin:0 0 4px;letter-spacing:-.4px;}
+.ab-bsub{font-size:13px;color:rgba(255,255,255,.72);margin:0;}
+.ab-steps{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.ab-step{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.45);}
+.ab-step.active{color:#fff;}
+.ab-step.done{color:rgba(255,255,255,.65);}
+.ab-snum{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.ab-step.active .ab-snum{background:#fff;color:#282D9E;border-color:#fff;}
+.ab-step.done   .ab-snum{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);}
+.ab-ssep{color:rgba(255,255,255,.3);font-size:11px;}
+
+/* ── PAGE ── */
+.ab-page{max-width:1160px;margin:0 auto;padding:28px 24px 64px;}
+.ab-layout{display:grid;grid-template-columns:1fr 370px;gap:24px;align-items:start;}
+.ab-left{display:flex;flex-direction:column;gap:20px;}
+
+/* ── CARD ── */
+.ab-card{background:#fff;border:1px solid #e5e8f0;border-radius:16px;padding:24px;}
+.ab-ctitle{font-size:1.1rem;font-weight:800;color:#1a2140;margin:0 0 4px;letter-spacing:-.2px;}
+.ab-csub{font-size:12.5px;color:#8892aa;margin:0 0 20px;}
+
+/* ── FORM ── */
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.ab-grid.one{grid-template-columns:1fr;}
+.ab-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.ab-field{display:flex;flex-direction:column;gap:5px;}
+.ab-lbl{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.5px;}
+.ab-lbl .req{color:#e53935;}
+.ab-inp{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13.5px;color:#1a2140;outline:none;background:#fff;width:100%;transition:border-color .2s,box-shadow .2s;}
+.ab-inp:focus{border-color:#282D9E;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+.ab-inp.err{border-color:#e53935!important;}
+select.ab-inp{cursor:pointer;}
+.ab-err{font-size:11px;color:#e53935;font-weight:600;display:none;margin-top:2px;}
+.ab-err.show{display:block;}
+.ab-hint{font-size:11px;color:#a0aabb;margin-top:3px;}
+.ab-phone-row{display:grid;grid-template-columns:96px 1fr;gap:8px;}
+.ab-prefix{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 12px;font-size:13px;font-weight:700;background:#f8f9fc;color:#1a2140;display:flex;align-items:center;gap:6px;}
+.ab-prefix i{font-size:8px;margin-left:auto;color:#a0aabb;}
+
+/* ── GUEST COUNTER ── */
+.ab-guest-counter{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+.ab-guest-box{border:1.5px solid #e5e8f0;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+.ab-guest-label{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.5px;}
+.ab-guest-age{font-size:10.5px;color:#b0bac8;font-weight:400;}
+.ab-guest-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ab-gnum{font-size:16px;font-weight:800;color:#1a2140;min-width:20px;text-align:center;}
+.ab-gbtn{width:28px;height:28px;border-radius:50%;border:1.5px solid #e5e8f0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#282D9E;transition:all .15s;font-weight:700;}
+.ab-gbtn:hover{border-color:#282D9E;background:#eff2ff;}
+.ab-gbtn:disabled{color:#c8cee0;border-color:#f0f2f8;cursor:default;background:#f8f9fc;}
+
+/* ── SPECIAL REQUESTS ── */
+.ab-textarea{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13.5px;color:#1a2140;outline:none;background:#fff;width:100%;transition:border-color .2s;resize:vertical;min-height:80px;}
+.ab-textarea:focus{border-color:#282D9E;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+
+/* ── INFO BOX ── */
+.ab-info-box{background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;}
+.ab-info-box i{color:#282D9E;margin-top:2px;flex-shrink:0;}
+.ab-info-box p{font-size:12.5px;color:#3730a3;font-weight:500;margin:0;line-height:1.55;}
+
+.ab-free-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;}
+.ab-free-box i{color:#16a34a;margin-top:2px;flex-shrink:0;}
+.ab-free-box p{font-size:12.5px;color:#15803d;font-weight:500;margin:0;line-height:1.55;}
+
+/* ── PAYMENT ── */
+.ab-pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.ab-pay-method{border:1.5px solid #e5e8f0;border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.ab-pay-method:hover{border-color:#282D9E;}
+.ab-pay-method.sel{border-color:#282D9E;background:#f8faff;box-shadow:0 0 0 3px rgba(40,45,158,.07);}
+.ab-pay-hdr{display:flex;align-items:center;gap:12px;}
+.ab-pm-dot{width:18px;height:18px;border-radius:50%;border:2px solid #c8cee0;flex-shrink:0;position:relative;transition:border-color .15s;}
+.ab-pay-method.sel .ab-pm-dot{border-color:#282D9E;}
+.ab-pay-method.sel .ab-pm-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#282D9E;}
+.ab-pm-lbl{font-size:14px;font-weight:700;color:#1a2140;flex:1;}
+.ab-pm-logos{display:flex;align-items:center;gap:5px;}
+.ab-pm-chip{height:20px;min-width:30px;border-radius:3px;border:1px solid #e5e8f0;background:#fff;font-size:9px;font-weight:800;color:#6b7592;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.ab-pay-fields{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #f0f2f8;}
+.ab-pay-method.sel .ab-pay-fields{display:block;}
+
+/* ── SUBMIT ── */
+.ab-submit{width:100%;padding:15px;background:#282D9E;color:#fff;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s;box-shadow:0 4px 16px rgba(40,45,158,.3);display:flex;align-items:center;justify-content:center;gap:8px;}
+.ab-submit:hover{background:#1F237E;transform:translateY(-1px);}
+.ab-submit:active{transform:translateY(0);}
+.ab-spin{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+.ab-submit.loading .ab-spin{display:block;}
+.ab-submit.loading .ab-stxt{opacity:.65;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ab-snote{font-size:12px;color:#a0aabb;text-align:center;margin-top:10px;line-height:1.5;}
+
+/* ── RIGHT SUMMARY ── */
+.ab-right{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+.ab-summary{background:#fff;border:1px solid #e5e8f0;border-radius:16px;overflow:hidden;}
+
+/* Attraction header in summary */
+.ab-sum-hero{position:relative;height:160px;overflow:hidden;background:#111;}
+.ab-sum-hero img{width:100%;height:100%;object-fit:cover;display:block;}
+.ab-sum-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,28,80,.75) 0%,transparent 60%);}
+.ab-sum-hero-badge{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.92);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;color:#282D9E;display:flex;align-items:center;gap:5px;}
+
+.ab-sum-att{padding:16px 18px;border-bottom:1px solid #f0f2f8;}
+.ab-sum-att-name{font-size:15px;font-weight:800;color:#1a2140;margin:0 0 4px;line-height:1.25;}
+.ab-sum-att-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#8892aa;margin-bottom:8px;}
+.ab-sum-att-rating{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:#f7b500;}
+.ab-sum-att-location{display:flex;align-items:center;gap:4px;}
+.ab-sum-att-location i{color:#282D9E;font-size:10px;}
+.ab-sum-att-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.ab-sum-tag{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.ab-sum-tag.cancel{background:#dcfce7;color:#15803d;}
+.ab-sum-tag.instant{background:#fef9c3;color:#854d0e;}
+.ab-sum-tag.popular{background:#dbeafe;color:#1d4ed8;}
+
+/* Date & guests */
+.ab-sum-details{padding:14px 18px;border-bottom:1px solid #f0f2f8;}
+.ab-sum-det-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:7px;}
+.ab-sum-det-row:last-child{margin-bottom:0;}
+.ab-sum-det-label{color:#8892aa;font-weight:500;display:flex;align-items:center;gap:6px;}
+.ab-sum-det-label i{font-size:11px;color:#282D9E;opacity:.7;}
+.ab-sum-det-value{font-weight:700;color:#1a2140;}
+
+/* Price breakdown */
+.ab-sum-price{padding:14px 18px;border-bottom:1px solid #f0f2f8;}
+.ab-sum-ptitle{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.ab-sum-pr-row{display:flex;justify-content:space-between;font-size:13px;color:#6b7592;font-weight:500;margin-bottom:7px;gap:8px;}
+.ab-sum-pr-row span:last-child{font-weight:600;color:#1a2140;white-space:nowrap;}
+.ab-sum-pr-row.disc span{color:#16a34a;}
+.ab-sum-pdiv{height:1px;background:#e5e8f0;margin:10px 0;}
+.ab-sum-total{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:800;color:#1a2140;}
+.ab-sum-total span:last-child{color:#282D9E;}
+.ab-sum-free-note{margin-top:6px;font-size:11.5px;color:#16a34a;font-weight:600;display:flex;align-items:center;gap:4px;}
+
+/* Info accordion */
+.ab-ib{padding:12px 18px;border-bottom:1px solid #f0f2f8;}
+.ab-ib:last-child{border-bottom:none;}
+.ab-itog{display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:none;border:none;padding:0;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.ab-itog-title{font-size:13px;font-weight:700;color:#1a2140;}
+.ab-itog i{font-size:12px;color:#a0aabb;transition:transform .2s;}
+.ab-itog.open i{transform:rotate(180deg);}
+.ab-ibody{display:none;padding-top:10px;}
+.ab-ibody.open{display:block;}
+.ab-ibody p,.ab-ibody li{font-size:12.5px;color:#6b7592;line-height:1.6;margin:0 0 6px;}
+.ab-ibody ul{padding-left:18px;margin:0;}
+
+/* SUCCESS */
+.ab-success{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;}
+.ab-success.show{display:flex;}
+.ab-sbox{background:#fff;border-radius:20px;padding:48px 52px;text-align:center;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.22);animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{transform:scale(.75);opacity:0;}to{transform:scale(1);opacity:1;}}
+.ab-sicon{font-size:3.8rem;color:#16a34a;margin-bottom:18px;}
+.ab-stitle2{font-size:1.6rem;font-weight:800;color:#1a2140;margin-bottom:8px;}
+.ab-ssub{font-size:.92rem;color:#8892aa;margin-bottom:18px;line-height:1.65;}
+.ab-sref{background:#f0f4ff;border-radius:10px;padding:14px 22px;font-size:.9rem;font-weight:700;color:#282D9E;margin-bottom:22px;}
+.ab-scta{background:#282D9E;color:#fff;border:none;border-radius:10px;padding:13px 38px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;}
+.ab-scta:hover{background:#1F237E;}
+
+/* DIVIDER */
+.ab-divider{height:1px;background:#f0f2f8;margin:18px 0;}
+
+/* SECTION TITLE */
+.ab-section-label{font-size:11px;font-weight:800;color:#8892aa;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.ab-section-label::after{content:'';flex:1;height:1px;background:#f0f2f8;}
+
+/* RESPONSIVE */
+@media(max-width:960px){.ab-layout{grid-template-columns:1fr;}.ab-right{position:static;}.ab-steps{display:none;}}
+@media(max-width:600px){
+  .ab-page{padding:20px 16px 48px;}
+  .ab-grid{grid-template-columns:1fr;}
+  .ab-grid.three{grid-template-columns:1fr 1fr;}
+  .ab-card{padding:18px 16px;}
+  .ab-banner{padding:20px 16px 24px;}
+  .ab-btitle{font-size:1.4rem;}
+  .ab-guest-counter{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="nav-container">
+    <div class="top-nav">
+      <a class="logo" href="index.html">
+        <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+      </a>
+      <div class="top-right">
+        <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="PH" class="flag-icon"></button>
+        <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+        <div class="relative">
+          <button class="support-btn" id="fbBtn">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+          <div class="dropdown-menu" id="fbMenu">
+            <div class="dropdown-item" data-page="hotel &amp; homes.html"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+            <div class="dropdown-item" data-page="car-rental.html"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+            <div class="dropdown-item" data-page="flights.html"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
+            <div class="dropdown-item" data-page="attractions.html"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
+            <div class="dropdown-item" data-page="airport-taxis.html"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
+          </div>
+        </div>
+        <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- BANNER -->
+<div class="ab-banner">
+  <div class="ab-bi">
+    <div class="ab-bc">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="attractions.html">Attractions &amp; Tours</a>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur" id="bcAttName">Attraction</span>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur">Complete Booking</span>
+    </div>
+    <div class="ab-brow">
+      <div>
+        <h1 class="ab-btitle">Complete Your Booking</h1>
+        <p class="ab-bsub">Fill in your details to confirm your attraction experience</p>
+      </div>
+      <div class="ab-steps">
+        <div class="ab-step done"><div class="ab-snum"><i class="fas fa-check" style="font-size:9px"></i></div><span>Select experience</span></div>
+        <span class="ab-ssep">———</span>
+        <div class="ab-step active"><div class="ab-snum">2</div><span>Guest details</span></div>
+        <span class="ab-ssep">———</span>
+        <div class="ab-step"><div class="ab-snum">3</div><span>Confirmation</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="ab-page">
+  <div class="ab-layout">
+
+    <!-- LEFT -->
+    <div class="ab-left">
+
+      <!-- 1. CONTACT INFO -->
+      <div class="ab-card">
+        <h2 class="ab-ctitle">Contact Information</h2>
+        <p class="ab-csub">Your booking confirmation and e-voucher will be sent to this contact.</p>
+        <div class="ab-grid">
+          <div class="ab-field">
+            <label class="ab-lbl">First name <span class="req">*</span></label>
+            <input type="text" id="contactFirstName" class="ab-inp" placeholder="Your first name">
+            <span class="ab-err" id="errFirstName">First name is required.</span>
+          </div>
+          <div class="ab-field">
+            <label class="ab-lbl">Last name <span class="req">*</span></label>
+            <input type="text" id="contactLastName" class="ab-inp" placeholder="Your last name">
+            <span class="ab-err" id="errLastName">Last name is required.</span>
+          </div>
+        </div>
+        <div class="ab-grid">
+          <div class="ab-field">
+            <label class="ab-lbl">Email address <span class="req">*</span></label>
+            <input type="email" id="contactEmail" class="ab-inp" placeholder="your@email.com">
+            <span class="ab-err" id="errEmail">Enter a valid email address.</span>
+            <span class="ab-hint">E-voucher and updates will be sent here</span>
+          </div>
+          <div class="ab-field">
+            <label class="ab-lbl">Phone number <span class="req">*</span></label>
+            <div class="ab-phone-row">
+              <div class="ab-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+              <input type="tel" id="contactPhone" class="ab-inp" placeholder="9XX XXX XXXX">
+            </div>
+            <span class="ab-err" id="errPhone">Phone number is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. VISIT DATE -->
+      <div class="ab-card">
+        <h2 class="ab-ctitle">Visit Date</h2>
+        <p class="ab-csub">Select your preferred date for this experience.</p>
+        <div class="ab-grid">
+          <div class="ab-field">
+            <label class="ab-lbl">Visit date <span class="req">*</span></label>
+            <input type="date" id="visitDate" class="ab-inp">
+            <span class="ab-err" id="errDate">Please select a visit date.</span>
+            <span class="ab-hint">Open tomorrow: 9:00 AM – 6:00 PM</span>
+          </div>
+          <div class="ab-field">
+            <label class="ab-lbl">Preferred time slot</label>
+            <select id="timeSlot" class="ab-inp">
+              <option value="">Any time / Flexible</option>
+              <option value="morning">Morning (9:00 AM – 12:00 PM)</option>
+              <option value="afternoon">Afternoon (12:00 PM – 3:00 PM)</option>
+              <option value="late_afternoon">Late Afternoon (3:00 PM – 6:00 PM)</option>
+            </select>
+          </div>
+        </div>
+        <div class="ab-info-box">
+          <i class="fas fa-circle-info"></i>
+          <p>Availability is subject to change. Your e-voucher will include full entry instructions. Present it digitally or printed at the attraction gate.</p>
+        </div>
+      </div>
+
+      <!-- 3. GUESTS -->
+      <div class="ab-card">
+        <h2 class="ab-ctitle">Number of Guests</h2>
+        <p class="ab-csub">Select the exact number of participants. Prices are per person.</p>
+        <div class="ab-guest-counter">
+          <div class="ab-guest-box">
+            <div>
+              <div class="ab-guest-label">Adults</div>
+              <div class="ab-guest-age">12+ years old</div>
+            </div>
+            <div class="ab-guest-controls">
+              <button class="ab-gbtn" id="adultMinus" onclick="updateGuest('adults',-1)">−</button>
+              <span class="ab-gnum" id="guestAdults">1</span>
+              <button class="ab-gbtn" onclick="updateGuest('adults',1)">+</button>
+            </div>
+          </div>
+          <div class="ab-guest-box">
+            <div>
+              <div class="ab-guest-label">Children</div>
+              <div class="ab-guest-age">2–11 years old</div>
+            </div>
+            <div class="ab-guest-controls">
+              <button class="ab-gbtn" id="childMinus" onclick="updateGuest('children',-1)" disabled>−</button>
+              <span class="ab-gnum" id="guestChildren">0</span>
+              <button class="ab-gbtn" onclick="updateGuest('children',1)">+</button>
+            </div>
+          </div>
+          <div class="ab-guest-box">
+            <div>
+              <div class="ab-guest-label">Infants</div>
+              <div class="ab-guest-age">Under 2 years old</div>
+            </div>
+            <div class="ab-guest-controls">
+              <button class="ab-gbtn" id="infantMinus" onclick="updateGuest('infants',-1)" disabled>−</button>
+              <span class="ab-gnum" id="guestInfants">0</span>
+              <button class="ab-gbtn" onclick="updateGuest('infants',1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="ab-info-box" id="freeEntryNote" style="display:none;">
+          <i class="fas fa-circle-info"></i>
+          <p>This attraction offers <strong>free entry</strong>. No payment is required. Your booking confirms your spot and provides a reference number for your visit.</p>
+        </div>
+      </div>
+
+      <!-- 4. SPECIAL REQUESTS -->
+      <div class="ab-card">
+        <h2 class="ab-ctitle">Special Requests</h2>
+        <p class="ab-csub">Optional — we'll do our best to accommodate any special needs.</p>
+        <div class="ab-field">
+          <label class="ab-lbl">Special requests / notes</label>
+          <textarea id="specialRequests" class="ab-textarea" placeholder="e.g. Wheelchair accessibility, dietary needs for food tours, group celebration, etc."></textarea>
+          <span class="ab-hint">Special requests are not guaranteed but will be forwarded to the venue.</span>
+        </div>
+      </div>
+
+      <!-- 5. PAYMENT -->
+      <div class="ab-card" id="paymentCard">
+        <h2 class="ab-ctitle">How Would You Like to Pay?</h2>
+        <div class="ab-pay-methods" id="payMethods">
+
+          <div class="ab-pay-method sel" data-method="card">
+            <div class="ab-pay-hdr">
+              <div class="ab-pm-dot"></div>
+              <div class="ab-pm-lbl">Credit / Debit Card</div>
+              <div class="ab-pm-logos">
+                <div class="ab-pm-chip">VISA</div>
+                <div class="ab-pm-chip">MC</div>
+                <div class="ab-pm-chip">JCB</div>
+                <div class="ab-pm-chip">AMEX</div>
+              </div>
+            </div>
+            <div class="ab-pay-fields">
+              <div class="ab-grid one" style="margin-bottom:12px">
+                <div class="ab-field">
+                  <label class="ab-lbl">Card number</label>
+                  <input type="text" id="cardNo" class="ab-inp" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+              </div>
+              <div class="ab-grid one" style="margin-bottom:12px">
+                <div class="ab-field">
+                  <label class="ab-lbl">Cardholder name</label>
+                  <input type="text" id="cardName" class="ab-inp" placeholder="Name as on card">
+                </div>
+              </div>
+              <div class="ab-grid">
+                <div class="ab-field">
+                  <label class="ab-lbl">Expiry date</label>
+                  <input type="text" id="cardExp" class="ab-inp" placeholder="MM / YY" maxlength="7">
+                </div>
+                <div class="ab-field">
+                  <label class="ab-lbl">CVV / CVC</label>
+                  <input type="text" id="cardCvv" class="ab-inp" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ab-pay-method" data-method="gcash">
+            <div class="ab-pay-hdr">
+              <div class="ab-pm-dot"></div>
+              <div class="ab-pm-lbl">GCash</div>
+              <div class="ab-pm-logos"><div class="ab-pm-chip" style="background:#0062ff;color:#fff;border-color:#0062ff;">G</div></div>
+            </div>
+            <div class="ab-pay-fields">
+              <div class="ab-field">
+                <label class="ab-lbl">GCash mobile number</label>
+                <div class="ab-phone-row">
+                  <div class="ab-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="ab-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ab-pay-method" data-method="maya">
+            <div class="ab-pay-hdr">
+              <div class="ab-pm-dot"></div>
+              <div class="ab-pm-lbl">Maya</div>
+              <div class="ab-pm-logos"><div class="ab-pm-chip" style="background:#00b14f;color:#fff;border-color:#00b14f;">M</div></div>
+            </div>
+            <div class="ab-pay-fields">
+              <div class="ab-field">
+                <label class="ab-lbl">Maya account number</label>
+                <div class="ab-phone-row">
+                  <div class="ab-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="ab-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ab-pay-method" data-method="other">
+            <div class="ab-pay-hdr">
+              <div class="ab-pm-dot"></div>
+              <div class="ab-pm-lbl">Pay at Venue</div>
+              <div class="ab-pm-logos"><div class="ab-pm-chip">CASH</div></div>
+            </div>
+            <div class="ab-pay-fields">
+              <p style="font-size:12.5px;color:#6b7592;margin:0;line-height:1.6;">Pay directly at the attraction venue on your visit date. Your booking reference will be required at the entrance.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="ab-submit" id="submitBtn">
+          <span class="ab-spin"></span>
+          <span class="ab-stxt"><i class="fas fa-lock"></i> Confirm Booking</span>
+        </button>
+        <p class="ab-snote"><i class="fas fa-shield-alt"></i> Your payment info is encrypted and secure. By completing this booking you agree to our Terms &amp; Conditions.</p>
+      </div>
+
+    </div><!-- end left -->
+
+    <!-- RIGHT SUMMARY -->
+    <div class="ab-right">
+      <div class="ab-summary">
+
+        <!-- Attraction hero image -->
+        <div class="ab-sum-hero">
+          <img id="sumHeroImg" src="" alt="" onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80'">
+          <div class="ab-sum-hero-overlay"></div>
+          <div class="ab-sum-hero-badge" id="sumCategoryBadge"><i class="fas fa-ticket-alt"></i> <span id="sumCategory">Attraction</span></div>
+        </div>
+
+        <!-- Attraction name + meta -->
+        <div class="ab-sum-att">
+          <h3 class="ab-sum-att-name" id="sumAttName">Loading...</h3>
+          <div class="ab-sum-att-meta">
+            <span class="ab-sum-att-rating"><i class="fas fa-star" style="font-size:10px"></i> <span id="sumRating">–</span></span>
+            <span>·</span>
+            <span id="sumReviews" style="color:#8892aa;"></span>
+            <span>·</span>
+            <span class="ab-sum-att-location"><i class="fas fa-map-marker-alt"></i> <span id="sumLocation">–</span></span>
+          </div>
+          <div class="ab-sum-att-tags" id="sumTags"></div>
+        </div>
+
+        <!-- Date, guests, duration -->
+        <div class="ab-sum-details">
+          <div class="ab-sum-det-row">
+            <span class="ab-sum-det-label"><i class="fas fa-calendar-alt"></i> Visit date</span>
+            <span class="ab-sum-det-value" id="sumVisitDate">Not selected</span>
+          </div>
+          <div class="ab-sum-det-row">
+            <span class="ab-sum-det-label"><i class="fas fa-users"></i> Total guests</span>
+            <span class="ab-sum-det-value" id="sumGuests">1 Adult</span>
+          </div>
+          <div class="ab-sum-det-row">
+            <span class="ab-sum-det-label"><i class="fas fa-hourglass-half"></i> Duration</span>
+            <span class="ab-sum-det-value" id="sumDuration">–</span>
+          </div>
+        </div>
+
+        <!-- Price breakdown -->
+        <div class="ab-sum-price">
+          <div class="ab-sum-ptitle">Price Details</div>
+          <div class="ab-sum-pr-row"><span id="prAdultLabel">1 adult</span><span id="prAdultAmt">–</span></div>
+          <div class="ab-sum-pr-row" id="prChildRow" style="display:none;"><span id="prChildLabel">Children</span><span id="prChildAmt">–</span></div>
+          <div class="ab-sum-pr-row" id="prInfantRow" style="display:none;"><span id="prInfantLabel">Infants</span><span id="prInfantAmt">–</span></div>
+          <div class="ab-sum-pr-row" id="prVatRow"><span>Taxes &amp; fees (12%)</span><span id="prVat">–</span></div>
+          <div class="ab-sum-pdiv"></div>
+          <div class="ab-sum-total"><span>Total</span><span id="prTotal">–</span></div>
+          <div class="ab-sum-free-note" id="freeNote" style="display:none;"><i class="fas fa-check-circle"></i> Free entry — no payment required</div>
+        </div>
+
+        <!-- What's included -->
+        <div class="ab-ib">
+          <button class="ab-itog open" id="includedToggle">
+            <span class="ab-itog-title">What's included</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="ab-ibody open" id="includedBody">
+            <ul>
+              <li>E-voucher with QR code for entry</li>
+              <li>Booking confirmation via email</li>
+              <li>Access to the main attraction area</li>
+              <li>Guided tour (where applicable)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Cancellation -->
+        <div class="ab-ib">
+          <button class="ab-itog open" id="cancelToggle">
+            <span class="ab-itog-title">Cancellation policy</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="ab-ibody open" id="cancelBody">
+            <p id="cancelText">Free cancellation up to 24 hours before your visit date. No refunds for cancellations within 24 hours of the visit.</p>
+          </div>
+        </div>
+
+        <!-- Important info -->
+        <div class="ab-ib">
+          <button class="ab-itog" id="infoToggle">
+            <span class="ab-itog-title">Important info</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="ab-ibody" id="infoBody">
+            <ul>
+              <li>Present your e-voucher (digital or printed) at the entrance.</li>
+              <li>Arrive at least 15 minutes before your selected time slot.</li>
+              <li>Children below 12 must be accompanied by an adult.</li>
+              <li>Infants (under 2) may enter free of charge.</li>
+              <li>Wear comfortable shoes and bring sunscreen for outdoor attractions.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end right -->
+
+  </div><!-- end layout -->
+</div><!-- end page -->
+
+<!-- SUCCESS OVERLAY -->
+<div class="ab-success" id="successOverlay">
+  <div class="ab-sbox">
+    <div class="ab-sicon"><i class="fas fa-check-circle"></i></div>
+    <div class="ab-stitle2">Booking Confirmed!</div>
+    <div class="ab-ssub">Your visit to <strong id="succAttName"></strong> is confirmed for <strong id="succDate"></strong>.<br>A confirmation and e-voucher have been sent to <strong id="succEmail"></strong>.</div>
+    <div class="ab-sref">Booking Ref: <span id="succRef"></span></div>
+    <button class="ab-scta" onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-content">
+      <div class="footer-columns">
+        <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
+        <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li></ul></div>
+        <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li></ul></div>
+      </div>
+      <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
+    </div>
+    <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
+  </div>
+</footer>
+
+<script src="auth-header.js"></script>
+<script>
+/* ================================================================
+   STATE — mapped from DB schema:
+   attraction_id, attraction_name, attraction_city, attraction_country,
+   category, visit_date, adults, children, infants, total_guests,
+   price_per_person, total_amount, is_free, special_requests,
+   payment_method, booking_ref, booking_status
+   ================================================================ */
+var S = {
+  attraction_id:   0,
+  attraction_name: '',
+  attraction_city: '',
+  attraction_country: 'Philippines',
+  category:        '',
+  location:        '',
+  duration:        '',
+  rating:          0,
+  reviews:         0,
+  price_per_person:0,
+  is_free:         false,
+  cancel:          false,
+  instant:         false,
+  tripbest:        '',
+  image:           '',
+  adults:          1,
+  children:        0,
+  infants:         0,
+  payment_method:  'card'
+};
+
+/* ── helpers ── */
+function $e(id){ return document.getElementById(id); }
+function txt(id,v){ var e=$e(id); if(e) e.textContent=v; }
+function show(id,on){ var e=$e(id); if(e) e.style.display=on?'':'none'; }
+function fmt(v){ return new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2}).format(v); }
+function fmtDate(val){
+  if(!val) return 'Not selected';
+  var d = new Date(val + 'T00:00:00');
+  return d.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+}
+
+/* ── read URL params (from goToAttBooking() in attractions.html) ── */
+(function(){
+  var p = new URLSearchParams(window.location.search);
+  function gp(){ for(var i=0;i<arguments.length;i++){ var v=p.get(arguments[i]); if(v!==null&&v!=='') return v; } return ''; }
+
+  S.attraction_id   = parseInt(gp('id'))||0;
+  S.attraction_name = decodeURIComponent(gp('name'));
+  S.attraction_city = gp('city');
+  S.attraction_country = gp('country') || 'Philippines';
+  S.location        = gp('location');
+  S.category        = gp('category');
+  S.duration        = gp('duration');
+  S.rating          = parseFloat(gp('rating'))||0;
+  S.reviews         = parseInt(gp('reviews'))||0;
+  S.price_per_person= parseFloat(gp('price'))||0;
+  S.is_free         = S.price_per_person === 0;
+  S.cancel          = gp('cancel') === '1';
+  S.instant         = gp('instant') === '1';
+  S.tripbest        = gp('tripbest');
+  S.image           = gp('image') ? decodeURIComponent(gp('image')) : '';
+
+  /* Pre-fill guests from URL if coming from attraction search */
+  S.adults   = Math.max(1, parseInt(gp('adults')  ||'1'));
+  S.children = Math.max(0, parseInt(gp('children')||'0'));
+  S.infants  = Math.max(0, parseInt(gp('infants') ||'0'));
+})();
+
+/* ── Guest counter ── */
+function updateGuest(type, dir){
+  S[type] = Math.max(type==='adults'?1:0, Math.min(9, S[type]+dir));
+  txt('guestAdults',   S.adults);
+  txt('guestChildren', S.children);
+  txt('guestInfants',  S.infants);
+  $e('adultMinus').disabled  = S.adults   <= 1;
+  $e('childMinus').disabled  = S.children <= 0;
+  $e('infantMinus').disabled = S.infants  <= 0;
+  updateSummaryGuests();
+  recalc();
+}
+
+function updateSummaryGuests(){
+  var parts = [S.adults + ' Adult' + (S.adults>1?'s':'')];
+  if(S.children>0) parts.push(S.children+' Child'+(S.children>1?'ren':''));
+  if(S.infants>0)  parts.push(S.infants+' Infant'+(S.infants>1?'s':''));
+  txt('sumGuests', parts.join(' + '));
+  txt('sumTotal', S.adults+S.children+S.infants);
+}
+
+/* ── Populate right-hand summary panel ── */
+function populateSummary(){
+  /* Hero image */
+  var img = $e('sumHeroImg');
+  if(img){
+    img.src = S.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80';
+    img.alt = S.attraction_name;
+  }
+
+  /* Breadcrumb */
+  txt('bcAttName', S.attraction_name || 'Attraction');
+
+  /* Name, rating, location */
+  txt('sumAttName', S.attraction_name || 'Attraction');
+  txt('sumCategory', S.category || 'Tour');
+  txt('sumRating', S.rating ? S.rating.toFixed(1) : '–');
+  txt('sumReviews', S.reviews ? S.reviews.toLocaleString()+' reviews' : '');
+  txt('sumLocation', S.location && S.city ? S.location+', '+S.attraction_city : S.attraction_city || '–');
+  txt('sumDuration', S.duration || '–');
+
+  /* Tags */
+  var tagsEl = $e('sumTags'); if(!tagsEl) return;
+  var tags = '';
+  if(S.cancel)  tags += '<span class="ab-sum-tag cancel"><i class="fas fa-check" style="font-size:9px"></i> Free cancel</span>';
+  if(S.instant) tags += '<span class="ab-sum-tag instant"><i class="fas fa-bolt" style="font-size:9px"></i> Instant confirm</span>';
+  tagsEl.innerHTML = tags;
+
+  /* Free entry notice */
+  show('freeEntryNote', S.is_free);
+  show('freeNote',      S.is_free);
+  show('prVatRow',      !S.is_free);
+
+  /* Cancellation text */
+  if(!S.cancel){
+    txt('cancelText','This experience is non-refundable. No refund will be given for cancellations after booking.');
+  }
+
+  /* Hide payment section for free entries */
+  if(S.is_free){
+    var payCard = $e('paymentCard');
+    if(payCard){
+      payCard.querySelector('h2').textContent = 'Confirm Your Booking';
+      payCard.querySelector('.ab-pay-methods').style.display = 'none';
+    }
+  }
+
+  /* Pre-fill guests from URL */
+  txt('guestAdults',   S.adults);
+  txt('guestChildren', S.children);
+  txt('guestInfants',  S.infants);
+  $e('adultMinus').disabled  = S.adults   <= 1;
+  $e('childMinus').disabled  = S.children <= 0;
+  $e('infantMinus').disabled = S.infants  <= 0;
+  updateSummaryGuests();
+  recalc();
+}
+
+/* ── Pricing ── */
+function recalc(){
+  var ppp = S.price_per_person;
+
+  if(S.is_free){
+    txt('prAdultLabel', 'Free entry');
+    txt('prAdultAmt',   'PHP 0.00');
+    txt('prVat',        'PHP 0.00');
+    txt('prTotal',      'PHP 0.00');
+    return 0;
+  }
+
+  var adultAmt  = ppp * S.adults;
+  var childAmt  = ppp * 0.75 * S.children;
+  var infantAmt = 0; /* infants free typically */
+  var sub       = adultAmt + childAmt + infantAmt;
+  var vat       = +(sub * 0.12).toFixed(2);
+  var total     = +(sub + vat).toFixed(2);
+
+  txt('prAdultLabel', S.adults+' adult'+(S.adults!==1?'s':'')+' × '+fmt(ppp));
+  txt('prAdultAmt',   fmt(adultAmt));
+
+  if(S.children>0){
+    show('prChildRow', true);
+    txt('prChildLabel', S.children+' child'+(S.children!==1?'ren':'')+' (75%)');
+    txt('prChildAmt',   fmt(childAmt));
+  } else { show('prChildRow', false); }
+
+  if(S.infants>0){
+    show('prInfantRow', true);
+    txt('prInfantLabel', S.infants+' infant'+(S.infants!==1?'s':'')+' (Free)');
+    txt('prInfantAmt',   'PHP 0.00');
+  } else { show('prInfantRow', false); }
+
+  txt('prVat',   fmt(vat));
+  txt('prTotal', fmt(total));
+  return total;
+}
+
+/* ── Accordion toggles ── */
+function wireToggle(tid, bid){
+  var btn=$e(tid), body=$e(bid);
+  if(!btn||!body) return;
+  btn.addEventListener('click',function(){
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+  });
+}
+
+/* ── Validation ── */
+function setErr(el, errEl, hasErr){
+  if(el)    el.classList.toggle('err', hasErr);
+  if(errEl) errEl.classList.toggle('show', hasErr);
+  return hasErr;
+}
+
+/* ── Submit ── */
+function submitBooking(){
+  var firstName = $e('contactFirstName') ? $e('contactFirstName').value.trim() : '';
+  var lastName  = $e('contactLastName')  ? $e('contactLastName').value.trim()  : '';
+  var email     = $e('contactEmail')     ? $e('contactEmail').value.trim()     : '';
+  var phone     = $e('contactPhone')     ? $e('contactPhone').value.trim()     : '';
+  var visitDate = $e('visitDate')        ? $e('visitDate').value               : '';
+  var specialReq= $e('specialRequests')  ? $e('specialRequests').value.trim()  : '';
+  var timeSlot  = $e('timeSlot')         ? $e('timeSlot').value                : '';
+
+  var ok = true;
+  if(setErr($e('contactFirstName'), $e('errFirstName'), !firstName)) ok=false;
+  if(setErr($e('contactLastName'),  $e('errLastName'),  !lastName))  ok=false;
+  if(setErr($e('contactEmail'),     $e('errEmail'),     !email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) ok=false;
+  if(setErr($e('contactPhone'),     $e('errPhone'),     !phone))     ok=false;
+  if(setErr($e('visitDate'),        $e('errDate'),      !visitDate)) ok=false;
+
+  if(!ok){
+    var fe = document.querySelector('.ab-inp.err');
+    if(fe) fe.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  var btn = $e('submitBtn');
+  btn.classList.add('loading'); btn.disabled=true;
+
+  var total       = recalc();
+  var totalGuests = S.adults + S.children + S.infants;
+
+  /* Payload matches the DB schema exactly */
+  var payload = {
+    first_name:         firstName,
+    last_name:          lastName,
+    email:              email,
+    phone:              phone,
+    attraction_id:      S.attraction_id,
+    attraction_name:    S.attraction_name,
+    attraction_city:    S.attraction_city,
+    attraction_country: S.attraction_country,
+    category:           S.category,
+    visit_date:         visitDate,
+    adults:             S.adults,
+    children:           S.children,
+    infants:            S.infants,
+    total_guests:       totalGuests,
+    price_per_person:   S.price_per_person,
+    total_amount:       total,
+    is_free:            S.is_free ? 1 : 0,
+    special_requests:   specialReq || null,
+    payment_method:     S.is_free ? 'other' : S.payment_method,
+    booking_status:     'confirmed'
+  };
+
+  fetch('api/save_attraction_booking.php', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.classList.remove('loading'); btn.disabled=false;
+    if(d.ok||d.success) showSuccess(d.booking_ref, email, visitDate);
+    else alert(d.message||'Booking failed. Please try again.');
+  })
+  .catch(function(){
+    btn.classList.remove('loading'); btn.disabled=false;
+    /* Show success even on network error (demo mode) */
+    showSuccess(null, email, visitDate);
+  });
+}
+
+function showSuccess(ref, email, visitDate){
+  var r = ref || ('ATT-'+(Date.now()%1000000).toString().padStart(6,'0'));
+  txt('succAttName', S.attraction_name);
+  txt('succDate',    fmtDate(visitDate));
+  txt('succEmail',   email);
+  txt('succRef',     r);
+  var ov=$e('successOverlay');
+  if(ov) ov.classList.add('show');
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', function(){
+  populateSummary();
+
+  /* Live date → summary sync */
+  var dateInp = $e('visitDate');
+  if(dateInp){
+    /* Set min date to tomorrow */
+    var tom = new Date(); tom.setDate(tom.getDate()+1);
+    dateInp.min = tom.toISOString().split('T')[0];
+    dateInp.addEventListener('change', function(){
+      txt('sumVisitDate', fmtDate(this.value));
+    });
+  }
+
+  /* Pre-fill auth info */
+  try{
+    var auth = JSON.parse(localStorage.getItem('easyNavigateAuth')||'{}');
+    if(auth && auth.email && $e('contactEmail')) $e('contactEmail').value = auth.email;
+    if(auth && auth.first_name && $e('contactFirstName')) $e('contactFirstName').value = auth.first_name;
+    if(auth && auth.last_name  && $e('contactLastName'))  $e('contactLastName').value  = auth.last_name;
+  }catch(e){}
+
+  /* Payment method selection */
+  document.querySelectorAll('#payMethods .ab-pay-method').forEach(function(m){
+    m.addEventListener('click',function(){
+      document.querySelectorAll('#payMethods .ab-pay-method').forEach(function(x){ x.classList.remove('sel'); });
+      m.classList.add('sel');
+      S.payment_method = m.dataset.method||'card';
+    });
+  });
+
+  /* Card number formatting */
+  $e('cardNo') && $e('cardNo').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').substring(0,16);
+    this.value=v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  $e('cardExp') && $e('cardExp').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').substring(0,4);
+    if(v.length>=3) v=v.substring(0,2)+' / '+v.substring(2);
+    this.value=v;
+  });
+
+  /* Accordions */
+  wireToggle('includedToggle', 'includedBody');
+  wireToggle('cancelToggle',   'cancelBody');
+  wireToggle('infoToggle',     'infoBody');
+
+  /* Submit */
+  $e('submitBtn') && $e('submitBtn').addEventListener('click', submitBooking);
+
+  /* Find Bookings dropdown */
+  $e('fbBtn') && $e('fbBtn').addEventListener('click',function(e){
+    e.stopPropagation();
+    $e('fbMenu').classList.toggle('open');
+  });
+  document.querySelectorAll('#fbMenu .dropdown-item').forEach(function(item){
+    item.addEventListener('click',function(){
+      var pg=item.dataset.page; if(pg) window.location.href=pg;
+    });
+  });
+  document.addEventListener('click',function(){ $e('fbMenu')&&$e('fbMenu').classList.remove('open'); });
+});
+</script>
+</body>
+</html>

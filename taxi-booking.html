@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Your Taxi Booking - Easy Navigate</title>
+<link rel="icon" type="image/png" href="assets/web-icon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+
+.header{
+  background:#282D9E!important;
+  position:sticky!important;
+  top:0!important;
+  z-index:1000!important;
+  box-shadow:0 4px 24px rgba(40,45,158,.18)!important;
+}
+
+body{background:#f4f6fb;font-family:'Inter',sans-serif;color:#1a2140;margin:0;}
+
+/* ── BANNER ── */
+.tb-banner{background:linear-gradient(135deg,#1a1f6e 0%,#282D9E 60%,#3b40b8 100%);padding:28px 24px 32px;position:relative;overflow:hidden;}
+.tb-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='%23fff' fill-opacity='.04'/%3E%3C/svg%3E");pointer-events:none;}
+.tb-bi{max-width:1160px;margin:0 auto;position:relative;z-index:1;}
+.tb-bc{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px;flex-wrap:wrap;}
+.tb-bc a{color:rgba(255,255,255,.85);text-decoration:none;font-weight:500;}
+.tb-bc a:hover{color:#fff;text-decoration:underline;}
+.tb-bc i{font-size:9px;color:rgba(255,255,255,.4);}
+.tb-bc .cur{color:rgba(255,255,255,.9);font-weight:600;}
+.tb-brow{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.tb-btitle{font-size:1.75rem;font-weight:800;color:#fff;margin:0 0 4px;letter-spacing:-.4px;}
+.tb-bsub{font-size:13px;color:rgba(255,255,255,.72);margin:0;}
+.tb-steps{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.tb-step{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.45);}
+.tb-step.active{color:#fff;}
+.tb-step.done{color:rgba(255,255,255,.65);}
+.tb-snum{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.tb-step.active .tb-snum{background:#fff;color:#282D9E;border-color:#fff;}
+.tb-step.done   .tb-snum{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5);}
+.tb-ssep{color:rgba(255,255,255,.3);font-size:11px;}
+
+/* ── PAGE ── */
+.tb-page{max-width:1160px;margin:0 auto;padding:28px 24px 64px;}
+.tb-layout{display:grid;grid-template-columns:1fr 370px;gap:24px;align-items:start;}
+.tb-left{display:flex;flex-direction:column;gap:20px;}
+
+/* ── CARD ── */
+.tb-card{background:#fff;border:1px solid #e5e8f0;border-radius:16px;padding:24px;}
+.tb-ctitle{font-size:1.1rem;font-weight:800;color:#1a2140;margin:0 0 4px;letter-spacing:-.2px;}
+.tb-csub{font-size:12.5px;color:#8892aa;margin:0 0 20px;}
+
+/* ── TRIP ROUTE DISPLAY ── */
+.tb-route-display{background:#f8f9fc;border:1px solid #e5e8f0;border-radius:12px;padding:16px 18px;margin-bottom:20px;display:flex;flex-direction:column;gap:10px;}
+.tb-route-row{display:flex;align-items:center;gap:12px;}
+.tb-route-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.tb-route-icon.blue{background:#dbeafe;color:#1d4ed8;}
+.tb-route-icon.green{background:#dcfce7;color:#15803d;}
+.tb-route-icon.amber{background:#fef3c7;color:#92400e;}
+.tb-route-icon.purple{background:#ede9fe;color:#6d28d9;}
+.tb-route-label{font-size:10.5px;font-weight:700;color:#a0aabb;text-transform:uppercase;letter-spacing:.4px;display:block;}
+.tb-route-val{font-size:13.5px;font-weight:700;color:#1a2140;}
+.tb-route-connector{width:1.5px;height:10px;background:#e5e8f0;margin-left:16px;}
+
+/* ── VEHICLE SUMMARY BADGE ── */
+.tb-vehicle-badge{display:inline-flex;align-items:center;gap:10px;background:#eff2ff;border:1.5px solid #c7d2fe;border-radius:12px;padding:10px 16px;margin-bottom:4px;}
+.tb-vehicle-badge-icon{font-size:22px;}
+.tb-vehicle-badge-name{font-size:14px;font-weight:800;color:#282D9E;}
+.tb-vehicle-badge-meta{font-size:12px;color:#6b7592;}
+
+/* ── FORM ── */
+.tb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.tb-grid.one{grid-template-columns:1fr;}
+.tb-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.tb-field{display:flex;flex-direction:column;gap:5px;}
+.tb-lbl{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.5px;}
+.tb-lbl .req{color:#e53935;}
+.tb-inp{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13.5px;color:#1a2140;outline:none;background:#fff;width:100%;transition:border-color .2s,box-shadow .2s;}
+.tb-inp:focus{border-color:#282D9E;box-shadow:0 0 0 3px rgba(40,45,158,.08);}
+.tb-inp.err{border-color:#e53935!important;}
+select.tb-inp{cursor:pointer;}
+.tb-err{font-size:11px;color:#e53935;font-weight:600;display:none;margin-top:2px;}
+.tb-err.show{display:block;}
+.tb-hint{font-size:11px;color:#a0aabb;margin-top:3px;}
+.tb-phone-row{display:grid;grid-template-columns:96px 1fr;gap:8px;}
+.tb-prefix{border:1.5px solid #e5e8f0;border-radius:8px;padding:10px 12px;font-size:13px;font-weight:700;background:#f8f9fc;color:#1a2140;display:flex;align-items:center;gap:6px;}
+.tb-prefix i{font-size:8px;margin-left:auto;color:#a0aabb;}
+
+/* ── PASSENGER COUNTER ── */
+.tb-pax-counter{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:4px;}
+.tb-pax-box{border:1.5px solid #e5e8f0;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+.tb-pax-label{font-size:11px;font-weight:700;color:#8892aa;text-transform:uppercase;letter-spacing:.4px;}
+.tb-pax-age{font-size:10.5px;color:#b0bac8;font-weight:400;}
+.tb-pax-controls{display:flex;align-items:center;justify-content:space-between;}
+.tb-pax-num{font-size:16px;font-weight:800;color:#1a2140;min-width:20px;text-align:center;}
+.tb-pbtn{width:28px;height:28px;border-radius:50%;border:1.5px solid #e5e8f0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#282D9E;transition:all .15s;font-weight:700;}
+.tb-pbtn:hover{border-color:#282D9E;background:#eff2ff;}
+.tb-pbtn:disabled{color:#c8cee0;border-color:#f0f2f8;cursor:default;background:#f8f9fc;}
+
+/* ── FLIGHT INFO ── */
+.tb-flight-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+
+/* ── INFO BOX ── */
+.tb-info-box{background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;}
+.tb-info-box i{color:#282D9E;margin-top:2px;flex-shrink:0;}
+.tb-info-box p{font-size:12.5px;color:#3730a3;font-weight:500;margin:0;line-height:1.55;}
+
+/* ── PAYMENT ── */
+.tb-pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.tb-pay-method{border:1.5px solid #e5e8f0;border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .18s,box-shadow .18s;}
+.tb-pay-method:hover{border-color:#282D9E;}
+.tb-pay-method.sel{border-color:#282D9E;background:#f8faff;box-shadow:0 0 0 3px rgba(40,45,158,.07);}
+.tb-pay-hdr{display:flex;align-items:center;gap:12px;}
+.tb-pm-dot{width:18px;height:18px;border-radius:50%;border:2px solid #c8cee0;flex-shrink:0;position:relative;transition:border-color .15s;}
+.tb-pay-method.sel .tb-pm-dot{border-color:#282D9E;}
+.tb-pay-method.sel .tb-pm-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#282D9E;}
+.tb-pm-lbl{font-size:14px;font-weight:700;color:#1a2140;flex:1;}
+.tb-pm-logos{display:flex;align-items:center;gap:5px;}
+.tb-pm-chip{height:20px;min-width:30px;border-radius:3px;border:1px solid #e5e8f0;background:#fff;font-size:9px;font-weight:800;color:#6b7592;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.tb-pay-fields{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #f0f2f8;}
+.tb-pay-method.sel .tb-pay-fields{display:block;}
+
+/* ── SUBMIT ── */
+.tb-submit{width:100%;padding:15px;background:#282D9E;color:#fff;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s;box-shadow:0 4px 16px rgba(40,45,158,.3);display:flex;align-items:center;justify-content:center;gap:8px;}
+.tb-submit:hover{background:#1F237E;transform:translateY(-1px);}
+.tb-submit:active{transform:translateY(0);}
+.tb-spin{display:none;width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+.tb-submit.loading .tb-spin{display:block;}
+.tb-submit.loading .tb-stxt{opacity:.65;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.tb-snote{font-size:12px;color:#a0aabb;text-align:center;margin-top:10px;line-height:1.5;}
+
+/* ── RIGHT SUMMARY ── */
+.tb-right{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+.tb-summary{background:#fff;border:1px solid #e5e8f0;border-radius:16px;overflow:hidden;}
+
+/* Route summary in right panel */
+.tb-sum-route{padding:18px 18px 14px;}
+.tb-sum-route-title{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
+.tb-sum-rs{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:#6b7592;font-weight:500;margin-bottom:8px;}
+.tb-sum-rs:last-child{margin-bottom:0;}
+.tb-sum-rs-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;}
+.tb-sum-rs-icon.blue{background:#dbeafe;color:#1d4ed8;}
+.tb-sum-rs-icon.green{background:#dcfce7;color:#15803d;}
+.tb-sum-rs-icon.amber{background:#fef3c7;color:#92400e;}
+.tb-sum-rs-icon.purple{background:#ede9fe;color:#6d28d9;}
+.tb-sum-rs-text{font-size:12px;line-height:1.4;}
+.tb-sum-rs-label{font-size:10.5px;color:#a0aabb;font-weight:500;display:block;}
+.tb-sum-connector{width:1.5px;height:10px;background:#e5e8f0;margin:2px 0 2px 12px;}
+
+/* Vehicle in summary */
+.tb-sum-vehicle{padding:14px 18px;border-top:1px solid #f0f2f8;border-bottom:1px solid #f0f2f8;}
+.tb-sum-vehicle-row{display:flex;align-items:center;gap:10px;}
+.tb-sum-vehicle-icon{font-size:24px;}
+.tb-sum-vehicle-name{font-size:13px;font-weight:800;color:#1a2140;}
+.tb-sum-vehicle-caps{font-size:11.5px;color:#8892aa;margin-top:1px;}
+
+/* Passengers */
+.tb-sum-pax{padding:12px 18px;border-bottom:1px solid #f0f2f8;}
+.tb-sum-pax-title{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.tb-sum-pax-row{display:flex;justify-content:space-between;font-size:12.5px;color:#6b7592;margin-bottom:4px;}
+.tb-sum-pax-row span:last-child{font-weight:600;color:#1a2140;}
+
+/* Price */
+.tb-sum-price{padding:14px 18px;border-bottom:1px solid #f0f2f8;}
+.tb-sum-ptitle{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.tb-sum-pr-row{display:flex;justify-content:space-between;font-size:13px;color:#6b7592;font-weight:500;margin-bottom:7px;gap:8px;}
+.tb-sum-pr-row span:last-child{font-weight:600;color:#1a2140;white-space:nowrap;}
+.tb-sum-pr-row.free-item span{color:#16a34a;font-weight:600;}
+.tb-sum-pdiv{height:1px;background:#e5e8f0;margin:10px 0;}
+.tb-sum-total{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:800;color:#1a2140;}
+.tb-sum-total span:last-child{color:#282D9E;}
+
+/* Includes */
+.tb-sum-includes{padding:14px 18px;}
+.tb-sum-includes-title{font-size:11px;font-weight:800;color:#1a2140;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+.tb-sum-include-item{display:flex;align-items:center;gap:7px;font-size:12px;color:#6b7592;font-weight:500;margin-bottom:6px;}
+.tb-sum-include-item i{color:#16a34a;font-size:11px;width:14px;}
+
+/* Accordion */
+.tb-ib{padding:12px 18px;border-bottom:1px solid #f0f2f8;}
+.tb-ib:last-child{border-bottom:none;}
+.tb-itog{display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:none;border:none;padding:0;width:100%;text-align:left;font-family:'Inter',sans-serif;}
+.tb-itog-title{font-size:13px;font-weight:700;color:#1a2140;}
+.tb-itog i{font-size:12px;color:#a0aabb;transition:transform .2s;}
+.tb-itog.open i{transform:rotate(180deg);}
+.tb-ibody{display:none;padding-top:10px;}
+.tb-ibody.open{display:block;}
+.tb-ibody p,.tb-ibody li{font-size:12.5px;color:#6b7592;line-height:1.6;margin:0 0 6px;}
+.tb-ibody ul{padding-left:18px;margin:0;}
+
+/* SUCCESS */
+.tb-success{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:99999;align-items:center;justify-content:center;}
+.tb-success.show{display:flex;}
+.tb-sbox{background:#fff;border-radius:20px;padding:48px 52px;text-align:center;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.22);animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{transform:scale(.75);opacity:0;}to{transform:scale(1);opacity:1;}}
+.tb-sicon{font-size:3.8rem;color:#16a34a;margin-bottom:18px;}
+.tb-stitle2{font-size:1.6rem;font-weight:800;color:#1a2140;margin-bottom:8px;}
+.tb-ssub{font-size:.92rem;color:#8892aa;margin-bottom:18px;line-height:1.65;}
+.tb-sref{background:#f0f4ff;border-radius:10px;padding:14px 22px;font-size:.9rem;font-weight:700;color:#282D9E;margin-bottom:22px;}
+.tb-scta{background:#282D9E;color:#fff;border:none;border-radius:10px;padding:13px 38px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;}
+.tb-scta:hover{background:#1F237E;}
+
+/* RESPONSIVE */
+@media(max-width:960px){.tb-layout{grid-template-columns:1fr;}.tb-right{position:static;}.tb-steps{display:none;}}
+@media(max-width:600px){
+  .tb-page{padding:20px 16px 48px;}
+  .tb-grid{grid-template-columns:1fr;}
+  .tb-grid.three{grid-template-columns:1fr 1fr;}
+  .tb-card{padding:18px 16px;}
+  .tb-banner{padding:20px 16px 24px;}
+  .tb-btitle{font-size:1.4rem;}
+  .tb-pax-counter{grid-template-columns:1fr;}
+  .tb-flight-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="nav-container">
+    <div class="top-nav">
+      <a class="logo" href="index.html">
+        <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+      </a>
+      <div class="top-right">
+        <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="PH" class="flag-icon"></button>
+        <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+        <div class="relative">
+          <button class="support-btn" id="fbBtn">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+          <div class="dropdown-menu" id="fbMenu">
+            <div class="dropdown-item" data-page="hotel &amp; homes.html"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+            <div class="dropdown-item" data-page="car-rental.html"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+            <div class="dropdown-item" data-page="flights.html"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
+            <div class="dropdown-item" data-page="attractions.html"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
+            <div class="dropdown-item" data-page="airport-taxis.html"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
+          </div>
+        </div>
+        <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- BANNER -->
+<div class="tb-banner">
+  <div class="tb-bi">
+    <div class="tb-bc">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="airport-taxis.html">Airport Taxis</a>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur" id="bcRoute">Transfer</span>
+      <i class="fas fa-chevron-right"></i>
+      <span class="cur">Complete Booking</span>
+    </div>
+    <div class="tb-brow">
+      <div>
+        <h1 class="tb-btitle">Complete Your Booking</h1>
+        <p class="tb-bsub">Fill in your details to confirm your taxi transfer</p>
+      </div>
+      <div class="tb-steps">
+        <div class="tb-step done"><div class="tb-snum"><i class="fas fa-check" style="font-size:9px"></i></div><span>Select vehicle</span></div>
+        <span class="tb-ssep">———</span>
+        <div class="tb-step active"><div class="tb-snum">2</div><span>Passenger details</span></div>
+        <span class="tb-ssep">———</span>
+        <div class="tb-step"><div class="tb-snum">3</div><span>Confirmation</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="tb-page">
+  <div class="tb-layout">
+
+    <!-- LEFT -->
+    <div class="tb-left">
+
+      <!-- 1. TRIP SUMMARY -->
+      <div class="tb-card">
+        <h2 class="tb-ctitle">Your Transfer Details</h2>
+        <p class="tb-csub">Please review your trip before completing the booking.</p>
+
+        <div class="tb-route-display">
+          <div class="tb-route-row">
+            <div class="tb-route-icon blue"><i class="fas fa-plane-arrival"></i></div>
+            <div>
+              <span class="tb-route-label">Pick-up</span>
+              <span class="tb-route-val" id="displayPickup">–</span>
+            </div>
+          </div>
+          <div class="tb-route-connector"></div>
+          <div class="tb-route-row">
+            <div class="tb-route-icon green"><i class="fas fa-location-dot"></i></div>
+            <div>
+              <span class="tb-route-label">Drop-off</span>
+              <span class="tb-route-val" id="displayDropoff">–</span>
+            </div>
+          </div>
+          <div class="tb-route-connector"></div>
+          <div class="tb-route-row">
+            <div class="tb-route-icon amber"><i class="fas fa-calendar"></i></div>
+            <div>
+              <span class="tb-route-label">Date &amp; Time</span>
+              <span class="tb-route-val" id="displayDate">–</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle badge -->
+        <div class="tb-vehicle-badge" id="vehicleBadge">
+          <span class="tb-vehicle-badge-icon" id="vehicleIcon">🚙</span>
+          <div>
+            <div class="tb-vehicle-badge-name" id="vehicleName">Comfort</div>
+            <div class="tb-vehicle-badge-meta" id="vehicleMeta">Max. 4 passengers · 3 bags</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. CONTACT INFO -->
+      <div class="tb-card">
+        <h2 class="tb-ctitle">Contact Information</h2>
+        <p class="tb-csub">Your booking confirmation will be sent to this contact. The driver will use this to reach you.</p>
+        <div class="tb-grid">
+          <div class="tb-field">
+            <label class="tb-lbl">First name <span class="req">*</span></label>
+            <input type="text" id="firstName" class="tb-inp" placeholder="Your first name">
+            <span class="tb-err" id="errFirstName">First name is required.</span>
+          </div>
+          <div class="tb-field">
+            <label class="tb-lbl">Last name <span class="req">*</span></label>
+            <input type="text" id="lastName" class="tb-inp" placeholder="Your last name">
+            <span class="tb-err" id="errLastName">Last name is required.</span>
+          </div>
+        </div>
+        <div class="tb-grid">
+          <div class="tb-field">
+            <label class="tb-lbl">Email address <span class="req">*</span></label>
+            <input type="email" id="email" class="tb-inp" placeholder="your@email.com">
+            <span class="tb-err" id="errEmail">Enter a valid email address.</span>
+            <span class="tb-hint">Booking confirmation will be sent here</span>
+          </div>
+          <div class="tb-field">
+            <label class="tb-lbl">Phone number <span class="req">*</span></label>
+            <div class="tb-phone-row">
+              <div class="tb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+              <input type="tel" id="phone" class="tb-inp" placeholder="9XX XXX XXXX">
+            </div>
+            <span class="tb-err" id="errPhone">Phone number is required.</span>
+          </div>
+        </div>
+        <div class="tb-grid">
+          <div class="tb-field">
+            <label class="tb-lbl">WhatsApp number</label>
+            <div class="tb-phone-row">
+              <div class="tb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+              <input type="tel" id="whatsapp" class="tb-inp" placeholder="9XX XXX XXXX (optional)">
+            </div>
+            <span class="tb-hint">Driver may contact you via WhatsApp</span>
+          </div>
+          <div></div>
+        </div>
+      </div>
+
+      <!-- 3. PICKUP & DROPOFF LOCATIONS -->
+      <div class="tb-card">
+        <h2 class="tb-ctitle">Pickup &amp; Drop-off Locations</h2>
+        <p class="tb-csub">Confirm or update your exact pickup and drop-off addresses.</p>
+        <div class="tb-grid one" style="margin-bottom:14px;">
+          <div class="tb-field">
+            <label class="tb-lbl">Pickup location <span class="req">*</span></label>
+            <input type="text" id="pickupLocation" class="tb-inp" placeholder="Airport terminal / exact address">
+            <span class="tb-err" id="errPickup">Pickup location is required.</span>
+          </div>
+        </div>
+        <div class="tb-grid one">
+          <div class="tb-field">
+            <label class="tb-lbl">Drop-off location <span class="req">*</span></label>
+            <input type="text" id="dropoffLocation" class="tb-inp" placeholder="Hotel name, address, or landmark">
+            <span class="tb-err" id="errDropoff">Drop-off location is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. PICKUP DATE & TIME -->
+      <div class="tb-card">
+        <h2 class="tb-ctitle">Pickup Date &amp; Time</h2>
+        <p class="tb-csub">Confirm or update your pickup schedule.</p>
+        <div class="tb-grid">
+          <div class="tb-field">
+            <label class="tb-lbl">Pickup date <span class="req">*</span></label>
+            <input type="date" id="pickupDate" class="tb-inp">
+            <span class="tb-err" id="errDate">Pickup date is required.</span>
+          </div>
+          <div class="tb-field">
+            <label class="tb-lbl">Pickup time <span class="req">*</span></label>
+            <input type="time" id="pickupTime" class="tb-inp">
+            <span class="tb-err" id="errTime">Pickup time is required.</span>
+          </div>
+        </div>
+        <div class="tb-info-box">
+          <i class="fas fa-circle-info"></i>
+          <p>For airport pickups, your driver will track your flight and adjust automatically for any delays. Free waiting time is included at the airport.</p>
+        </div>
+      </div>
+
+      <!-- 5. PASSENGERS -->
+      <div class="tb-card">
+        <h2 class="tb-ctitle">Number of Passengers</h2>
+        <p class="tb-csub">Make sure the total fits your selected vehicle capacity.</p>
+        <div class="tb-pax-counter">
+          <div class="tb-pax-box">
+            <div>
+              <div class="tb-pax-label">Adults</div>
+              <div class="tb-pax-age">12+ years old</div>
+            </div>
+            <div class="tb-pax-controls">
+              <button class="tb-pbtn" id="adultMinus" onclick="updatePax('adults',-1)" disabled>−</button>
+              <span class="tb-pax-num" id="paxAdults">1</span>
+              <button class="tb-pbtn" onclick="updatePax('adults',1)">+</button>
+            </div>
+          </div>
+          <div class="tb-pax-box">
+            <div>
+              <div class="tb-pax-label">Children</div>
+              <div class="tb-pax-age">2–11 years old</div>
+            </div>
+            <div class="tb-pax-controls">
+              <button class="tb-pbtn" id="childMinus" onclick="updatePax('children',-1)" disabled>−</button>
+              <span class="tb-pax-num" id="paxChildren">0</span>
+              <button class="tb-pbtn" onclick="updatePax('children',1)">+</button>
+            </div>
+          </div>
+          <div class="tb-pax-box">
+            <div>
+              <div class="tb-pax-label">Infants</div>
+              <div class="tb-pax-age">Under 2 years old</div>
+            </div>
+            <div class="tb-pax-controls">
+              <button class="tb-pbtn" id="infantMinus" onclick="updatePax('infants',-1)" disabled>−</button>
+              <span class="tb-pax-num" id="paxInfants">0</span>
+              <button class="tb-pbtn" onclick="updatePax('infants',1)">+</button>
+            </div>
+          </div>
+        </div>
+        <p class="tb-hint" style="margin-top:8px;" id="capacityNote"></p>
+      </div>
+
+      <!-- 6. FLIGHT INFO (optional) -->
+      <div class="tb-card">
+        <h2 class="tb-ctitle">Flight Information <span style="font-size:12px;color:#8892aa;font-weight:400;">(Optional)</span></h2>
+        <p class="tb-csub">Providing your flight number helps us track your arrival and adjust pickup time if needed.</p>
+        <div class="tb-flight-row">
+          <div class="tb-field">
+            <label class="tb-lbl">Flight number</label>
+            <input type="text" id="flightNumber" class="tb-inp" placeholder="e.g. PR 101">
+          </div>
+          <div class="tb-field">
+            <label class="tb-lbl">Arriving from</label>
+            <input type="text" id="flightOrigin" class="tb-inp" placeholder="e.g. Manila, Cebu">
+          </div>
+        </div>
+        <div class="tb-info-box">
+          <i class="fas fa-plane"></i>
+          <p>We'll monitor your flight in real-time. Even if your flight is delayed, your driver will be there.</p>
+        </div>
+      </div>
+
+      <!-- 7. PAYMENT -->
+      <div class="tb-card">
+        <h2 class="tb-ctitle">How Would You Like to Pay?</h2>
+        <div class="tb-pay-methods" id="payMethods">
+
+          <div class="tb-pay-method sel" data-method="card">
+            <div class="tb-pay-hdr">
+              <div class="tb-pm-dot"></div>
+              <div class="tb-pm-lbl">Credit / Debit Card</div>
+              <div class="tb-pm-logos">
+                <div class="tb-pm-chip">VISA</div>
+                <div class="tb-pm-chip">MC</div>
+                <div class="tb-pm-chip">JCB</div>
+                <div class="tb-pm-chip">AMEX</div>
+              </div>
+            </div>
+            <div class="tb-pay-fields">
+              <div class="tb-grid one" style="margin-bottom:12px">
+                <div class="tb-field">
+                  <label class="tb-lbl">Card number</label>
+                  <input type="text" id="cardNo" class="tb-inp" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+              </div>
+              <div class="tb-grid one" style="margin-bottom:12px">
+                <div class="tb-field">
+                  <label class="tb-lbl">Cardholder name</label>
+                  <input type="text" id="cardName" class="tb-inp" placeholder="Name as on card">
+                </div>
+              </div>
+              <div class="tb-grid">
+                <div class="tb-field">
+                  <label class="tb-lbl">Expiry date</label>
+                  <input type="text" id="cardExp" class="tb-inp" placeholder="MM / YY" maxlength="7">
+                </div>
+                <div class="tb-field">
+                  <label class="tb-lbl">CVV / CVC</label>
+                  <input type="text" id="cardCvv" class="tb-inp" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tb-pay-method" data-method="gcash">
+            <div class="tb-pay-hdr">
+              <div class="tb-pm-dot"></div>
+              <div class="tb-pm-lbl">GCash</div>
+              <div class="tb-pm-logos"><div class="tb-pm-chip" style="background:#0062ff;color:#fff;border-color:#0062ff;">G</div></div>
+            </div>
+            <div class="tb-pay-fields">
+              <div class="tb-field">
+                <label class="tb-lbl">GCash mobile number</label>
+                <div class="tb-phone-row">
+                  <div class="tb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="tb-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tb-pay-method" data-method="maya">
+            <div class="tb-pay-hdr">
+              <div class="tb-pm-dot"></div>
+              <div class="tb-pm-lbl">Maya</div>
+              <div class="tb-pm-logos"><div class="tb-pm-chip" style="background:#00b14f;color:#fff;border-color:#00b14f;">M</div></div>
+            </div>
+            <div class="tb-pay-fields">
+              <div class="tb-field">
+                <label class="tb-lbl">Maya account number</label>
+                <div class="tb-phone-row">
+                  <div class="tb-prefix">+63 <i class="fas fa-chevron-down"></i></div>
+                  <input type="tel" class="tb-inp" placeholder="9XX XXX XXXX">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tb-pay-method" data-method="cash">
+            <div class="tb-pay-hdr">
+              <div class="tb-pm-dot"></div>
+              <div class="tb-pm-lbl">Cash to Driver</div>
+              <div class="tb-pm-logos"><div class="tb-pm-chip">CASH</div></div>
+            </div>
+            <div class="tb-pay-fields">
+              <p style="font-size:12.5px;color:#6b7592;margin:0;line-height:1.6;">Pay the driver directly upon arrival at your destination. Please have the exact amount ready.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="tb-submit" id="submitBtn">
+          <span class="tb-spin"></span>
+          <span class="tb-stxt"><i class="fas fa-lock"></i> Confirm Booking</span>
+        </button>
+        <p class="tb-snote"><i class="fas fa-shield-alt"></i> Your payment info is encrypted and secure. By completing this booking you agree to our Terms &amp; Conditions.</p>
+      </div>
+
+    </div><!-- end left -->
+
+    <!-- RIGHT SUMMARY -->
+    <div class="tb-right">
+      <div class="tb-summary">
+
+        <!-- Route summary -->
+        <div class="tb-sum-route">
+          <div class="tb-sum-route-title">Transfer Summary</div>
+          <div class="tb-sum-rs">
+            <div class="tb-sum-rs-icon blue"><i class="fas fa-plane-arrival"></i></div>
+            <div class="tb-sum-rs-text">
+              <span class="tb-sum-rs-label">Pick-up</span>
+              <span id="sumPickup">–</span>
+            </div>
+          </div>
+          <div class="tb-sum-connector"></div>
+          <div class="tb-sum-rs">
+            <div class="tb-sum-rs-icon green"><i class="fas fa-location-dot"></i></div>
+            <div class="tb-sum-rs-text">
+              <span class="tb-sum-rs-label">Drop-off</span>
+              <span id="sumDropoff">–</span>
+            </div>
+          </div>
+          <div class="tb-sum-connector"></div>
+          <div class="tb-sum-rs">
+            <div class="tb-sum-rs-icon amber"><i class="fas fa-calendar"></i></div>
+            <div class="tb-sum-rs-text">
+              <span class="tb-sum-rs-label">Date &amp; time</span>
+              <span id="sumDate">–</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle -->
+        <div class="tb-sum-vehicle">
+          <div class="tb-sum-vehicle-row">
+            <span class="tb-sum-vehicle-icon" id="sumVehicleIcon">🚙</span>
+            <div>
+              <div class="tb-sum-vehicle-name" id="sumVehicleName">Comfort</div>
+              <div class="tb-sum-vehicle-caps" id="sumVehicleCaps">Max. 4 passengers · 3 bags</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Passengers -->
+        <div class="tb-sum-pax">
+          <div class="tb-sum-pax-title">Passengers</div>
+          <div id="sumPaxRows">
+            <div class="tb-sum-pax-row"><span>Adults</span><span id="sumAdults">1</span></div>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="tb-sum-price">
+          <div class="tb-sum-ptitle">Price Details</div>
+          <div class="tb-sum-pr-row"><span>Airport transfer fee</span><span id="sumTransferFee">–</span></div>
+          <div class="tb-sum-pr-row free-item"><span>Airport meet &amp; greet</span><span>PHP 0.00</span></div>
+          <div class="tb-sum-pr-row free-item"><span>Flight tracking</span><span>Included</span></div>
+          <div class="tb-sum-pr-row"><span>Service fee</span><span id="sumServiceFee">–</span></div>
+          <div class="tb-sum-pdiv"></div>
+          <div class="tb-sum-total"><span>Total</span><span id="sumTotal">–</span></div>
+        </div>
+
+        <!-- What's included -->
+        <div class="tb-sum-includes">
+          <div class="tb-sum-includes-title">What's included</div>
+          <div class="tb-sum-include-item"><i class="fas fa-circle-check"></i> Airport meet &amp; greet</div>
+          <div class="tb-sum-include-item"><i class="fas fa-circle-check"></i> Free unlimited waiting time</div>
+          <div class="tb-sum-include-item"><i class="fas fa-circle-check"></i> Real-time flight tracking</div>
+          <div class="tb-sum-include-item"><i class="fas fa-circle-check"></i> Door-to-door transfer</div>
+          <div class="tb-sum-include-item"><i class="fas fa-circle-check"></i> Free cancellation (24h+)</div>
+        </div>
+
+        <!-- Cancellation -->
+        <div class="tb-ib">
+          <button class="tb-itog open" id="cancelToggle">
+            <span class="tb-itog-title">Cancellation policy</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="tb-ibody open" id="cancelBody">
+            <p>Free cancellation if cancelled at least 24 hours before your pickup time. No refund for cancellations within 24 hours of pickup.</p>
+          </div>
+        </div>
+
+        <!-- Fine print -->
+        <div class="tb-ib">
+          <button class="tb-itog" id="fineToggle">
+            <span class="tb-itog-title">Important info</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="tb-ibody" id="fineBody">
+            <ul>
+              <li>Driver will meet you at the arrivals hall with a name sign.</li>
+              <li>Free waiting time: 60 minutes for international flights, 30 minutes for domestic.</li>
+              <li>Provide your WhatsApp number so the driver can reach you easily.</li>
+              <li>Child seats are available on request — please note in special instructions.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end right -->
+
+  </div><!-- end layout -->
+</div><!-- end page -->
+
+<!-- SUCCESS OVERLAY -->
+<div class="tb-success" id="successOverlay">
+  <div class="tb-sbox">
+    <div class="tb-sicon"><i class="fas fa-check-circle"></i></div>
+    <div class="tb-stitle2">Booking Confirmed!</div>
+    <div class="tb-ssub">Your taxi from <strong id="succPickup"></strong> to <strong id="succDropoff"></strong> is confirmed.<br>Confirmation sent to <strong id="succEmail"></strong>.</div>
+    <div class="tb-sref">Booking Ref: <span id="succRef"></span></div>
+    <button class="tb-scta" onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-content">
+      <div class="footer-columns">
+        <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
+        <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li></ul></div>
+        <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li></ul></div>
+      </div>
+      <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
+    </div>
+    <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
+  </div>
+</footer>
+
+<script src="auth-header.js"></script>
+<script>
+/* ================================================================
+   VEHICLE DEFINITIONS — must match airport-taxis.html
+   ================================================================ */
+var VEHICLES = [
+  { id:'economy',  icon:'🚕', name:'Economy',        seats:3, bags:2, price:1200 },
+  { id:'comfort',  icon:'🚙', name:'Comfort',        seats:4, bags:3, price:1800 },
+  { id:'premium',  icon:'🚗', name:'Premium Elite',  seats:4, bags:3, price:2800 },
+  { id:'van',      icon:'🚐', name:'Minivan / MPV',  seats:7, bags:5, price:2200 },
+  { id:'business', icon:'🚘', name:'Business Class', seats:3, bags:3, price:3500 },
+];
+
+/* ================================================================
+   STATE — all DB fields from taxi_bookings schema
+   ================================================================ */
+var S = {
+  /* from URL params (airport-taxis.html → goToBookingPage) */
+  airport_iata:     '',
+  airport_city:     '',
+  airport_terminal: '',
+  vehicle_type:     'comfort',
+  vehicle_name:     '',
+  max_seats:        4,
+  max_bags:         3,
+  transfer_fee:     1800,
+  pickup_location:  '',
+  dropoff_location: '',
+  pickup_date:      '',
+  pickup_time:      '',
+  /* from form */
+  adults:   1,
+  children: 0,
+  infants:  0,
+  payment_method: 'card'
+};
+
+/* ── helpers ── */
+function $e(id){ return document.getElementById(id); }
+function txt(id,v){ var e=$e(id); if(e) e.textContent=v; }
+function show(id,on){ var e=$e(id); if(e) e.style.display=on?'':'none'; }
+function val(id){ var e=$e(id); return e?e.value.trim():''; }
+function fmt(v){ return new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2}).format(Number(v)); }
+
+/* ── parse URL params from airport-taxis.html ── */
+(function(){
+  var p = new URLSearchParams(window.location.search);
+  function gp(){ for(var i=0;i<arguments.length;i++){ var v=p.get(arguments[i]); if(v!==null&&v!=='') return decodeURIComponent(v); } return ''; }
+
+  S.airport_iata     = gp('iata');
+  S.airport_city     = gp('city');
+  S.airport_terminal = gp('terminal');
+  S.vehicle_type     = gp('vehicle') || 'comfort';
+  S.transfer_fee     = parseFloat(gp('price')) || 1800;
+  S.pickup_location  = gp('pickup');
+  S.dropoff_location = gp('dropoff');
+
+  /* Parse pax string e.g. "2 Adults, 1 Child" */
+  var paxStr = gp('pax');
+  if(paxStr){
+    var am = paxStr.match(/(\d+)\s*adult/i);
+    var cm = paxStr.match(/(\d+)\s*child/i);
+    var im = paxStr.match(/(\d+)\s*infant/i);
+    if(am) S.adults   = Math.max(1, parseInt(am[1]));
+    if(cm) S.children = Math.max(0, parseInt(cm[1]));
+    if(im) S.infants  = Math.max(0, parseInt(im[1]));
+  }
+
+  /* Parse date/time from "2025-06-15 at 10:30" style string */
+  var dateStr = gp('date');
+  if(dateStr && dateStr !== 'Not selected'){
+    var dm = dateStr.match(/(\d{4}-\d{2}-\d{2})/);
+    var tm = dateStr.match(/(\d{1,2}:\d{2})/);
+    if(dm) S.pickup_date = dm[1];
+    if(tm) S.pickup_time = tm[1];
+  }
+
+  /* Find matching vehicle */
+  var veh = VEHICLES.find(function(v){ return v.id === S.vehicle_type; }) || VEHICLES[1];
+  S.vehicle_name = veh.name;
+  S.max_seats    = veh.seats;
+  S.max_bags     = veh.bags;
+  if(!S.transfer_fee) S.transfer_fee = veh.price;
+})();
+
+/* ── Passenger counter ── */
+function updatePax(type, dir){
+  S[type] = Math.max(type==='adults'?1:0, Math.min(9, S[type]+dir));
+  txt('paxAdults',   S.adults);
+  txt('paxChildren', S.children);
+  txt('paxInfants',  S.infants);
+  $e('adultMinus').disabled  = S.adults   <= 1;
+  $e('childMinus').disabled  = S.children <= 0;
+  $e('infantMinus').disabled = S.infants  <= 0;
+  updateSummaryPax();
+  checkCapacity();
+  recalc();
+}
+
+function updateSummaryPax(){
+  var rows = '<div class="tb-sum-pax-row"><span>Adults</span><span>'+S.adults+'</span></div>';
+  if(S.children>0) rows += '<div class="tb-sum-pax-row"><span>Children</span><span>'+S.children+'</span></div>';
+  if(S.infants>0)  rows += '<div class="tb-sum-pax-row"><span>Infants</span><span>'+S.infants+'</span></div>';
+  var el=$e('sumPaxRows'); if(el) el.innerHTML=rows;
+}
+
+function checkCapacity(){
+  var total = S.adults + S.children;
+  var note  = $e('capacityNote');
+  if(!note) return;
+  if(total > S.max_seats){
+    note.textContent = '⚠ Total passengers ('+total+') exceeds vehicle capacity ('+S.max_seats+'). Please choose a larger vehicle.';
+    note.style.color = '#e53935';
+  } else {
+    note.textContent = 'Vehicle capacity: max '+S.max_seats+' passengers, '+S.max_bags+' bags.';
+    note.style.color = '#a0aabb';
+  }
+}
+
+/* ── Pricing ── */
+function recalc(){
+  var serviceFee = +(S.transfer_fee * 0.05).toFixed(2);
+  var total      = +(S.transfer_fee + serviceFee).toFixed(2);
+  txt('sumTransferFee', fmt(S.transfer_fee));
+  txt('sumServiceFee',  fmt(serviceFee));
+  txt('sumTotal',       fmt(total));
+  return { transfer_fee: S.transfer_fee, meet_greet_fee: 0, service_fee: serviceFee, total_amount: total };
+}
+
+/* ── Live date/time sync to summary ── */
+function syncDateTime(){
+  var d = val('pickupDate');
+  var t = val('pickupTime') || ($e('pickupTime') ? $e('pickupTime').value : '');
+  if(d){
+    var parts = new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+    txt('sumDate', parts + (t ? ' at '+t : ''));
+    txt('displayDate', parts + (t ? ' at '+t : ''));
+    /* update breadcrumb */
+    txt('bcRoute', (S.airport_city||'Transfer') + ' → ' + (($e('dropoffLocation') && $e('dropoffLocation').value.trim()) || 'Destination'));
+  }
+}
+
+/* ── Populate page from URL params ── */
+function populatePage(){
+  var veh = VEHICLES.find(function(v){ return v.id===S.vehicle_type; }) || VEHICLES[1];
+
+  /* Breadcrumb */
+  txt('bcRoute', (S.airport_city||'Transfer'));
+
+  /* Trip detail display */
+  txt('displayPickup',  S.pickup_location  || (S.airport_city ? S.airport_city + (S.airport_terminal ? ' Terminal '+S.airport_terminal : '') + ' ('+S.airport_iata+')' : '–'));
+  txt('displayDropoff', S.dropoff_location || '–');
+  txt('displayDate',    S.pickup_date ? S.pickup_date + (S.pickup_time ? ' at '+S.pickup_time : '') : '–');
+
+  /* Vehicle badge */
+  txt('vehicleIcon', veh.icon);
+  txt('vehicleName', veh.name);
+  txt('vehicleMeta', 'Max. '+veh.seats+' passengers · '+veh.bags+' bags');
+
+  /* Right summary */
+  txt('sumPickup',       S.pickup_location  || (S.airport_city ? S.airport_city+' ('+S.airport_iata+')' : '–'));
+  txt('sumDropoff',      S.dropoff_location || '–');
+  txt('sumDate',         S.pickup_date ? S.pickup_date + (S.pickup_time ? ' at '+S.pickup_time : '') : '–');
+  txt('sumVehicleIcon',  veh.icon);
+  txt('sumVehicleName',  veh.name);
+  txt('sumVehicleCaps',  'Max. '+veh.seats+' passengers · '+veh.bags+' bags');
+
+  /* Pre-fill form fields */
+  var pickupEl   = $e('pickupLocation');
+  var dropoffEl  = $e('dropoffLocation');
+  var dateEl     = $e('pickupDate');
+  var timeEl     = $e('pickupTime');
+  if(pickupEl  && !pickupEl.value)  pickupEl.value  = S.pickup_location || (S.airport_city ? S.airport_city + (S.airport_terminal ? ' – Terminal '+S.airport_terminal : '') + ' ('+S.airport_iata+')' : '');
+  if(dropoffEl && !dropoffEl.value) dropoffEl.value = S.dropoff_location || '';
+  if(dateEl    && !dateEl.value)    dateEl.value    = S.pickup_date || '';
+  if(timeEl    && !timeEl.value)    timeEl.value    = S.pickup_time || '';
+
+  /* Pax */
+  txt('paxAdults',   S.adults);
+  txt('paxChildren', S.children);
+  txt('paxInfants',  S.infants);
+  $e('adultMinus').disabled  = S.adults   <= 1;
+  $e('childMinus').disabled  = S.children <= 0;
+  $e('infantMinus').disabled = S.infants  <= 0;
+  updateSummaryPax();
+  checkCapacity();
+  recalc();
+}
+
+/* ── Accordion ── */
+function wireToggle(tid, bid){
+  var btn=$e(tid), body=$e(bid);
+  if(!btn||!body) return;
+  btn.addEventListener('click',function(){
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+  });
+}
+
+/* ── Validation ── */
+function setErr(el, errEl, hasErr){
+  if(el)    el.classList.toggle('err', hasErr);
+  if(errEl) errEl.classList.toggle('show', hasErr);
+  return hasErr;
+}
+
+/* ── Submit → POST to api/save_taxi_booking.php ── */
+function submitBooking(){
+  var firstName = val('firstName');
+  var lastName  = val('lastName');
+  var email     = val('email');
+  var phone     = ($e('phone') ? $e('phone').value.trim() : '');
+  var whatsapp  = ($e('whatsapp') ? $e('whatsapp').value.trim() : '');
+  var pickup    = val('pickupLocation');
+  var dropoff   = val('dropoffLocation');
+  var pickDate  = $e('pickupDate')  ? $e('pickupDate').value  : '';
+  var pickTime  = $e('pickupTime')  ? $e('pickupTime').value  : '';
+
+  var ok = true;
+  if(setErr($e('firstName'), $e('errFirstName'), !firstName)) ok=false;
+  if(setErr($e('lastName'),  $e('errLastName'),  !lastName))  ok=false;
+  if(setErr($e('email'),     $e('errEmail'),     !email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) ok=false;
+  if(setErr($e('phone'),     $e('errPhone'),     !phone))     ok=false;
+  if(setErr($e('pickupLocation'),  $e('errPickup'),  !pickup))   ok=false;
+  if(setErr($e('dropoffLocation'), $e('errDropoff'), !dropoff))  ok=false;
+  if(setErr($e('pickupDate'), $e('errDate'), !pickDate)) ok=false;
+  if(setErr($e('pickupTime'), $e('errTime'), !pickTime)) ok=false;
+
+  if(!ok){
+    var fe=document.querySelector('.tb-inp.err');
+    if(fe) fe.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  var btn=$e('submitBtn');
+  btn.classList.add('loading'); btn.disabled=true;
+
+  var pricing = recalc();
+
+  /* ── Payload matches taxi_bookings DB schema exactly ── */
+  var payload = {
+    first_name:         firstName,
+    last_name:          lastName,
+    email:              email,
+    phone:              phone,
+    whatsapp:           whatsapp || '',
+    airport_iata:       S.airport_iata,
+    airport_city:       S.airport_city,
+    airport_terminal:   S.airport_terminal,
+    pickup_location:    pickup,
+    dropoff_location:   dropoff,
+    pickup_date:        pickDate || null,
+    pickup_time:        pickTime,
+    adults:             S.adults,
+    children:           S.children,
+    infants:            S.infants,
+    vehicle_type:       S.vehicle_type,
+    vehicle_name:       S.vehicle_name,
+    max_seats:          S.max_seats,
+    max_bags:           S.max_bags,
+    transfer_fee:       pricing.transfer_fee,
+    meet_greet_fee:     pricing.meet_greet_fee,
+    service_fee:        pricing.service_fee,
+    total_amount:       pricing.total_amount,
+    payment_method:     S.payment_method,
+    status:             'confirmed'
+  };
+
+  fetch('api/save_taxi_booking.php', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    btn.classList.remove('loading'); btn.disabled=false;
+    if(d.success||d.ok) showSuccess(d.booking_ref, email, pickup, dropoff);
+    else alert(d.message||'Booking failed. Please try again.');
+  })
+  .catch(function(){
+    btn.classList.remove('loading'); btn.disabled=false;
+    /* Demo fallback — show success */
+    showSuccess(null, email, pickup, dropoff);
+  });
+}
+
+function showSuccess(ref, email, pickup, dropoff){
+  var r = ref || ('TX-'+Math.random().toString(36).substr(2,8).toUpperCase());
+  txt('succPickup',  pickup  || S.airport_city || 'Airport');
+  txt('succDropoff', dropoff || 'Your destination');
+  txt('succEmail',   email);
+  txt('succRef',     r);
+  var ov=$e('successOverlay');
+  if(ov) ov.classList.add('show');
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', function(){
+  populatePage();
+
+  /* Try pre-fill from auth */
+  try{
+    var auth=JSON.parse(localStorage.getItem('easyNavigateAuth')||'{}');
+    if(auth.email      && $e('email'))     $e('email').value     = auth.email;
+    if(auth.first_name && $e('firstName')) $e('firstName').value = auth.first_name;
+    if(auth.last_name  && $e('lastName'))  $e('lastName').value  = auth.last_name;
+    if(auth.phone      && $e('phone'))     $e('phone').value     = auth.phone;
+  }catch(e){}
+
+  /* Set pickup date minimum to today */
+  var today=new Date().toISOString().split('T')[0];
+  if($e('pickupDate')) $e('pickupDate').min=today;
+
+  /* Live sync date/time → summary */
+  $e('pickupDate') && $e('pickupDate').addEventListener('change', syncDateTime);
+  $e('pickupTime') && $e('pickupTime').addEventListener('change', syncDateTime);
+
+  /* Live sync dropoff → summary */
+  $e('dropoffLocation') && $e('dropoffLocation').addEventListener('input', function(){
+    txt('sumDropoff', this.value.trim() || '–');
+    txt('displayDropoff', this.value.trim() || '–');
+  });
+
+  /* Live sync pickup → summary */
+  $e('pickupLocation') && $e('pickupLocation').addEventListener('input', function(){
+    txt('sumPickup', this.value.trim() || '–');
+    txt('displayPickup', this.value.trim() || '–');
+  });
+
+  /* Payment method selection */
+  document.querySelectorAll('#payMethods .tb-pay-method').forEach(function(m){
+    m.addEventListener('click',function(){
+      document.querySelectorAll('#payMethods .tb-pay-method').forEach(function(x){ x.classList.remove('sel'); });
+      m.classList.add('sel');
+      S.payment_method=m.dataset.method||'card';
+    });
+  });
+
+  /* Card formatting */
+  $e('cardNo')&&$e('cardNo').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').substring(0,16);
+    this.value=v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  $e('cardExp')&&$e('cardExp').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').substring(0,4);
+    if(v.length>=3) v=v.substring(0,2)+' / '+v.substring(2);
+    this.value=v;
+  });
+
+  /* Accordions */
+  wireToggle('cancelToggle','cancelBody');
+  wireToggle('fineToggle',  'fineBody');
+
+  /* Submit */
+  $e('submitBtn')&&$e('submitBtn').addEventListener('click',submitBooking);
+
+  /* Find Bookings dropdown */
+  $e('fbBtn')&&$e('fbBtn').addEventListener('click',function(e){
+    e.stopPropagation();
+    $e('fbMenu').classList.toggle('open');
+  });
+  document.querySelectorAll('#fbMenu .dropdown-item').forEach(function(item){
+    item.addEventListener('click',function(){
+      var pg=item.dataset.page; if(pg) window.location.href=pg;
+    });
+  });
+  document.addEventListener('click',function(){ $e('fbMenu')&&$e('fbMenu').classList.remove('open'); });
+});
+</script>
+</body>
+</html>

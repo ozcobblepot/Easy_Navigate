@@ -41,6 +41,47 @@
         return `${h}:${m} ${ampm}`;
     }
 
+    /**
+     * Combine a date string (YYYY-MM-DD or "Mon DD, YYYY") and a time string
+     * (HH:MM or HH:MM:SS) into a full ISO datetime "YYYY-MM-DDTHH:MM:SS"
+     * that the booking page can reliably parse.
+     */
+    function buildDatetime(dateStr, timeStr) {
+        if (!dateStr && !timeStr) return '';
+
+        // Normalise the date part to YYYY-MM-DD
+        let datePart = '';
+        if (dateStr) {
+            // Already ISO? e.g. "2025-06-15"
+            if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
+                datePart = dateStr.substring(0, 10);
+            } else {
+                // Try to parse freeform strings like "Jun 15, 2025" or "June 15 2025"
+                const d = new Date(dateStr);
+                if (!isNaN(d.getTime())) {
+                    datePart = d.toISOString().substring(0, 10);
+                }
+            }
+        }
+
+        // Normalise time to HH:MM:SS
+        let timePart = '00:00:00';
+        if (timeStr) {
+            // Strip any trailing seconds already there, re-add cleanly
+            const tp = timeStr.trim().split(':');
+            const hh = (tp[0] || '00').padStart(2, '0');
+            const mm = (tp[1] || '00').padStart(2, '0');
+            const ss = (tp[2] || '00').padStart(2, '0');
+            timePart = `${hh}:${mm}:${ss}`;
+        }
+
+        if (datePart) return `${datePart}T${timePart}`;
+
+        // Fallback: no date available — return time only so the booking page
+        // at least shows the time rather than "Not provided"
+        return timePart;
+    }
+
     function getLabels(f) {
         const labels = [];
         if (f.is_cheapest)     labels.push({ key: 'cheapest',    text: 'Cheapest',     cls: 'fl-badge--cheapest' });
@@ -54,10 +95,6 @@
     }
 
     // ── FARE TIERS ────────────────────────────────────────────────
-    // Build 3 fare tiers from a single flight record.
-    // Tier 0 = base price (no checked bag)
-    // Tier 1 = +20 kg checked bag  (~+4%)
-    // Tier 2 = +30 kg checked bag  (~+8.3%)
     function buildFareTiers(f) {
         const base = Number(f.price);
         return [
@@ -65,7 +102,7 @@
                 name:        'Economy class',
                 subtitle:    'Regular Fare',
                 bagCarry:    '1 piece',
-                bagChecked:  null,           // not included
+                bagChecked:  null,
                 refundable:  false,
                 changeable:  false,
                 miles:       true,
@@ -114,11 +151,9 @@
         const overlay = document.getElementById('flFareModalOverlay');
         if (!overlay) return;
 
-        // ── Route title ──
         document.getElementById('flFareOriginName').textContent  = f.origin_name || f.origin || '';
         document.getElementById('flFareDestName').textContent    = f.destination_name || f.destination || '';
 
-        // ── Flight legs ──
         const legsEl = document.getElementById('flFareLegs');
         const logoHtml = f.airline_logo
             ? `<img src="${escapeHtml(f.airline_logo)}" alt="${escapeHtml(f.airline_name)}" onerror="this.onerror=null;this.style.display='none';">`
@@ -143,7 +178,6 @@
                 </div>
             </div>`;
 
-        // Show return leg only for round trips
         let legReturn = '';
         if (f.round_trip) {
             const returnLogoHtml = f.airline_logo
@@ -171,14 +205,8 @@
         }
 
         legsEl.innerHTML = legDepart + legReturn;
-
-        // ── Fare tier cards ──
         renderFareTiers(f);
-
-        // ── Footer ──
         updateFooterPrice();
-
-        // ── Show ──
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
     }
@@ -203,7 +231,6 @@
             <div class="fl-fare-card${isSelected ? ' selected' : ''}${t.recommended ? ' recommended' : ''}"
                  onclick="selectFareTier(${i})">
                 ${recommendedBadge}
-
                 <div class="fl-fare-card-header">
                     <div class="fl-fare-card-title-group">
                         <div class="fl-fare-card-name">${escapeHtml(t.name)}</div>
@@ -211,11 +238,9 @@
                     </div>
                     <div class="fl-fare-radio${isSelected ? ' checked' : ''}"></div>
                 </div>
-
                 <div class="fl-fare-section-title">Baggage</div>
                 <div class="fl-fare-feature bag"><i class="fas fa-briefcase"></i> Carry-on baggage: ${escapeHtml(t.bagCarry)}</div>
                 ${bagCheckedHtml}
-
                 <div class="fl-fare-section-title">Flexibility</div>
                 <div class="fl-fare-feature ${t.refundable ? 'ok' : 'no'}">
                     <i class="fas fa-${t.refundable ? 'check' : 'times'}"></i>
@@ -225,7 +250,6 @@
                     <i class="fas fa-${t.changeable ? 'check' : 'times'}"></i>
                     ${t.changeable ? 'Changeable' : 'Non-changeable (partial segments)'}
                 </div>
-
                 <div class="fl-fare-section-title">Other benefits</div>
                 <div class="fl-fare-feature ${t.miles ? 'ok' : 'no'}">
                     <i class="fas fa-${t.miles ? 'check' : 'times'}"></i>
@@ -235,7 +259,6 @@
                     <i class="far fa-clock"></i>
                     Ticketing: ${escapeHtml(t.ticketing)}
                 </div>
-
                 <div class="fl-fare-card-price-row">
                     <div style="display:flex;align-items:baseline;gap:8px;">
                         <span class="fl-fare-card-price">${formatPrice(t.price)}</span>
@@ -243,7 +266,6 @@
                     </div>
                     <div class="fl-fare-card-trip-label">${f.round_trip ? 'Round-trip' : 'One-way'}</div>
                 </div>
-
                 <div class="fl-fare-payment-row">
                     <i class="fas fa-wallet"></i>
                     <span>Payment method: GCash</span>
@@ -253,7 +275,6 @@
         }).join('');
     }
 
-    // Select a fare tier card
     window.selectFareTier = function (idx) {
         selectedTierIdx = idx;
         if (modalFlight) {
@@ -266,7 +287,7 @@
         if (!modalFlight) return;
         const tiers    = buildFareTiers(modalFlight);
         const tier     = tiers[selectedTierIdx];
-        const footerOrigEl = document.getElementById('flFareFooterOriginal');
+        const footerOrigEl  = document.getElementById('flFareFooterOriginal');
         const footerPriceEl = document.getElementById('flFareFooterPrice');
         const footerTripEl  = document.getElementById('flFareFooterTrip');
         if (footerOrigEl)  footerOrigEl.textContent  = formatPrice(tier.originalPrice);
@@ -288,7 +309,6 @@
         modalFlight = null;
     }
 
-    // Close on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') _closeFareModal();
     });
@@ -296,22 +316,65 @@
     // ── CONTINUE (proceed to booking) ────────────────────────────
     window.fareModalContinue = function () {
         if (!modalFlight) return;
-        const tiers = buildFareTiers(modalFlight);
+        const f     = modalFlight;
+        const tiers = buildFareTiers(f);
         const tier  = tiers[selectedTierIdx];
+
+        // PHP now sends pre-built depart_datetime / arrive_datetime directly.
+        // Fall back to building from parts only if somehow missing.
+        const departDT = f.depart_datetime || buildDatetime(f.depart_date, f.depart_time);
+        const arriveDT = f.arrive_datetime || buildDatetime(f.depart_date, f.arrive_time);
+
+        const retDepartDT = f.return_datetime || buildDatetime(f.return_date, f.return_depart_time || f.arrive_time);
+        const retArriveDT = buildDatetime(f.return_date, f.return_arrive_time || f.depart_time);
+
+        // Read current passenger counts from the search form
+        const adults   = parseInt(document.getElementById('paxAdults')?.textContent   || '1');
+        const children = parseInt(document.getElementById('paxChildren')?.textContent || '0');
+        const infants  = parseInt(document.getElementById('paxInfants')?.textContent  || '0');
+
+        // Read selected cabin class from the label
+        const cabin = document.getElementById('cabinLabel')?.textContent?.trim() || 'Economy';
+
         const params = new URLSearchParams({
-            id:           modalFlight.id,
-            airline:      modalFlight.airline_name,
-            flight:       modalFlight.flight_number,
-            origin:       modalFlight.origin,
-            destination:  modalFlight.destination,
-            depart:       modalFlight.depart_time,
-            arrive:       modalFlight.arrive_time,
-            duration:     modalFlight.duration,
-            price:        tier.price,
-            round_trip:   modalFlight.round_trip,
-            fare_tier:    selectedTierIdx,
-            bag_checked:  tier.bagChecked || '',
+            // ── IDs ──────────────────────────────────────────────
+            fid:        f.id,
+
+            // ── Airline / flight ─────────────────────────────────
+            airline:    f.airline_name  || '',
+            fn:         f.flight_number || '',
+
+            // ── Origin / destination ─────────────────────────────
+            // IATA codes
+            orig:       f.origin        || '',
+            dest:       f.destination   || '',
+            // City / airport full names
+            origCity:   f.origin_name   || '',
+            destCity:   f.destination_name || '',
+
+            // ── Full datetime strings ────────────────────────────
+            dep:        departDT,
+            arr:        arriveDT,
+
+            // ── Cabin + trip type ────────────────────────────────
+            cabin:      cabin,
+            trip:       f.round_trip ? 'round_trip' : 'one_way',
+
+            // ── Passengers ───────────────────────────────────────
+            adults:     adults,
+            children:   children,
+            infants:    infants,
+
+            // ── Price ────────────────────────────────────────────
+            price:      tier.price,
+
+            // ── Return leg (only meaningful for round trips) ─────
+            retAirline: f.airline_name  || '',
+            retFn:      f.return_flight_number || f.flight_number || '',
+            retDep:     retDepartDT,
+            retArr:     retArriveDT,
         });
+
         window.location.href = `flight-booking.html?${params.toString()}`;
     };
 
@@ -328,7 +391,6 @@
         });
     }
 
-    // ── RENDER AIRLINE LABEL FILTERS ─────────────────────────────
     function renderAirlineFilters() {
         const container = document.getElementById('flightAirlineFilters');
         if (!container) return;
@@ -352,7 +414,6 @@
         renderFlights();
     };
 
-    // ── PRICE FILTER BUTTONS ──────────────────────────────────────
     function initPriceFilters() {
         const btns = document.querySelectorAll('.filter-price-btn[data-min]');
         btns.forEach(btn => {
@@ -432,7 +493,6 @@
 </div>`;
     }
 
-    // Public alias so the HTML onclick can call it
     window.openFlightFareModal = function (id) { openFareModal(id); };
 
     // ── RENDER FLIGHTS ────────────────────────────────────────────
