@@ -12,18 +12,35 @@
 
     function updateHeaderAuthUi() {
         const authState = getAuthState();
-        if (!authState) return;
-
         const signInButtons = document.querySelectorAll('.btn-signin');
-        signInButtons.forEach((button) => {
-            button.classList.add('profile-icon-btn');
-            button.setAttribute('aria-label', 'Profile');
-            button.innerHTML = '<i class="fas fa-user-circle" aria-hidden="true"></i>';
-            button.onclick = () => {
-                window.location.href = 'auth-success.html';
-            };
-        });
+
+        if (authState) {
+            signInButtons.forEach((button) => {
+                button.classList.add('profile-icon-btn');
+                button.setAttribute('aria-label', 'Profile');
+                button.innerHTML = '<i class="fas fa-user-circle" aria-hidden="true"></i>';
+                button.onclick = () => { window.location.href = 'profile.html'; };
+                button.dataset.authWired = '1';
+            });
+        } else {
+            signInButtons.forEach((button) => {
+                button.classList.remove('profile-icon-btn');
+                button.removeAttribute('aria-label');
+                button.innerHTML = 'Sign In / Register';
+                button.onclick = () => {
+                    if (typeof window.openAuthModal === 'function') {
+                        window.openAuthModal('signin');
+                    }
+                };
+                button.dataset.authWired = '1';
+            });
+        }
     }
+
+    // Exposed so auth-modal.js can trigger a header refresh after sign-in
+    window.updateHeaderForAuth = function () {
+        updateHeaderAuthUi();
+    };
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', updateHeaderAuthUi);

@@ -1,19 +1,19 @@
 <?php
 /* ═══════════════════════════════════════════════════════════════
    api/db.php — Central database connection for Easy Navigate
-   Usage: require_once __DIR__ . '/db.php';
-          then use $pdo for all queries.
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── CONFIG (edit these to match your XAMPP/MySQL setup) ─────── */
+declare(strict_types=1);
+
+/* ── CONFIG ──────────────────────────────────────────────────── */
 define('DB_HOST',    'localhost');
 define('DB_PORT',    '3306');
-define('DB_NAME',    'easy_navigate');   // your database name
-define('DB_USER',    'root');            // XAMPP default
-define('DB_PASS',    '');                // XAMPP default (empty)
+define('DB_NAME',    'easy_navigate');
+define('DB_USER',    'root');
+define('DB_PASS',    '');
 define('DB_CHARSET', 'utf8mb4');
 
-/* ── CREATE PDO CONNECTION ───────────────────────────────────── */
+/* ── CONNECTION ──────────────────────────────────────────────── */
 function getDB(): PDO {
     static $pdo = null;
     if ($pdo !== null) return $pdo;
@@ -42,16 +42,16 @@ function getDB(): PDO {
     return $pdo;
 }
 
-/* ── SHARED RESPONSE HELPERS ─────────────────────────────────── */
+/* ── RESPONSE HELPERS ────────────────────────────────────────── */
 function jsonOk(array $data = []): void {
-    header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(array_merge(['ok' => true], $data));
     exit;
 }
 
 function jsonError(string $message, int $code = 400): void {
     http_response_code($code);
-    header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['ok' => false, 'message' => $message]);
     exit;
 }
@@ -60,5 +60,8 @@ function corsHeaders(): void {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Accept');
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') exit;
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        http_response_code(204); // ← was missing, caused OPTIONS preflight to hang
+        exit;
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+// api/register.php
 
 declare(strict_types=1);
 
@@ -33,7 +34,7 @@ if (!is_array($data)) {
 $firstName = trim($data['first_name'] ?? '');
 $lastName  = trim($data['last_name']  ?? '');
 $email     = trim($data['email']      ?? '');
-$password  = $data['password']        ?? '';
+$password  =      $data['password']   ?? '';
 
 $errors = [];
 if ($firstName === '') $errors[] = 'First name is required.';
@@ -60,6 +61,7 @@ require_once __DIR__ . '/db_connect.php';
 try {
     $pdo = getDB();
 
+    // Check if email already exists
     $checkStmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
     $checkStmt->execute([':email' => $email]);
 
@@ -71,7 +73,10 @@ try {
 
     $passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
-    $insertStmt = $pdo->prepare('INSERT INTO users (first_name, last_name, email, password_hash) VALUES (:first_name, :last_name, :email, :password_hash)');
+    $insertStmt = $pdo->prepare(
+        'INSERT INTO users (first_name, last_name, email, password_hash)
+         VALUES (:first_name, :last_name, :email, :password_hash)'
+    );
     $insertStmt->execute([
         ':first_name'    => $firstName,
         ':last_name'     => $lastName,
@@ -93,12 +98,14 @@ try {
         ],
     ]);
 
-} catch (Throwable $e) {
-    http_response_code(500);
-    echo json_encode([
-        'ok'      => false,
-        'message' => $e->getMessage(),
-        'file'    => $e->getFile(),
-        'line'    => $e->getLine(),
-    ]);
+} catch (PDOException $e) {
+    // Handle race-condition duplicate email at DB level
+    if ($e->getCode() === '23000') {
+        http_response_code(400);
+        echo json_encode(['ok' => false, 'message' => 'An account with this email already exists.']);
+    } else {
+        error_log('register.php PDOException: ' . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['ok' => false, 'message' => 'A server error occurred. Please try again later.']);
+    }
 }

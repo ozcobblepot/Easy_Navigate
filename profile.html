@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile – EasyNavigate</title>
+    <link rel="icon" type="image/png" href="assets/web-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f4f6fb; margin: 0; min-height: 100vh; }
+
+    .profile-page { max-width: 1100px; margin: 0 auto; padding: 80px 24px 80px; display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start; }
+
+    /* SIDEBAR */
+    .profile-sidebar { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 80px; }
+    .profile-card { background: #fff; border-radius: 14px; border: 1px solid #e8eaf0; overflow: hidden; }
+    .profile-avatar-section { background: linear-gradient(135deg,#282D9E 0%,#1a1f7a 100%); padding: 32px 20px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .profile-avatar-ring { width: 88px; height: 88px; border-radius: 50%; background: rgba(255,255,255,.15); border: 3px solid rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; }
+    .profile-avatar-initials { font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+    .profile-display-name  { font-size: 17px; font-weight: 800; color: #fff; text-align: center; line-height: 1.2; }
+    .profile-display-email { font-size: 12px; color: rgba(255,255,255,.72); text-align: center; word-break: break-all; }
+    .profile-member-badge  { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 5px; }
+    .profile-member-badge i { color: #fbbf24; }
+
+    .profile-nav { padding: 8px 0; }
+    .profile-nav-item { display: flex; align-items: center; gap: 12px; padding: 13px 20px; font-size: 14px; font-weight: 600; color: #4a5580; cursor: pointer; transition: background .15s,color .15s; border-left: 3px solid transparent; }
+    .profile-nav-item:hover  { background: #f5f6fa; color: #282D9E; }
+    .profile-nav-item.active { background: #eef0ff; color: #282D9E; border-left-color: #282D9E; }
+    .profile-nav-item i      { width: 18px; text-align: center; font-size: 14px; }
+    .profile-nav-divider     { height: 1px; background: #f0f2f8; margin: 4px 0; }
+    .nav-badge { margin-left: auto; background: #282D9E; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; min-width: 20px; text-align: center; }
+
+    .profile-signout-btn { background: none; border: 1.5px solid #e8eaf0; border-radius: 10px; padding: 12px 20px; font-family: 'Inter',sans-serif; font-size: 14px; font-weight: 700; color: #b62020; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background .15s,border-color .15s; width: 100%; }
+    .profile-signout-btn:hover { background: #fff5f5; border-color: #b62020; }
+
+    /* MAIN */
+    .profile-main    { display: flex; flex-direction: column; gap: 20px; }
+    .profile-section { background: #fff; border-radius: 14px; border: 1px solid #e8eaf0; overflow: hidden; }
+    .profile-section-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 16px; border-bottom: 1px solid #f0f2f8; }
+    .profile-section-title  { font-size: 16px; font-weight: 800; color: #1a2140; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .profile-section-title i { color: #282D9E; font-size: 15px; }
+
+    .profile-edit-btn { background: none; border: 1.5px solid #e8eaf0; border-radius: 8px; padding: 7px 16px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 700; color: #282D9E; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background .15s,border-color .15s; }
+    .profile-edit-btn:hover { background: #eef0ff; border-color: #282D9E; }
+    .profile-save-btn { background: #282D9E; border: none; border-radius: 8px; padding: 8px 18px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; display: none; align-items: center; gap: 6px; transition: background .15s; }
+    .profile-save-btn:hover   { background: #1f2480; }
+    .profile-save-btn.visible { display: flex; }
+
+    /* STATS */
+    .profile-stats-row { display: grid; grid-template-columns: repeat(4,1fr); border-top: 1px solid #f0f2f8; }
+    .profile-stat { padding: 18px 20px; text-align: center; border-right: 1px solid #f0f2f8; }
+    .profile-stat:last-child { border-right: none; }
+    .profile-stat-value { font-size: 22px; font-weight: 800; color: #282D9E; line-height: 1; margin-bottom: 4px; }
+    .profile-stat-label { font-size: 11px; font-weight: 600; color: #8892aa; }
+
+    /* BOOKING FILTER BAR */
+    .booking-filter-bar { display: flex; align-items: center; gap: 6px; padding: 14px 24px 0; flex-wrap: wrap; }
+    .booking-filter-btn { background: #f0f2f8; border: none; border-radius: 20px; padding: 6px 14px; font-family: 'Inter',sans-serif; font-size: 12px; font-weight: 700; color: #4a5580; cursor: pointer; transition: background .15s,color .15s; display: flex; align-items: center; gap: 5px; }
+    .booking-filter-btn:hover  { background: #e0e3f0; color: #282D9E; }
+    .booking-filter-btn.active { background: #282D9E; color: #fff; }
+    .booking-filter-btn i { font-size: 11px; }
+
+    /* BOOKING CARDS */
+    .profile-bookings-list { padding: 14px 24px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .profile-booking-card  { border: 1.5px solid #e8eaf0; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; transition: border-color .15s,box-shadow .15s; cursor: pointer; }
+    .profile-booking-card:hover { border-color: #282D9E; box-shadow: 0 2px 12px rgba(40,45,158,.08); }
+    .profile-booking-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .type-hotel      { background: #eef0ff; color: #282D9E; }
+    .type-car        { background: #fef9c3; color: #b45309; }
+    .type-flight     { background: #e0f2fe; color: #0369a1; }
+    .type-attraction { background: #fce7f3; color: #9d174d; }
+    .type-taxi       { background: #dcfce7; color: #15803d; }
+    .profile-booking-info { flex: 1; min-width: 0; }
+    .profile-booking-name { font-size: 14px; font-weight: 700; color: #1a2140; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .profile-booking-ref  { font-size: 11px; color: #8892aa; font-weight: 500; margin-bottom: 2px; }
+    .profile-booking-meta { font-size: 12px; color: #8892aa; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .profile-booking-meta i { font-size: 10px; color: #b0b8cc; }
+    .profile-booking-status { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; white-space: nowrap; }
+    .status-confirmed { background: #dcfce7; color: #16a34a; }
+    .status-pending   { background: #fef9c3; color: #b45309; }
+    .status-completed { background: #f0f2f8; color: #4a5580; }
+    .status-cancelled { background: #fee2e2; color: #b62020; }
+    .profile-booking-amount { text-align: right; flex-shrink: 0; }
+    .profile-booking-price  { font-size: 15px; font-weight: 800; color: #282D9E; }
+    .profile-booking-price-sub { font-size: 11px; color: #282D9E; font-weight: 600; }
+
+    /* EMPTY / LOADING */
+    .profile-empty-state { padding: 48px 24px; text-align: center; color: #8892aa; }
+    .profile-empty-state i    { font-size: 40px; opacity: .2; margin-bottom: 12px; display: block; }
+    .profile-empty-state p    { margin: 0 0 4px; font-size: 14px; font-weight: 600; color: #1a2140; }
+    .profile-empty-state span { font-size: 13px; }
+    .profile-loading  { padding: 48px 24px; text-align: center; color: #8892aa; }
+    .profile-spinner  { width: 32px; height: 32px; border: 3px solid #e8eaf0; border-top-color: #282D9E; border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* INFO GRID */
+    .profile-info-grid { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .profile-info-field { display: flex; flex-direction: column; gap: 6px; }
+    .profile-info-field.full-width { grid-column: 1/-1; }
+    .profile-field-label { font-size: 11px; font-weight: 700; color: #8892aa; text-transform: uppercase; letter-spacing: .06em; }
+    .profile-field-value { font-size: 14px; font-weight: 600; color: #1a2140; padding: 10px 14px; background: #f8f9fd; border-radius: 8px; border: 1.5px solid transparent; min-height: 42px; display: flex; align-items: center; }
+    .profile-field-value.placeholder { color: #aab0c4; font-weight: 500; }
+    .profile-field-value.hidden { display: none; }
+    .profile-field-input { font-size: 14px; font-weight: 600; color: #1a2140; padding: 10px 14px; background: #fff; border-radius: 8px; border: 1.5px solid #d5dae2; min-height: 42px; font-family: 'Inter',sans-serif; outline: none; transition: border-color .15s; display: none; width: 100%; }
+    .profile-field-input:focus   { border-color: #282D9E; }
+    .profile-field-input.visible { display: block; }
+
+    /* PREFERENCES */
+    .profile-prefs-grid { padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .profile-pref-item  { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: #f8f9fd; border-radius: 10px; gap: 12px; }
+    .profile-pref-label { font-size: 13px; font-weight: 600; color: #1a2140; display: flex; align-items: center; gap: 8px; }
+    .profile-pref-label i { color: #282D9E; font-size: 13px; }
+    .profile-toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+    .profile-toggle input { opacity: 0; width: 0; height: 0; }
+    .profile-toggle-slider { position: absolute; cursor: pointer; inset: 0; background: #d5dae2; border-radius: 22px; transition: .3s; }
+    .profile-toggle-slider:before { content:''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .3s; }
+    .profile-toggle input:checked + .profile-toggle-slider { background: #282D9E; }
+    .profile-toggle input:checked + .profile-toggle-slider:before { transform: translateX(18px); }
+
+    /* SECURITY */
+    .profile-security-list { padding: 0 24px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .profile-security-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border: 1.5px solid #e8eaf0; border-radius: 10px; gap: 12px; }
+    .profile-security-left { display: flex; align-items: center; gap: 12px; }
+    .profile-security-icon { width: 38px; height: 38px; background: #eef0ff; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #282D9E; flex-shrink: 0; }
+    .profile-security-title { font-size: 13px; font-weight: 700; color: #1a2140; margin-bottom: 2px; }
+    .profile-security-sub   { font-size: 12px; color: #8892aa; }
+    .profile-security-action { background: none; border: 1.5px solid #e8eaf0; border-radius: 7px; padding: 7px 14px; font-family: 'Inter',sans-serif; font-size: 12px; font-weight: 700; color: #282D9E; cursor: pointer; transition: background .15s,border-color .15s; white-space: nowrap; }
+    .profile-security-action:hover { background: #eef0ff; border-color: #282D9E; }
+
+    /* CHANGE PASSWORD FORM */
+    .pw-change-form { display: none; flex-direction: column; gap: 12px; padding: 20px 24px; background: #f8f9fd; border-top: 1px solid #f0f2f8; }
+    .pw-change-form.open { display: flex; }
+    .pw-change-form-title { font-size: 14px; font-weight: 800; color: #1a2140; }
+    .pw-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .pw-field { display: flex; flex-direction: column; gap: 6px; }
+    .pw-field label { font-size: 11px; font-weight: 700; color: #8892aa; text-transform: uppercase; letter-spacing: .06em; }
+    .pw-input-wrap { position: relative; }
+    .pw-input { width: 100%; padding: 10px 38px 10px 14px; border: 1.5px solid #d5dae2; border-radius: 8px; font-family: 'Inter',sans-serif; font-size: 14px; font-weight: 600; color: #1a2140; outline: none; background: #fff; transition: border-color .15s; }
+    .pw-input:focus { border-color: #282D9E; }
+    .pw-eye { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #8892aa; font-size: 14px; padding: 0; display: flex; align-items: center; transition: color .15s; }
+    .pw-eye:hover { color: #282D9E; }
+    .pw-strength-wrap  { margin-top: 4px; }
+    .pw-strength-bar   { height: 3px; border-radius: 2px; background: #e8eaf0; overflow: hidden; margin-bottom: 3px; }
+    .pw-strength-fill  { height: 100%; border-radius: 2px; width: 0%; transition: width .3s,background .3s; }
+    .pw-strength-label { font-size: 11px; color: #8892aa; }
+    .pw-actions { display: flex; align-items: center; gap: 10px; margin-top: 4px; flex-wrap: wrap; }
+    .pw-submit-btn { background: #282D9E; color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background .15s; }
+    .pw-submit-btn:hover    { background: #1f2480; }
+    .pw-submit-btn:disabled { background: #a0aabb; cursor: not-allowed; }
+    .pw-cancel-btn { background: none; border: 1.5px solid #e8eaf0; border-radius: 8px; padding: 10px 18px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 700; color: #4a5580; cursor: pointer; transition: background .15s; }
+    .pw-cancel-btn:hover { background: #f0f2f8; }
+    .pw-status { font-size: 13px; font-weight: 600; min-height: 18px; }
+    .pw-status.ok  { color: #16a34a; }
+    .pw-status.err { color: #b62020; }
+
+    /* TABS */
+    .profile-tab-content { display: none; }
+    .profile-tab-content.active { display: flex; flex-direction: column; gap: 20px; }
+
+    /* TOAST */
+    .profile-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(12px); background: #1a2140; color: #fff; padding: 12px 22px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 9000; opacity: 0; pointer-events: none; transition: opacity .25s,transform .25s; display: flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,.2); }
+    .profile-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .profile-toast i    { color: #4ade80; }
+    .profile-toast.err i { color: #f87171; }
+
+    /* GUEST */
+    .profile-guest-notice { background: #fff; border-radius: 14px; border: 1px solid #e8eaf0; padding: 60px 40px; text-align: center; grid-column: 1/-1; }
+    .profile-guest-notice i  { font-size: 52px; color: #d5dae2; margin-bottom: 16px; display: block; }
+    .profile-guest-notice h2 { font-size: 20px; font-weight: 800; color: #1a2140; margin: 0 0 8px; }
+    .profile-guest-notice p  { font-size: 14px; color: #8892aa; margin: 0 0 20px; }
+    .profile-signin-prompt-btn { background: #282D9E; color: #fff; border: none; border-radius: 10px; padding: 13px 32px; font-family: 'Inter',sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; display: inline-flex; align-items: center; gap: 8px; }
+    .profile-signin-prompt-btn:hover { background: #1f2480; }
+
+    /* BOOKING DETAIL MODAL */
+    .bkm-overlay { position: fixed; inset: 0; background: rgba(17,24,39,.55); z-index: 9500; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .22s, visibility .22s; overflow-y: auto; }
+    .bkm-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
+    .bkm-box { background: #fff; border-radius: 18px; width: min(680px,100%); max-height: 88vh; overflow-y: auto; position: relative; transform: translateY(16px) scale(.97); transition: transform .26s, opacity .26s; opacity: .9; font-family: 'Inter',sans-serif; margin: auto; }
+    .bkm-overlay.open .bkm-box { transform: translateY(0) scale(1); opacity: 1; }
+    .bkm-box::-webkit-scrollbar { display: none; }
+.bkm-box { scrollbar-width: none; -ms-overflow-style: none; }
+    .bkm-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,.12); background: rgba(255,255,255,.9); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; z-index: 10; color: #4a5580; transition: background .15s; }
+    .bkm-close:hover { background: #f0f2f8; }
+    .bkm-hero { padding: 28px 24px 22px; position: relative; overflow: hidden; border-radius: 18px 18px 0 0; }
+    .bkm-hero-hotel      { background: linear-gradient(135deg,#1a1f7a 0%,#282D9E 100%); }
+    .bkm-hero-flight     { background: linear-gradient(135deg,#0c447c 0%,#185fa5 100%); }
+    .bkm-hero-car        { background: linear-gradient(135deg,#92400e 0%,#b45309 100%); }
+    .bkm-hero-attraction { background: linear-gradient(135deg,#6b21a8 0%,#9d174d 100%); }
+    .bkm-hero-taxi       { background: linear-gradient(135deg,#065f46 0%,#15803d 100%); }
+    .bkm-hero-dots { position: absolute; inset: 0; opacity: .07; background-image: radial-gradient(circle,#fff 1px,transparent 1px); background-size: 20px 20px; pointer-events: none; }
+    .bkm-hero-ref { position: absolute; top: 20px; right: 52px; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 5px 12px; font-size: 11px; font-weight: 700; color: #fff; }
+    .bkm-hero-type { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.25); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,.9); margin-bottom: 12px; }
+    .bkm-hero-name { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 6px; }
+    .bkm-hero-sub { font-size: 13px; color: rgba(255,255,255,.72); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .bkm-status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-top: 10px; }
+    .bkm-s-confirmed { background: rgba(22,163,74,.2); color: #bbf7d0; }
+    .bkm-s-pending   { background: rgba(251,191,36,.2); color: #fde68a; }
+    .bkm-s-completed { background: rgba(255,255,255,.15); color: rgba(255,255,255,.8); }
+    .bkm-s-cancelled { background: rgba(220,38,38,.2); color: #fca5a5; }
+    .bkm-body { padding: 20px 24px 24px; }
+    .bkm-stitle { font-size: 10px; font-weight: 700; color: #8892aa; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 12px; }
+    .bkm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+    .bkm-field { display: flex; flex-direction: column; gap: 3px; }
+    .bkm-field.full { grid-column: 1/-1; }
+    .bkm-lbl { font-size: 11px; font-weight: 600; color: #a0aabb; }
+    .bkm-val { font-size: 13.5px; font-weight: 600; color: #1a2140; }
+    .bkm-div { height: 1px; background: #f0f2f8; margin: 18px 0; }
+    .bkm-price-block { background: #f8f9fd; border-radius: 12px; padding: 16px 18px; }
+    .bkm-pr-row { display: flex; justify-content: space-between; font-size: 13px; color: #6b7592; font-weight: 500; margin-bottom: 8px; }
+    .bkm-pr-row:last-of-type { margin-bottom: 0; }
+    .bkm-pr-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #1a2140; padding-top: 10px; border-top: 1px solid #e8eaf0; margin-top: 10px; }
+    .bkm-pr-total span:last-child { color: #282D9E; }
+    .bkm-route-vis { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #f8f9fd; border-radius: 12px; margin-bottom: 12px; }
+    .bkm-iata { font-size: 22px; font-weight: 800; color: #1a2140; line-height: 1; }
+    .bkm-city { font-size: 11px; color: #8892aa; font-weight: 500; text-align: center; }
+    .bkm-route-line { flex: 1; display: flex; align-items: center; gap: 6px; }
+    .bkm-route-dash { flex: 1; height: 1px; background: #d5dae2; }
+    .bkm-amenities { display: flex; flex-wrap: wrap; gap: 6px; }
+    .bkm-amenity { background: #f0f2f8; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 600; color: #4a5580; }
+    .bkm-car-specs { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 4px; }
+    .bkm-spec { background: #f8f9fd; border-radius: 10px; padding: 12px; text-align: center; }
+    .bkm-spec-icon { font-size: 15px; color: #282D9E; margin-bottom: 4px; }
+    .bkm-spec-val { font-size: 13px; font-weight: 700; color: #1a2140; }
+    .bkm-spec-lbl { font-size: 10px; color: #8892aa; }
+    .bkm-stops { position: relative; padding-left: 22px; }
+    .bkm-stop { position: relative; padding-bottom: 16px; }
+    .bkm-stop:last-child { padding-bottom: 0; }
+    .bkm-stop::before { content: ''; position: absolute; left: -15px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: #282D9E; border: 2px solid #fff; outline: 2px solid #282D9E; }
+    .bkm-stop:not(:last-child)::after { content: ''; position: absolute; left: -12px; top: 14px; width: 2px; height: calc(100% - 6px); background: #d5dae2; }
+    .bkm-stop-time { font-size: 13px; font-weight: 700; color: #1a2140; }
+    .bkm-stop-place { font-size: 12px; color: #8892aa; margin-top: 1px; }
+    .bkm-footer { padding: 14px 24px; border-top: 1px solid #f0f2f8; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .bkm-footer-note { font-size: 12px; color: #8892aa; display: flex; align-items: center; gap: 5px; }
+    .bkm-footer-note i { color: #282D9E; font-size: 11px; }
+    .bkm-dl-btn { background: #282D9E; color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-family: 'Inter',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background .15s; }
+    .bkm-dl-btn:hover { background: #1f2480; }
+
+    @media(max-width:900px){
+        .profile-page { grid-template-columns: 1fr; padding-top: 80px; }
+        .profile-sidebar { position: static; }
+        .profile-stats-row { grid-template-columns: repeat(2,1fr); }
+        .profile-info-grid { grid-template-columns: 1fr; }
+        .profile-info-field.full-width { grid-column: 1; }
+        .profile-prefs-grid { grid-template-columns: 1fr; }
+        .pw-row { grid-template-columns: 1fr; }
+    }
+    @media(max-width:600px){
+        .bkm-grid { grid-template-columns: 1fr; }
+        .bkm-car-specs { grid-template-columns: 1fr 1fr; }
+    }
+    @media(max-width:540px){
+        .profile-stats-row { grid-template-columns: 1fr 1fr; }
+        .profile-booking-card { flex-wrap: wrap; }
+    }
+
+    .bkm-box {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.bkm-box::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="nav-container">
+        <div class="top-nav">
+            <a class="logo" href="index.html">
+                <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+            </a>
+            <div class="top-right">
+                <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon"></button>
+                <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+                <div class="relative">
+                    <button class="support-btn" onclick="toggleDropdown('findBookingsMenu',event)">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+                    <div class="dropdown-menu" id="findBookingsMenu">
+                        <div class="dropdown-item" onclick="navTo('hotel & homes.html')"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+                        <div class="dropdown-item" onclick="navTo('car-rental.html')"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+                        <div class="dropdown-item" onclick="navTo('flights.html')"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings.</span></div></div>
+                        <div class="dropdown-item" onclick="navTo('attractions.html')"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities.</span></div></div>
+                        <div class="dropdown-item" onclick="navTo('airport-taxis.html')"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
+                    </div>
+                </div>
+                <button class="btn-signin profile-icon-btn" id="openAuthModalBtn" aria-label="Profile">
+                    <i class="fas fa-user-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="profile-page" id="profilePage">
+
+    <div class="profile-guest-notice" id="guestNotice" style="display:none;">
+        <i class="fas fa-user-lock"></i>
+        <h2>You're not signed in</h2>
+        <p>Please sign in to view your profile and manage your bookings.</p>
+        <button class="profile-signin-prompt-btn" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-left"></i> Go to Home
+        </button>
+    </div>
+
+    <aside class="profile-sidebar" id="profileSidebar" style="display:none;">
+        <div class="profile-card">
+            <div class="profile-avatar-section">
+                <div class="profile-avatar-ring">
+                    <span class="profile-avatar-initials" id="profileInitials">EN</span>
+                </div>
+                <div class="profile-display-name" id="profileDisplayName">Easy Navigate</div>
+                <div class="profile-display-email" id="profileDisplayEmail">user@easynav.com</div>
+                <div class="profile-member-badge"><i class="fas fa-star"></i> Gold Member</div>
+            </div>
+            <nav class="profile-nav">
+                <div class="profile-nav-item active" onclick="switchTab('overview')"><i class="fas fa-gauge-high"></i> Overview</div>
+                <div class="profile-nav-item" onclick="switchTab('bookings')"><i class="fas fa-calendar-check"></i> My Bookings <span class="nav-badge" id="navBookingCount" style="display:none;"></span></div>
+                <div class="profile-nav-item" onclick="switchTab('personal')"><i class="fas fa-user"></i> Personal Info</div>
+                <div class="profile-nav-divider"></div>
+                <div class="profile-nav-item" onclick="switchTab('preferences')"><i class="fas fa-sliders"></i> Preferences</div>
+                <div class="profile-nav-item" onclick="switchTab('security')"><i class="fas fa-shield-halved"></i> Security</div>
+            </nav>
+        </div>
+        <button class="profile-signout-btn" onclick="signOut()"><i class="fas fa-right-from-bracket"></i> Sign Out</button>
+    </aside>
+
+    <main class="profile-main" id="profileMain" style="display:none;">
+
+        <!-- OVERVIEW -->
+        <div class="profile-tab-content active" id="tab-overview">
+            <div class="profile-section">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title"><i class="fas fa-gauge-high"></i> Account Overview</h2>
+                </div>
+                <div class="profile-stats-row">
+                    <div class="profile-stat"><div class="profile-stat-value" id="statBookings">—</div><div class="profile-stat-label">Total Bookings</div></div>
+                    <div class="profile-stat"><div class="profile-stat-value" id="statNights">—</div><div class="profile-stat-label">Nights Stayed</div></div>
+                    <div class="profile-stat"><div class="profile-stat-value" id="statDestinations">—</div><div class="profile-stat-label">Destinations</div></div>
+                    <div class="profile-stat"><div class="profile-stat-value" id="statSpent">—</div><div class="profile-stat-label">Total Spent</div></div>
+                </div>
+            </div>
+            <div class="profile-section">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title"><i class="fas fa-clock-rotate-left"></i> Recent Bookings</h2>
+                    <button class="profile-edit-btn" onclick="switchTab('bookings')"><i class="fas fa-arrow-right"></i> View All</button>
+                </div>
+                <div class="profile-loading" id="overviewLoading"><div class="profile-spinner"></div><p>Loading bookings…</p></div>
+                <div class="profile-bookings-list" id="overviewBookingsList" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- BOOKINGS -->
+        <div class="profile-tab-content" id="tab-bookings">
+            <div class="profile-section">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title"><i class="fas fa-calendar-check"></i> My Bookings</h2>
+                </div>
+                <div class="booking-filter-bar">
+                    <button class="booking-filter-btn active" onclick="filterBookings('all',this)"><i class="fas fa-list"></i> All</button>
+                    <button class="booking-filter-btn" onclick="filterBookings('hotel',this)"><i class="fas fa-bed"></i> Hotels</button>
+                    <button class="booking-filter-btn" onclick="filterBookings('flight',this)"><i class="fas fa-plane"></i> Flights</button>
+                    <button class="booking-filter-btn" onclick="filterBookings('car',this)"><i class="fas fa-car"></i> Cars</button>
+                    <button class="booking-filter-btn" onclick="filterBookings('attraction',this)"><i class="fas fa-ticket-alt"></i> Attractions</button>
+                    <button class="booking-filter-btn" onclick="filterBookings('taxi',this)"><i class="fas fa-taxi"></i> Taxis</button>
+                </div>
+                <div class="profile-loading" id="allBookingsLoading"><div class="profile-spinner"></div><p>Loading bookings…</p></div>
+                <div class="profile-bookings-list" id="allBookingsList" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- PERSONAL INFO -->
+        <div class="profile-tab-content" id="tab-personal">
+            <div class="profile-section">
+                <div class="profile-section-header">
+                    <h2 class="profile-section-title"><i class="fas fa-user"></i> Personal Information</h2>
+                    <div style="display:flex;gap:8px;">
+                        <button class="profile-edit-btn" id="personalEditBtn" onclick="togglePersonalEdit()"><i class="fas fa-pen"></i> Edit</button>
+                        <button class="profile-save-btn" id="personalSaveBtn" onclick="savePersonalInfo()"><i class="fas fa-check"></i> Save Changes</button>
+                    </div>
+                </div>
+                <div id="personalLoading" class="profile-loading"><div class="profile-spinner"></div><p>Loading your info…</p></div>
+                <div class="profile-info-grid" id="personalInfoGrid" style="display:none;">
+                    <div class="profile-info-field"><span class="profile-field-label">First Name</span><div class="profile-field-value" id="val-firstName">—</div><input class="profile-field-input" id="inp-firstName" type="text" placeholder="First name"></div>
+                    <div class="profile-info-field"><span class="profile-field-label">Last Name</span><div class="profile-field-value" id="val-lastName">—</div><input class="profile-field-input" id="inp-lastName" type="text" placeholder="Last name"></div>
+                    <div class="profile-info-field full-width"><span class="profile-field-label">Email Address</span><div class="profile-field-value" id="val-email">—</div><input class="profile-field-input" id="inp-email" type="email" placeholder="Email address"></div>
+                    <div class="profile-info-field"><span class="profile-field-label">Phone Number</span><div class="profile-field-value placeholder" id="val-phone">Not set</div><input class="profile-field-input" id="inp-phone" type="tel" placeholder="+63 912 345 6789"></div>
+                    <div class="profile-info-field"><span class="profile-field-label">Date of Birth</span><div class="profile-field-value placeholder" id="val-dob">Not set</div><input class="profile-field-input" id="inp-dob" type="date"></div>
+                    <div class="profile-info-field full-width"><span class="profile-field-label">Address</span><div class="profile-field-value placeholder" id="val-address">Not set</div><input class="profile-field-input" id="inp-address" type="text" placeholder="Your address"></div>
+                    <div class="profile-info-field"><span class="profile-field-label">Nationality</span><div class="profile-field-value" id="val-nationality">Filipino</div><input class="profile-field-input" id="inp-nationality" type="text" placeholder="Nationality"></div>
+                    <div class="profile-info-field"><span class="profile-field-label">Passport / ID No.</span><div class="profile-field-value placeholder" id="val-passport">Not set</div><input class="profile-field-input" id="inp-passport" type="text" placeholder="Passport or ID number"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PREFERENCES -->
+        <div class="profile-tab-content" id="tab-preferences">
+            <div class="profile-section">
+                <div class="profile-section-header"><h2 class="profile-section-title"><i class="fas fa-sliders"></i> Preferences</h2></div>
+                <div class="profile-prefs-grid">
+                    <div class="profile-pref-item"><span class="profile-pref-label"><i class="fas fa-bell"></i> Email Notifications</span><label class="profile-toggle"><input type="checkbox" checked><span class="profile-toggle-slider"></span></label></div>
+                    <div class="profile-pref-item"><span class="profile-pref-label"><i class="fas fa-tag"></i> Deals &amp; Promotions</span><label class="profile-toggle"><input type="checkbox" checked><span class="profile-toggle-slider"></span></label></div>
+                    <div class="profile-pref-item"><span class="profile-pref-label"><i class="fas fa-mobile-screen"></i> SMS Alerts</span><label class="profile-toggle"><input type="checkbox"><span class="profile-toggle-slider"></span></label></div>
+                    <div class="profile-pref-item"><span class="profile-pref-label"><i class="fas fa-star"></i> Loyalty Rewards</span><label class="profile-toggle"><input type="checkbox" checked><span class="profile-toggle-slider"></span></label></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECURITY -->
+        <div class="profile-tab-content" id="tab-security">
+            <div class="profile-section">
+                <div class="profile-section-header"><h2 class="profile-section-title"><i class="fas fa-shield-halved"></i> Security</h2></div>
+                <div class="profile-security-list">
+                    <div>
+                        <div class="profile-security-item">
+                            <div class="profile-security-left">
+                                <div class="profile-security-icon"><i class="fas fa-lock"></i></div>
+                                <div><div class="profile-security-title">Password</div><div class="profile-security-sub">Change your account password</div></div>
+                            </div>
+                            <button class="profile-security-action" id="togglePwFormBtn" onclick="togglePwForm()">Change Password</button>
+                        </div>
+                        <div class="pw-change-form" id="pwChangeForm">
+                            <div class="pw-change-form-title">Change Password</div>
+                            <div class="pw-row">
+                                <div class="pw-field">
+                                    <label>Current Password</label>
+                                    <div class="pw-input-wrap"><input class="pw-input" id="pwOld" type="password" placeholder="Enter current password" autocomplete="current-password"><button type="button" class="pw-eye" onclick="togglePwEye('pwOld',this)"><i class="fas fa-eye"></i></button></div>
+                                </div>
+                                <div class="pw-field">
+                                    <label>New Password</label>
+                                    <div class="pw-input-wrap"><input class="pw-input" id="pwNew" type="password" placeholder="Min. 8 characters" autocomplete="new-password" oninput="pwStrength(this.value)"><button type="button" class="pw-eye" onclick="togglePwEye('pwNew',this)"><i class="fas fa-eye"></i></button></div>
+                                    <div class="pw-strength-wrap" id="pwStrengthWrap" style="display:none;"><div class="pw-strength-bar"><div class="pw-strength-fill" id="pwStrengthFill"></div></div><span class="pw-strength-label" id="pwStrengthLabel"></span></div>
+                                </div>
+                                <div class="pw-field">
+                                    <label>Confirm New Password</label>
+                                    <div class="pw-input-wrap"><input class="pw-input" id="pwConfirm" type="password" placeholder="Repeat new password" autocomplete="new-password"><button type="button" class="pw-eye" onclick="togglePwEye('pwConfirm',this)"><i class="fas fa-eye"></i></button></div>
+                                </div>
+                            </div>
+                            <div class="pw-actions">
+                                <button class="pw-submit-btn" id="pwSubmitBtn" onclick="submitPasswordChange()"><i class="fas fa-check"></i> Update Password</button>
+                                <button class="pw-cancel-btn" onclick="togglePwForm()">Cancel</button>
+                                <span class="pw-status" id="pwStatus"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-security-item">
+                        <div class="profile-security-left"><div class="profile-security-icon"><i class="fas fa-mobile-screen-button"></i></div><div><div class="profile-security-title">Two-Factor Authentication</div><div class="profile-security-sub">Not enabled — adds extra login security</div></div></div>
+                        <button class="profile-security-action" onclick="showToast('2FA setup coming soon.')">Enable 2FA</button>
+                    </div>
+                    <div class="profile-security-item">
+                        <div class="profile-security-left"><div class="profile-security-icon" style="background:#fee2e2;"><i class="fas fa-trash" style="color:#b62020;"></i></div><div><div class="profile-security-title" style="color:#b62020;">Delete Account</div><div class="profile-security-sub">Permanently remove your account and data</div></div></div>
+                        <button class="profile-security-action" style="color:#b62020;border-color:#f5c6c6;" onclick="confirmDelete()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- BOOKING DETAIL MODAL -->
+<div class="bkm-overlay" id="bkmOverlay" onclick="if(event.target===this)closeBkModal()">
+    <div class="bkm-box" id="bkmBox">
+        <button class="bkm-close" onclick="closeBkModal()"><i class="fas fa-times"></i></button>
+        <div id="bkmContent"></div>
+    </div>
+</div>
+
+<div class="profile-toast" id="profileToast"><i class="fas fa-circle-check"></i><span id="profileToastMsg">Saved!</span></div>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-content">
+            <div class="footer-columns">
+                <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li></ul></div>
+                <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li></ul></div>
+                <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li></ul></div>
+            </div>
+            <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
+        </div>
+        <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved</p>
+    </div>
+</footer>
+
+<!-- SIGN OUT MODAL -->
+<div class="bkm-overlay" id="signoutOverlay" onclick="if(event.target===this)closeSignoutModal()">
+    <div style="background:var(--color-background-primary,#fff);border-radius:16px;width:min(420px,100%);font-family:'Inter',sans-serif;overflow:hidden;border:0.5px solid #e8eaf0;">
+        
+        <!-- Header -->
+        <div style="background:linear-gradient(135deg,#1a1f7a,#282D9E);padding:28px 24px 22px;position:relative;overflow:hidden;">
+            <div style="position:absolute;inset:0;opacity:.06;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:18px 18px;pointer-events:none;"></div>
+            <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+                <i class="fas fa-right-from-bracket" style="font-size:20px;color:#fff;"></i>
+            </div>
+            <div style="font-size:19px;font-weight:800;color:#fff;margin-bottom:6px;">Sign out?</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.7);">You'll need to sign in again to access your bookings and profile.</div>
+        </div>
+
+        <!-- Body -->
+        <div style="padding:22px 24px 24px;">
+            <div style="background:#f8f9fd;border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:50%;background:#eef0ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fas fa-user" style="font-size:14px;color:#282D9E;"></i>
+                </div>
+                <div>
+                    <div style="font-size:13px;font-weight:700;color:#1a2140;" id="signoutName">—</div>
+                    <div style="font-size:12px;color:#8892aa;" id="signoutEmail">—</div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <button onclick="confirmSignOut()" style="background:#282D9E;color:#fff;border:none;border-radius:10px;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s;width:100%;"
+                    onmouseover="this.style.background='#1f2480'" onmouseout="this.style.background='#282D9E'">
+                    <i class="fas fa-right-from-bracket"></i> Yes, sign me out
+                </button>
+                <button onclick="closeSignoutModal()" style="background:none;border:1.5px solid #e8eaf0;border-radius:10px;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#4a5580;cursor:pointer;transition:background .15s;width:100%;"
+                    onmouseover="this.style.background='#f5f6fa'" onmouseout="this.style.background='none'">
+                    Cancel, stay signed in
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="auth-header.js"></script>
+<script src="auth-modal.js"></script>
+<script>
+'use strict';
+
+let _allBookings = [];
+
+function getAuth() {
+    try { const a = JSON.parse(localStorage.getItem('easyNavigateAuth')); return (a && a.isLoggedIn) ? a : null; }
+    catch(_) { return null; }
+}
+
+function getApiUrl(path) {
+    if (window.location.protocol === 'file:')
+        return 'http://localhost/platform-technologies-proj-v1-main/api/' + path;
+    const href = window.location.href.split('?')[0];
+    return href.substring(0, href.lastIndexOf('/') + 1) + 'api/' + path;
+}
+
+/* ── INIT ── */
+function initProfile() {
+    const auth = getAuth();
+    if (!auth) { document.getElementById('guestNotice').style.display = 'block'; return; }
+    document.getElementById('profileSidebar').style.display = 'flex';
+    document.getElementById('profileMain').style.display    = 'flex';
+    const parts = (auth.name||'').split(' ');
+    const f = parts[0]||'', l = parts.slice(1).join(' ')||'';
+    document.getElementById('profileInitials').textContent     = ((f[0]||'')+(l[0]||'')||'EN').toUpperCase();
+    document.getElementById('profileDisplayName').textContent  = auth.name  || 'Easy Navigate User';
+    document.getElementById('signoutName').textContent  = auth.name  || 'Easy Navigate User';
+document.getElementById('signoutEmail').textContent = auth.email || '';
+    loadProfileFromDB(auth.id);
+    loadBookings(auth.email);
+}
+
+/* ── LOAD PROFILE ── */
+async function loadProfileFromDB(userId) {
+    try {
+        const res  = await fetch(getApiUrl('get_profile.php'), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id: userId}) });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        fillPersonalInfo(data.user);
+        const f = data.user.first_name||'', l = data.user.last_name||'';
+        document.getElementById('profileInitials').textContent     = ((f[0]||'')+(l[0]||'')||'EN').toUpperCase();
+        document.getElementById('profileDisplayName').textContent  = (f+' '+l).trim()||'Easy Navigate User';
+        document.getElementById('profileDisplayEmail').textContent = data.user.email||'';
+    } catch(e) {
+        const auth = getAuth();
+        if (auth) { const p=(auth.name||'').split(' '); fillPersonalInfoFallback(p[0]||'', p.slice(1).join(' ')||'', auth.email||''); }
+    } finally {
+        document.getElementById('personalLoading').style.display  = 'none';
+        document.getElementById('personalInfoGrid').style.display = 'grid';
+    }
+}
+
+function fillPersonalInfo(u) {
+    setField('firstName', u.first_name, '');   setField('lastName',    u.last_name,  '');
+    setField('email',     u.email,      '');   setField('phone',       u.phone,      'Not set');
+    setField('dob',       u.dob,        'Not set'); setField('address', u.address,   'Not set');
+    setField('nationality', u.nationality, 'Filipino'); setField('passport', u.passport, 'Not set');
+    document.getElementById('inp-firstName').value   = u.first_name  ||'';
+    document.getElementById('inp-lastName').value    = u.last_name   ||'';
+    document.getElementById('inp-email').value       = u.email       ||'';
+    document.getElementById('inp-phone').value       = u.phone       ||'';
+    document.getElementById('inp-dob').value         = u.dob         ||'';
+    document.getElementById('inp-address').value     = u.address     ||'';
+    document.getElementById('inp-nationality').value = u.nationality ||'Filipino';
+    document.getElementById('inp-passport').value    = u.passport    ||'';
+}
+
+function fillPersonalInfoFallback(first, last, email) {
+    setField('firstName', first, ''); setField('lastName', last, ''); setField('email', email, '');
+    setField('phone', null, 'Not set'); setField('dob', null, 'Not set'); setField('address', null, 'Not set');
+    setField('nationality', 'Filipino', 'Filipino'); setField('passport', null, 'Not set');
+    document.getElementById('inp-firstName').value = first;
+    document.getElementById('inp-lastName').value  = last;
+    document.getElementById('inp-email').value     = email;
+    document.getElementById('inp-nationality').value = 'Filipino';
+}
+
+function setField(key, value, placeholder) {
+    const el = document.getElementById('val-'+key); if (!el) return;
+    if (value) { el.textContent = value; el.classList.remove('placeholder'); }
+    else        { el.textContent = placeholder; el.classList.add('placeholder'); }
+}
+
+/* ── LOAD BOOKINGS ── */
+async function loadBookings(email) {
+    try {
+        const res  = await fetch(getApiUrl('get_user_bookings.php'), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email}) });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        _allBookings = data.bookings || [];
+
+        const s = data.stats || {};
+        document.getElementById('statBookings').textContent     = s.total_bookings     || 0;
+        document.getElementById('statNights').textContent       = s.nights_stayed       || 0;
+        document.getElementById('statDestinations').textContent = s.unique_destinations || 0;
+        document.getElementById('statSpent').textContent        = '₱' + (s.total_spent  || '0.00');
+
+        if (_allBookings.length > 0) {
+            const badge = document.getElementById('navBookingCount');
+            badge.textContent   = _allBookings.length;
+            badge.style.display = 'inline-block';
+        }
+        renderOverviewBookings();
+        renderAllBookings('all');
+    } catch(e) {
+        console.warn('Bookings error:', e.message);
+        document.getElementById('overviewBookingsList').innerHTML = emptyStateHtml('No bookings found.');
+        document.getElementById('allBookingsList').innerHTML      = emptyStateHtml('No bookings found.');
+        ['statBookings','statNights','statDestinations'].forEach(id => document.getElementById(id).textContent = '0');
+        document.getElementById('statSpent').textContent = '₱0.00';
+    } finally {
+        document.getElementById('overviewLoading').style.display      = 'none';
+        document.getElementById('overviewBookingsList').style.display = 'flex';
+        document.getElementById('allBookingsLoading').style.display   = 'none';
+        document.getElementById('allBookingsList').style.display      = 'flex';
+    }
+}
+
+function renderOverviewBookings() {
+    const list = document.getElementById('overviewBookingsList');
+    const top3 = _allBookings.slice(0,3);
+    list.innerHTML = top3.length ? top3.map(bookingCardHtml).join('') : emptyStateHtml('No bookings yet.');
+}
+
+function renderAllBookings(filter) {
+    const list     = document.getElementById('allBookingsList');
+    const filtered = filter === 'all' ? _allBookings : _allBookings.filter(b => b.type === filter);
+    list.innerHTML = filtered.length
+        ? filtered.map(bookingCardHtml).join('')
+        : emptyStateHtml(filter === 'all' ? 'You have no bookings yet.' : 'No ' + filter + ' bookings found.');
+}
+
+function filterBookings(filter, btn) {
+    document.querySelectorAll('.booking-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderAllBookings(filter);
+}
+
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function bookingCardHtml(b) {
+    const statusClass = { confirmed:'status-confirmed', pending:'status-pending', completed:'status-completed', cancelled:'status-cancelled' }[b.booking_status] || 'status-completed';
+    const statusLabel = (b.booking_status||'confirmed').charAt(0).toUpperCase() + (b.booking_status||'confirmed').slice(1);
+    const amount = b.total_amount ? '₱' + parseFloat(b.total_amount).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+    const bJson = escHtml(JSON.stringify(b));
+    return `<div class="profile-booking-card" onclick='openBookingModal(${JSON.stringify(b)})'>
+        <div class="profile-booking-icon type-${b.type}"><i class="fas ${b.icon}"></i></div>
+        <div class="profile-booking-info">
+            <div class="profile-booking-name">${escHtml(b.title||'—')}</div>
+            <div class="profile-booking-ref">Ref: ${escHtml(b.booking_ref||'—')}</div>
+            <div class="profile-booking-meta"><i class="fas fa-location-dot"></i>${escHtml(b.meta||'')}</div>
+        </div>
+        <span class="profile-booking-status ${statusClass}">${statusLabel}</span>
+        <div class="profile-booking-amount">
+            <div class="profile-booking-price">${amount}</div>
+            <div class="profile-booking-price-sub">View details →</div>
+        </div>
+    </div>`;
+}
+
+function emptyStateHtml(msg) {
+    return `<div class="profile-empty-state"><i class="fas fa-calendar-xmark"></i><p>${escHtml(msg)}</p><span>Your bookings will appear here once you make a reservation.</span></div>`;
+}
+
+/* ── BOOKING DETAIL MODAL ── */
+function openBookingModal(b) {
+  const heroMap   = { hotel:'bkm-hero-hotel', flight:'bkm-hero-flight', car:'bkm-hero-car', attraction:'bkm-hero-attraction', taxi:'bkm-hero-taxi' };
+  const iconMap   = { hotel:'fa-bed', flight:'fa-plane', car:'fa-car', attraction:'fa-ticket-alt', taxi:'fa-taxi' };
+  const typeLabel = { hotel:'Hotel Stay', flight:'Flight', car:'Car Rental', attraction:'Attraction & Tour', taxi:'Airport Transfer' };
+  const heroClass = heroMap[b.type] || 'bkm-hero-hotel';
+  const icon      = iconMap[b.type] || 'fa-bookmark';
+  const status    = b.booking_status || 'confirmed';
+  const statusLbl = status.charAt(0).toUpperCase() + status.slice(1);
+  const amt       = b.total_amount
+    ? '₱' + parseFloat(b.total_amount).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2})
+    : '—';
+
+  function fmtDate(str) {
+    if (!str) return '—';
+    const d = new Date(str.includes('T') ? str : str + 'T00:00:00');
+    return isNaN(d) ? str : d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  }
+  function fmtDateTime(str) {
+    if (!str) return '—';
+    const d = new Date(str);
+    return isNaN(d) ? str : d.toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  function fmtBookedOn(str) {
+    if (!str) return '—';
+    const d = new Date(str);
+    return isNaN(d) ? str : d.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  function field(label, val, full) {
+    const v = val ?? '';
+    if (v === '' || v === 'null' || v === 'undefined' || v === '—') return '';
+    return `<div class="bkm-field${full?' full':''}">
+      <div class="bkm-lbl">${label}</div>
+      <div class="bkm-val">${escHtml(String(v))}</div>
+    </div>`;
+  }
+
+  /* ── TYPE-SPECIFIC SECTIONS ── */
+  let specific = '';
+
+  if (b.type === 'hotel') {
+    const amenities = b.amenities
+      ? b.amenities.split(',').map(a => `<span class="bkm-amenity">${escHtml(a.trim())}</span>`).join('')
+      : '';
+    specific = `
+      <div class="bkm-stitle">Stay details</div>
+      <div class="bkm-grid">
+        ${field('Check-in',  b.date_from ? fmtDate(b.date_from) + ' · From 3:00 PM' : '—')}
+        ${field('Check-out', b.date_to   ? fmtDate(b.date_to)   + ' · Before 12:00 PM' : '—')}
+        ${field('Room type', b.room_type, false)}
+        ${field('Nights', b.nights ? b.nights + ' night' + (b.nights > 1 ? 's' : '') : '—')}
+        ${field('Rooms',  b.rooms  ? b.rooms  + ' room'  + (b.rooms  > 1 ? 's' : '') : '—')}
+        ${field('Guests', b.guests ? b.guests + ' guest' + (b.guests > 1 ? 's' : '') : '—')}
+        ${field('Location', b.subtitle)}
+      </div>
+      ${amenities ? `<div class="bkm-amenities" style="margin-top:10px">${amenities}</div>` : ''}`;
+
+  } else if (b.type === 'flight') {
+    const parts = (b.title || '').split('→');
+    const orig  = parts[0] ? parts[0].trim() : '—';
+    const dest  = parts[1] ? parts[1].trim() : '—';
+    const subParts = (b.subtitle || '').split(' to ');
+    const origCity = subParts[0] ? subParts[0].trim() : orig;
+    const destCity = subParts[1] ? subParts[1].trim() : dest;
+    specific = `
+      <div class="bkm-stitle">Route</div>
+      <div class="bkm-route-vis">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <div class="bkm-iata">${escHtml(orig)}</div>
+          <div class="bkm-city">${escHtml(origCity)}</div>
+        </div>
+        <div class="bkm-route-line">
+          <div class="bkm-route-dash"></div>
+          <i class="fas fa-plane" style="font-size:14px;color:#282D9E"></i>
+          <div class="bkm-route-dash"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:right">
+          <div class="bkm-iata">${escHtml(dest)}</div>
+          <div class="bkm-city">${escHtml(destCity)}</div>
+        </div>
+      </div>
+      <div class="bkm-stitle" style="margin-top:14px">Flight details</div>
+      <div class="bkm-grid">
+        ${field('Departure', fmtDateTime(b.date_from))}
+        ${field('Arrival',   fmtDateTime(b.date_to))}
+        ${field('Airline',   b.airline)}
+        ${field('Flight no.', b.flight_number)}
+        ${field('Cabin class', b.cabin_class)}
+        ${field('Passengers', b.total_passengers
+          ? b.total_passengers + ' passenger' + (b.total_passengers > 1 ? 's' : '')
+          : '—')}
+      </div>`;
+
+  } else if (b.type === 'car') {
+    specific = `
+      <div class="bkm-stitle">Vehicle specs</div>
+      <div class="bkm-car-specs">
+        <div class="bkm-spec">
+          <div class="bkm-spec-icon"><i class="fas fa-users"></i></div>
+          <div class="bkm-spec-val">5 seats</div><div class="bkm-spec-lbl">Capacity</div>
+        </div>
+        <div class="bkm-spec">
+          <div class="bkm-spec-icon"><i class="fas fa-cog"></i></div>
+          <div class="bkm-spec-val">Automatic</div><div class="bkm-spec-lbl">Transmission</div>
+        </div>
+        <div class="bkm-spec">
+          <div class="bkm-spec-icon"><i class="fas fa-calendar-days"></i></div>
+          <div class="bkm-spec-val">${b.rental_days || 1} day${(b.rental_days||1) > 1 ? 's' : ''}</div>
+          <div class="bkm-spec-lbl">Rental days</div>
+        </div>
+      </div>
+      <div class="bkm-stitle" style="margin-top:14px">Rental details</div>
+      <div class="bkm-grid">
+        ${field('Pick-up',          fmtDateTime(b.date_from))}
+        ${field('Drop-off',         fmtDateTime(b.date_to))}
+        ${field('Pick-up location', b.pickup_location, true)}
+        ${field('Vehicle',          b.subtitle || b.title)}
+      </div>`;
+
+  } else if (b.type === 'attraction') {
+    specific = `
+      <div class="bkm-stitle">Experience details</div>
+      <div class="bkm-grid">
+        ${field('Visit date',   fmtDate(b.date_from))}
+        ${field('Location',     b.subtitle)}
+        ${field('Adults',       b.adults   ? String(b.adults)   : '—')}
+        ${field('Children',     b.children !== undefined ? String(b.children) : '—')}
+        ${field('Total guests', b.total_guests
+          ? b.total_guests + ' guest' + (b.total_guests > 1 ? 's' : '')
+          : '—')}
+      </div>`;
+
+  } else if (b.type === 'taxi') {
+    specific = `
+      <div class="bkm-stitle">Transfer route</div>
+      <div class="bkm-stops">
+        <div class="bkm-stop">
+          <div class="bkm-stop-time">Pick-up · ${fmtDate(b.date_from)}</div>
+          <div class="bkm-stop-place">${escHtml(b.subtitle || 'Airport Terminal')}</div>
+        </div>
+        <div class="bkm-stop">
+          <div class="bkm-stop-time">Drop-off · Destination</div>
+          <div class="bkm-stop-place">${escHtml(b.pickup_location || 'Your destination')}</div>
+        </div>
+      </div>
+      <div class="bkm-stitle" style="margin-top:14px">Vehicle details</div>
+      <div class="bkm-grid">
+        ${field('Vehicle',          b.vehicle_name)}
+        ${field('Pick-up location', b.pickup_location)}
+      </div>`;
+  }
+
+  /* ── BOOKING INFO (always shown) ── */
+  const bookingInfo = `
+    <div class="bkm-stitle" style="margin-top:20px">Booking info</div>
+    <div class="bkm-grid">
+      ${field('Booked on',         fmtBookedOn(b.created_at))}
+      ${field('Booking reference', b.booking_ref, true)}
+    </div>`;
+
+  /* ── ASSEMBLE ── */
+  const html = `
+  <div class="bkm-hero ${heroClass}">
+    <div class="bkm-hero-dots"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px">
+      <div class="bkm-hero-type"><i class="fas ${icon}" style="font-size:11px"></i> ${typeLabel[b.type] || 'Booking'}</div>
+      <div class="bkm-hero-ref">${escHtml(b.booking_ref || '—')}</div>
+    </div>
+    <div class="bkm-hero-name">${escHtml(b.title || '—')}</div>
+    <div class="bkm-hero-sub">
+      <i class="fas fa-map-marker-alt" style="font-size:10px"></i>
+      ${escHtml(b.subtitle || b.meta || '')}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px">
+      <div class="bkm-status bkm-s-${status}">
+        <i class="fas fa-circle" style="font-size:7px"></i> ${statusLbl}
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:22px;font-weight:800;color:#fff">${amt}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.6)">Total paid</div>
+      </div>
+    </div>
+  </div>
+  <div class="bkm-body">
+    ${specific}
+    <div class="bkm-div"></div>
+    <div class="bkm-stitle">Price summary</div>
+    <div class="bkm-price-block">
+      <div class="bkm-pr-row"><span>Booking total</span><span>${amt}</span></div>
+      <div class="bkm-pr-total"><span>Total paid</span><span>${amt}</span></div>
+    </div>
+    ${bookingInfo}
+  </div>
+  <div class="bkm-footer">
+    <div class="bkm-footer-note">
+      <i class="fas fa-lock"></i> Ref: ${escHtml(b.booking_ref || '—')}
+    </div>
+    <button class="bkm-dl-btn" onclick="window.print()">
+      <i class="fas fa-download"></i> Download receipt
+    </button>
+  </div>`;
+
+  document.getElementById('bkmContent').innerHTML = html;
+  document.getElementById('bkmOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBkModal() {
+    document.getElementById('bkmOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/* ── TABS ── */
+function switchTab(tab) {
+    document.querySelectorAll('.profile-nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.profile-tab-content').forEach(el => el.classList.remove('active'));
+    const idx = {overview:0,bookings:1,personal:2,preferences:3,security:4};
+    document.querySelectorAll('.profile-nav-item')[idx[tab]]?.classList.add('active');
+    document.getElementById('tab-'+tab)?.classList.add('active');
+}
+
+/* ── PERSONAL EDIT ── */
+let _editing = false;
+function togglePersonalEdit() {
+    _editing = !_editing;
+    ['firstName','lastName','email','phone','dob','address','nationality','passport'].forEach(f => {
+        document.getElementById('val-'+f)?.classList.toggle('hidden', _editing);
+        document.getElementById('inp-'+f)?.classList.toggle('visible', _editing);
+    });
+    document.getElementById('personalEditBtn').innerHTML = _editing ? '<i class="fas fa-x"></i> Cancel' : '<i class="fas fa-pen"></i> Edit';
+    document.getElementById('personalSaveBtn').classList.toggle('visible', _editing);
+}
+
+async function savePersonalInfo() {
+    const auth = getAuth(); if (!auth) return;
+    const btn  = document.getElementById('personalSaveBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+    const payload = {
+        id: auth.id,
+        first_name:  document.getElementById('inp-firstName').value.trim(),
+        last_name:   document.getElementById('inp-lastName').value.trim(),
+        email:       document.getElementById('inp-email').value.trim(),
+        phone:       document.getElementById('inp-phone').value.trim(),
+        dob:         document.getElementById('inp-dob').value,
+        address:     document.getElementById('inp-address').value.trim(),
+        nationality: document.getElementById('inp-nationality').value.trim(),
+        passport:    document.getElementById('inp-passport').value.trim(),
+    };
+    try {
+        const res  = await fetch(getApiUrl('update_profile.php'), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (!data.ok) { showToast(data.message||'Update failed.', true); return; }
+        fillPersonalInfo(data.user);
+        auth.name  = (payload.first_name+' '+payload.last_name).trim();
+        auth.email = payload.email;
+        localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
+        const f = payload.first_name, l = payload.last_name;
+        document.getElementById('profileDisplayName').textContent  = auth.name;
+        document.getElementById('profileDisplayEmail').textContent = auth.email;
+        document.getElementById('profileInitials').textContent     = ((f[0]||'')+(l[0]||'')||'EN').toUpperCase();
+        if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
+        togglePersonalEdit();
+        showToast('Profile updated successfully!');
+    } catch(e) { showToast('Could not connect to server.', true); }
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Save Changes'; }
+}
+
+/* ── CHANGE PASSWORD ── */
+function togglePwForm() {
+    const form = document.getElementById('pwChangeForm');
+    const open = form.classList.toggle('open');
+    document.getElementById('togglePwFormBtn').textContent = open ? 'Cancel' : 'Change Password';
+    if (!open) { ['pwOld','pwNew','pwConfirm'].forEach(id => document.getElementById(id).value=''); document.getElementById('pwStatus').textContent=''; document.getElementById('pwStrengthWrap').style.display='none'; }
+}
+
+function togglePwEye(inputId, btn) {
+    const inp = document.getElementById(inputId), h = inp.type==='password';
+    inp.type = h ? 'text' : 'password';
+    btn.querySelector('i').className = h ? 'fas fa-eye-slash' : 'fas fa-eye';
+}
+
+function pwStrength(pw) {
+    const wrap=document.getElementById('pwStrengthWrap'), fill=document.getElementById('pwStrengthFill'), lbl=document.getElementById('pwStrengthLabel');
+    if (!pw) { wrap.style.display='none'; return; }
+    wrap.style.display='block';
+    let s=0;
+    if (pw.length>=8) s++; if (pw.length>=12) s++; if (/[A-Z]/.test(pw)) s++; if (/[0-9]/.test(pw)) s++; if (/[^A-Za-z0-9]/.test(pw)) s++;
+    const lvls=[{pct:'20%',bg:'#ef4444',txt:'Very weak'},{pct:'40%',bg:'#f97316',txt:'Weak'},{pct:'60%',bg:'#eab308',txt:'Fair'},{pct:'80%',bg:'#22c55e',txt:'Strong'},{pct:'100%',bg:'#16a34a',txt:'Very strong'}];
+    const lvl=lvls[Math.min(s-1,4)]||lvls[0];
+    fill.style.width=lvl.pct; fill.style.background=lvl.bg; lbl.textContent=lvl.txt; lbl.style.color=lvl.bg;
+}
+
+async function submitPasswordChange() {
+    const auth=getAuth(); if (!auth) return;
+    const oldPw=document.getElementById('pwOld').value, newPw=document.getElementById('pwNew').value, confPw=document.getElementById('pwConfirm').value;
+    const status=document.getElementById('pwStatus'), btn=document.getElementById('pwSubmitBtn');
+    status.textContent=''; status.className='pw-status';
+    if (!oldPw||!newPw||!confPw) { status.textContent='Please fill in all fields.'; status.classList.add('err'); return; }
+    if (newPw.length<8)          { status.textContent='New password must be at least 8 characters.'; status.classList.add('err'); return; }
+    if (newPw!==confPw)          { status.textContent='New passwords do not match.'; status.classList.add('err'); return; }
+    btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Updating…';
+    try {
+        const res  = await fetch(getApiUrl('change_password.php'), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id:auth.id, old_password:oldPw, new_password:newPw, confirm_pw:confPw}) });
+        const data = await res.json();
+        if (data.ok) {
+            status.textContent='Password updated!'; status.classList.add('ok');
+            ['pwOld','pwNew','pwConfirm'].forEach(id=>document.getElementById(id).value='');
+            document.getElementById('pwStrengthWrap').style.display='none';
+            showToast('Password changed successfully!');
+            setTimeout(togglePwForm, 1500);
+        } else { status.textContent=data.message||'Update failed.'; status.classList.add('err'); }
+    } catch(e) { status.textContent='Could not connect to server.'; status.classList.add('err'); }
+    finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> Update Password'; }
+}
+
+/* ── SIGN OUT / DELETE ── */
+function signOut() {
+    document.getElementById('signoutOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeSignoutModal() {
+    document.getElementById('signoutOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function confirmSignOut() {
+    localStorage.removeItem('easyNavigateAuth');
+    window.location.href = 'index.html';
+}
+function confirmDelete() {
+    if (confirm('Permanently delete your account? This cannot be undone.')) {
+        localStorage.removeItem('easyNavigateAuth');
+        showToast('Account deleted. Redirecting…');
+        setTimeout(()=>window.location.href='index.html', 1800);
+    }
+}
+
+/* ── TOAST ── */
+let _toastTimer;
+function showToast(msg, isError=false) {
+    const t=document.getElementById('profileToast');
+    document.getElementById('profileToastMsg').textContent=msg;
+    t.querySelector('i').className=isError?'fas fa-circle-exclamation':'fas fa-circle-check';
+    t.classList.toggle('err',isError); t.classList.add('show');
+    clearTimeout(_toastTimer); _toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/* ── MISC ── */
+function toggleDropdown(id,event) {
+    if (event) event.stopPropagation();
+    const menu=document.getElementById(id), was=menu.classList.contains('open');
+    document.querySelectorAll('.dropdown-menu.open').forEach(m=>m.classList.remove('open'));
+    if (!was) menu.classList.add('open');
+}
+function navTo(page) { window.location.href=page; }
+
+document.addEventListener('DOMContentLoaded', function() {
+    initProfile();
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeBkModal(); });
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.dropdown-menu') && !e.target.closest('.support-btn'))
+            document.querySelectorAll('.dropdown-menu.open').forEach(m=>m.classList.remove('open'));
+    });
+    const btn=document.getElementById('openAuthModalBtn');
+    if (btn) btn.onclick=()=>window.location.href='profile.html';
+});
+</script>
+</body>
+</html>

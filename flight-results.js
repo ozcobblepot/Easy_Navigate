@@ -493,7 +493,9 @@
 </div>`;
     }
 
-    window.openFlightFareModal = function (id) { openFareModal(id); };
+    window.openFlightFareModal = function (id) {
+    requireAuth(function () { openFareModal(id); }, 'Sign in to view fare options');
+};
 
     // ── RENDER FLIGHTS ────────────────────────────────────────────
     function renderFlights() {

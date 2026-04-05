@@ -11,77 +11,6 @@
     <link rel="stylesheet" href="styles.css">
 
     <style>
-    /* ── AUTH MODAL ── */
-    .auth-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,.55);z-index:9000;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s,visibility .24s}
-    .auth-modal.open{opacity:1;visibility:visible;pointer-events:auto}
-    .auth-modal-shell{width:min(980px,100%);height:min(734px,calc(100vh - 40px));background:#fff;border-radius:12px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;transform:translateY(18px) scale(.98);transition:transform .26s,opacity .26s;opacity:.9}
-    .auth-modal.open .auth-modal-shell{transform:translateY(0) scale(1);opacity:1}
-    .auth-modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid #d5dae2;border-radius:50%;background:#fff;color:#364152;cursor:pointer;font-size:16px;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .15s}
-    .auth-modal-close:hover{background:#f5f6fa}
-    .auth-modal-panel{display:flex;justify-content:center;align-items:stretch;background:#fff}
-    .auth-modal-inner{width:min(380px,100%);padding:36px 0 28px;display:flex;flex-direction:column;overflow-y:auto;box-sizing:border-box}
-    .auth-modal-inner::-webkit-scrollbar{width:0}
-    .auth-modal-logo{width:160px;height:auto;margin:0 auto 20px;display:block}
-    .auth-modal-divider{height:1px;background:#e0e2ea;margin-bottom:16px}
-    .auth-tabs{display:flex;border-bottom:2px solid #e8eaf0;margin-bottom:18px}
-    .auth-tab-btn{flex:1;padding:10px 0;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#8892aa;background:none;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;cursor:pointer;transition:color .18s,border-color .18s}
-    .auth-tab-btn.active{color:#282D9E;border-bottom-color:#282D9E}
-    .auth-tab-btn:hover:not(.active){color:#1a2140}
-    .auth-form-panel{display:none;flex-direction:column;gap:0}
-    .auth-form-panel.active{display:flex}
-    .auth-field-group{display:flex;flex-direction:column;gap:10px}
-    .auth-modal-input{width:100%;border-radius:4px;border:1px solid #d5dae2;min-height:45px;font-family:'Inter',sans-serif;font-size:15px;padding:0 16px;color:#273142;outline:none;background:#fff;box-sizing:border-box;transition:border-color .15s}
-    .auth-modal-input:focus{border-color:#282D9E}
-    .auth-modal-input::placeholder{color:#a5acb7}
-    .auth-modal-btn{width:100%;border-radius:4px;border:1px solid #d5dae2;min-height:45px;font-family:'Inter',sans-serif;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s;box-sizing:border-box}
-    .auth-modal-or-row{margin:18px 0 14px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
-    .auth-modal-or-line{height:1px;background:#d7dce5}
-    .auth-modal-or-text{color:#a5acb7;font-weight:600;font-size:18px;line-height:1}
-    .auth-modal-social{display:grid;gap:10px}
-    .auth-modal-btn-google{background:#4b82e0;border-color:#4b82e0;color:#fff}
-    .auth-modal-btn-google:hover{background:#3a6ec0}
-    .auth-modal-btn-social{background:#fff;color:#252b36}
-    .auth-modal-btn-social:hover{background:#f5f6fa}
-    .auth-modal-icon{width:22px;display:inline-flex;justify-content:center;align-items:center;font-size:22px}
-    .auth-fb-icon{color:#1e78df}
-    .auth-modal-terms{margin:16px 0 0;color:#515864;font-size:12px;line-height:1.4}
-    .auth-modal-status{min-height:18px;margin-top:8px;font-size:13px;color:#1f3f87}
-    .auth-pw-wrap{position:relative}
-    .auth-pw-wrap .auth-modal-input{padding-right:44px}
-    .auth-pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#8892aa;font-size:14px;padding:0;display:flex;align-items:center;transition:color .15s}
-    .auth-pw-toggle:hover{color:#282D9E}
-    .auth-name-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .auth-strength-wrap{margin-top:-4px}
-    .auth-strength-bar{height:3px;border-radius:2px;background:#e8eaf0;overflow:hidden;margin-bottom:4px}
-    .auth-strength-fill{height:100%;border-radius:2px;width:0%;transition:width .3s,background .3s}
-    .auth-strength-label{font-size:11px;color:#8892aa}
-    .auth-forgot{display:block;text-align:right;margin-top:-4px;font-size:12px;font-weight:600;color:#282D9E;cursor:pointer;text-decoration:none;transition:opacity .15s}
-    .auth-forgot:hover{opacity:.7}
-    .auth-terms-check{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#515864;line-height:1.4;cursor:pointer;margin-top:2px}
-    .auth-terms-check input{width:14px;height:14px;margin-top:1px;accent-color:#282D9E;flex-shrink:0;cursor:pointer}
-    .auth-submit-btn{background:#282D9E;border-color:#282D9E;color:#fff;opacity:.42;pointer-events:none}
-    .auth-submit-btn.ready{opacity:1;pointer-events:auto}
-    .auth-submit-btn:hover{background:#1f2480;border-color:#1f2480}
-    .auth-success-box{display:none;flex-direction:column;align-items:center;gap:10px;padding:28px 0 12px;text-align:center}
-    .auth-success-box.show{display:flex}
-    .auth-success-icon{font-size:44px;color:#16a34a}
-    .auth-success-title{font-size:18px;font-weight:800;color:#1a2140}
-    .auth-success-sub{font-size:13px;color:#8892aa}
-    .auth-modal-hero{position:relative;background:center/cover no-repeat url('assets/car-rentals-bg.jpg')}
-    .auth-modal-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.28) 100%)}
-    .auth-modal-hero-logo{position:absolute;right:26px;bottom:24px;width:148px;z-index:1}
-    @media(max-width:860px){
-        .auth-modal-shell{grid-template-columns:1fr;overflow-y:auto}
-        .auth-modal-hero{min-height:200px;order:-1}
-        .auth-modal-inner{width:min(440px,calc(100% - 32px));padding-top:24px}
-    }
-
-    /* ── AUTH TOAST ── */
-    .auth-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:#1a2140;color:#fff;padding:13px 22px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;z-index:9100;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px}
-    .auth-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
-    .auth-toast-btn{background:#282D9E;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .15s}
-    .auth-toast-btn:hover{background:#1f2480}
-
     /* ── PASSENGER DROPDOWN ── */
     .passenger-dropdown{min-width:320px;padding:8px 16px}
     .passenger-note{font-size:13px;color:#6b6b6b;margin-bottom:12px;line-height:1.25;font-weight:400;text-align:left}
@@ -95,9 +24,7 @@
     .pax-btn:hover{color:#282D9E}
     .pax-value{font-size:16px;font-weight:700;color:#1a2140;min-width:20px;text-align:center}
 
-    /* ══════════════════════════════════════════════════════════
-       CAR RENTAL LISTING STYLES
-       ══════════════════════════════════════════════════════════ */
+    /* ══ CAR RENTAL LISTING STYLES ══ */
     .car-section{max-width:1160px;margin:32px auto 0;padding:0 28px 64px}
     .car-wrapper{display:flex;gap:22px;align-items:flex-start}
     .car-sidebar{width:260px;flex-shrink:0}
@@ -121,8 +48,7 @@
     .car-card-specs{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
     .car-spec-item{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--gray-600);white-space:nowrap;font-weight:500}
     .car-spec-item i{font-size:13px;color:var(--gray-500);flex-shrink:0}
-    .car-spec-transmission{display:inline-flex;align-items:center;gap:5px}
-    .car-trans-badge{width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:9px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:0}
+    .car-trans-badge{width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:9px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
     .car-card-brands{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .car-brand-name{font-size:13px;font-weight:800;color:var(--gray-700);letter-spacing:0.3px;font-style:italic}
     .car-card-rating{display:inline-flex;align-items:center;gap:5px}
@@ -139,14 +65,14 @@
     .car-select-btn:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:0 5px 16px rgba(40,45,158,0.28)}
     .car-results-loading,.car-results-empty{background:#fff;border:1px solid var(--gray-100);border-radius:var(--radius);padding:32px 20px;color:var(--gray-500);font-size:13.5px;text-align:center}
     .car-empty-icon{font-size:36px;margin-bottom:12px;opacity:0.35}
+    .fl-label-filters label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#1a2140;font-weight:600;padding:4px 0}
+    .fl-label-filters input{accent-color:#282D9E;width:15px;height:15px;cursor:pointer}
 
     @media(max-width:1000px){.car-card{grid-template-columns:170px 1fr auto}}
     @media(max-width:760px){.car-wrapper{flex-direction:column}.car-sidebar{width:100%;position:static}.car-card{grid-template-columns:1fr}.car-card-img-col{border-right:none;border-bottom:1px solid var(--gray-100);padding:14px;height:130px}.car-card-price-col{border-left:none;border-top:1px solid var(--gray-100);align-items:flex-start;min-width:0}}
     @media(max-width:540px){.car-section{padding:0 16px 40px}.car-card-name{font-size:15px}}
 
-    /* ══════════════════════════════════════════════════════════
-       CAR DETAIL MODAL
-       ══════════════════════════════════════════════════════════ */
+    /* ══ CAR DETAIL MODAL ══ */
     .carmodal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.52);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.22s ease}
     .carmodal-overlay.open{opacity:1;pointer-events:all}
     .carmodal{background:#fff;border-radius:16px;width:100%;max-width:760px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.22);transform:translateY(18px) scale(0.98);transition:transform 0.26s ease}
@@ -226,87 +152,6 @@
 
 <body class="service-page service-car">
 
-<!-- ══ AUTH MODAL ══ -->
-<div class="auth-modal" id="authModal" aria-hidden="true">
-    <div class="auth-modal-shell" role="dialog" aria-modal="true">
-        <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close"><i class="fas fa-times"></i></button>
-        <section class="auth-modal-panel">
-            <div class="auth-modal-inner">
-                <img class="auth-modal-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
-                <div class="auth-modal-divider"></div>
-                <div class="auth-tabs" role="tablist">
-                    <button class="auth-tab-btn active" id="authTabSignin"   onclick="authSwitchTab('signin')"   role="tab" aria-selected="true">Sign In</button>
-                    <button class="auth-tab-btn"        id="authTabRegister" onclick="authSwitchTab('register')" role="tab" aria-selected="false">Create Account</button>
-                </div>
-                <!-- SIGN IN -->
-                <div class="auth-form-panel active" id="authPanelSignin" role="tabpanel">
-                    <div class="auth-field-group">
-                        <input id="siEmail"    type="email"    class="auth-modal-input" placeholder="Email address"  autocomplete="email">
-                        <div class="auth-pw-wrap">
-                            <input id="siPassword" type="password" class="auth-modal-input" placeholder="Password" autocomplete="current-password">
-                            <button type="button" class="auth-pw-toggle" onclick="authTogglePw('siPassword',this)" aria-label="Show/hide password"><i class="fas fa-eye"></i></button>
-                        </div>
-                        <a class="auth-forgot" onclick="authForgotPassword()">Forgot password?</a>
-                        <button type="button" id="siSubmitBtn" class="auth-modal-btn auth-submit-btn" onclick="authSignIn()">Sign In</button>
-                    </div>
-                    <div class="auth-modal-or-row"><span class="auth-modal-or-line"></span><span class="auth-modal-or-text">or</span><span class="auth-modal-or-line"></span></div>
-                    <div class="auth-modal-social">
-                        <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="authSocial('google')"><span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span><span>Continue with Google</span></button>
-                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')"><span class="auth-modal-icon"><i class="fa-brands fa-microsoft"></i></span><span>Continue with Microsoft</span></button>
-                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('facebook')"><span class="auth-modal-icon auth-fb-icon"><i class="fa-brands fa-facebook-f"></i></span><span>Continue with Facebook</span></button>
-                    </div>
-                    <p class="auth-modal-terms">By signing in you agree to Easy Navigate's <a href="#" style="color:#282D9E;">Terms</a> &amp; <a href="#" style="color:#282D9E;">Privacy Policy</a>.</p>
-                    <p id="siStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
-                </div>
-                <!-- REGISTER -->
-                <div class="auth-form-panel" id="authPanelRegister" role="tabpanel">
-                    <div class="auth-success-box" id="regSuccess">
-                        <div class="auth-success-icon"><i class="fas fa-circle-check"></i></div>
-                        <div class="auth-success-title">Account Created!</div>
-                        <div class="auth-success-sub">Welcome to Easy Navigate.<br>You can now sign in.</div>
-                        <button type="button" class="auth-modal-btn auth-submit-btn ready" style="margin-top:10px;" onclick="authSwitchTab('signin')">Go to Sign In</button>
-                    </div>
-                    <div id="regForm" class="auth-field-group">
-                        <div class="auth-name-row">
-                            <input id="regFirstName" type="text"     class="auth-modal-input" placeholder="First name" autocomplete="given-name">
-                            <input id="regLastName"  type="text"     class="auth-modal-input" placeholder="Last name"  autocomplete="family-name">
-                        </div>
-                        <input id="regEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
-                        <div class="auth-pw-wrap">
-                            <input id="regPassword" type="password" class="auth-modal-input" placeholder="Password (min. 8 characters)" autocomplete="new-password" oninput="authCheckPwStrength(this.value)">
-                            <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regPassword',this)" aria-label="Show/hide"><i class="fas fa-eye"></i></button>
-                        </div>
-                        <div class="auth-strength-wrap" id="regStrengthWrap" style="display:none">
-                            <div class="auth-strength-bar"><div class="auth-strength-fill" id="regStrengthFill"></div></div>
-                            <span class="auth-strength-label" id="regStrengthLabel"></span>
-                        </div>
-                        <div class="auth-pw-wrap">
-                            <input id="regConfirmPw" type="password" class="auth-modal-input" placeholder="Confirm password" autocomplete="new-password">
-                            <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regConfirmPw',this)" aria-label="Show/hide"><i class="fas fa-eye"></i></button>
-                        </div>
-                        <label class="auth-terms-check">
-                            <input type="checkbox" id="regTerms" onchange="authCheckRegReady()">
-                            I agree to Easy Navigate's <a href="#" style="color:#282D9E;margin-left:3px;">Terms &amp; Privacy Policy</a>
-                        </label>
-                        <button type="button" id="regSubmitBtn" class="auth-modal-btn auth-submit-btn" onclick="authRegister()">Create Account</button>
-                    </div>
-                    <p id="regStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
-                </div>
-            </div>
-        </section>
-        <section class="auth-modal-hero" aria-hidden="true">
-            <div class="auth-modal-hero-overlay"></div>
-            <img class="auth-modal-hero-logo" src="assets/easy-navigate-logo-white.png" alt="">
-        </section>
-    </div>
-</div>
-
-<!-- ══ AUTH TOAST ══ -->
-<div class="auth-toast" id="authToast">
-    <span id="authToastMsg">Please sign in to continue</span>
-    <button class="auth-toast-btn" onclick="openAuthModal('signin')">Sign In</button>
-</div>
-
 <!-- ══ HEADER ══ -->
 <header class="header">
     <div class="nav-container">
@@ -327,7 +172,8 @@
                         <div class="dropdown-item" onclick="selectFindBooking('taxi')"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
                     </div>
                 </div>
-                <button class="btn-signin" id="openAuthModalBtn" onclick="openAuthModal('signin')">Sign In / Register</button>
+                <!-- auth-header.js + auth-modal.js manage this button -->
+                <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
             </div>
         </div>
     </div>
@@ -412,7 +258,6 @@
 <!-- ══ CAR RENTAL LISTING ══ -->
 <section class="car-section">
     <div class="car-wrapper">
-
         <!-- FILTER SIDEBAR -->
         <aside class="hotel-filter-sidebar car-sidebar">
             <div class="filter-header">
@@ -434,9 +279,9 @@
                 <div class="filter-group">
                     <span class="filter-group-label">Transmission</span>
                     <div class="filter-stars" id="carTransFilters">
-                        <label><input type="radio" name="carTrans" value="" onchange="carApplyFilters()" checked><span class="star-icons" style="color:var(--blue);font-size:12px;">⚙️</span><span>Any</span></label>
-                        <label><input type="radio" name="carTrans" value="Automatic" onchange="carApplyFilters()"><span class="star-icons" style="color:var(--blue);font-size:12px;">🔵</span><span>Automatic</span></label>
-                        <label><input type="radio" name="carTrans" value="Manual" onchange="carApplyFilters()"><span class="star-icons" style="color:var(--blue);font-size:12px;">🔧</span><span>Manual</span></label>
+                        <label><input type="radio" name="carTrans" value="" onchange="carApplyFilters()" checked> <span>Any</span></label>
+                        <label><input type="radio" name="carTrans" value="Automatic" onchange="carApplyFilters()"> <span>Automatic</span></label>
+                        <label><input type="radio" name="carTrans" value="Manual" onchange="carApplyFilters()"> <span>Manual</span></label>
                     </div>
                 </div>
                 <div class="filter-group">
@@ -452,10 +297,10 @@
                 <div class="filter-group">
                     <span class="filter-group-label">Fuel type</span>
                     <div class="fl-label-filters" id="carFuelFilters">
-                        <label><input type="checkbox" value="Petrol" onchange="carApplyFilters()"><span class="fl-label-dot" style="background:#e53e3e;"></span><span>Petrol</span></label>
-                        <label><input type="checkbox" value="Diesel" onchange="carApplyFilters()"><span class="fl-label-dot" style="background:#1d4ed8;"></span><span>Diesel</span></label>
-                        <label><input type="checkbox" value="Electric" onchange="carApplyFilters()"><span class="fl-label-dot" style="background:#16a34a;"></span><span>Electric</span></label>
-                        <label><input type="checkbox" value="Hybrid" onchange="carApplyFilters()"><span class="fl-label-dot" style="background:#9d174d;"></span><span>Hybrid</span></label>
+                        <label><input type="checkbox" value="Petrol" onchange="carApplyFilters()"> <span>Petrol</span></label>
+                        <label><input type="checkbox" value="Diesel" onchange="carApplyFilters()"> <span>Diesel</span></label>
+                        <label><input type="checkbox" value="Electric" onchange="carApplyFilters()"> <span>Electric</span></label>
+                        <label><input type="checkbox" value="Hybrid" onchange="carApplyFilters()"> <span>Hybrid</span></label>
                     </div>
                 </div>
                 <div class="filter-group">
@@ -472,10 +317,10 @@
                 <div class="filter-group">
                     <span class="filter-group-label">Minimum rating</span>
                     <div class="filter-stars" id="carRatingFilters">
-                        <label><input type="radio" name="carRating" value="0"   onchange="carApplyFilters()" checked> <span class="star-icons">★★★★★</span> <span>Any</span></label>
-                        <label><input type="radio" name="carRating" value="4.5" onchange="carApplyFilters()"> <span class="star-icons">★★★★★</span> <span>4.5+</span></label>
-                        <label><input type="radio" name="carRating" value="4.0" onchange="carApplyFilters()"> <span class="star-icons">★★★★☆</span> <span>4.0+</span></label>
-                        <label><input type="radio" name="carRating" value="3.5" onchange="carApplyFilters()"> <span class="star-icons">★★★☆☆</span> <span>3.5+</span></label>
+                        <label><input type="radio" name="carRating" value="0"   onchange="carApplyFilters()" checked> <span>Any</span></label>
+                        <label><input type="radio" name="carRating" value="4.5" onchange="carApplyFilters()"> <span>4.5+</span></label>
+                        <label><input type="radio" name="carRating" value="4.0" onchange="carApplyFilters()"> <span>4.0+</span></label>
+                        <label><input type="radio" name="carRating" value="3.5" onchange="carApplyFilters()"> <span>3.5+</span></label>
                     </div>
                 </div>
             </div>
@@ -510,7 +355,6 @@
                 <button class="search-btn" style="margin:14px auto 0;font-size:13px;padding:0 24px;min-height:40px;" onclick="carClearFilters()">Clear filters</button>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -551,12 +395,12 @@
         <div class="footer-content">
             <div class="footer-columns">
                 <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
-                <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li><li><a href="#">Accessibility Statement</a></li></ul></div>
+                <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li></ul></div>
                 <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li><li><a href="#">Security</a></li></ul></div>
             </div>
             <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
         </div>
-        <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved Site Operator: Easy Navigate Travel</p>
+        <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved</p>
     </div>
 </footer>
 
@@ -569,7 +413,6 @@
             <button class="carmodal-close" onclick="carModalHide()" title="Close">&times;</button>
         </div>
         <div class="carmodal-body">
-            <!-- Panel 1: Car Details -->
             <div class="carmodal-panel active" id="carModalPanel1">
                 <div class="carmodal-car-header">
                     <img class="carmodal-car-img" id="cmImg" src="" alt="">
@@ -618,7 +461,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Panel 2: Important Information -->
             <div class="carmodal-panel" id="carModalPanel2">
                 <div class="carmodal-info-section">
                     <div class="carmodal-info-title">What you need to bring to pick-up</div>
@@ -626,9 +468,9 @@
                     <div class="carmodal-info-row">
                         <div class="carmodal-info-key">Driver's license requirements</div>
                         <div class="carmodal-info-val">
-                            <p>At pick-up, the main driver and any additional drivers must present their original driver's licenses and required types of proof. Electronic versions, photos, or non-official licenses will not be accepted.</p>
+                            <p>At pick-up, all drivers must present their original driver's licenses. Electronic versions will not be accepted.</p>
                             <p>All drivers must have held their licenses for at least 12 months.</p>
-                            <p>Drivers age requirements: <strong>25–80 years old.</strong></p>
+                            <p>Driver age requirements: <strong>25–80 years old.</strong></p>
                             <div class="carmodal-license-box">
                                 <div class="carmodal-license-box-title">The branch accepts: Original Driving License + International Driving Permit</div>
                                 <p><strong>Original Driving License:</strong> Original full valid driving license issued by the main driver's country.</p>
@@ -636,9 +478,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="carmodal-info-row"><div class="carmodal-info-key">Payment at pick-up</div><div class="carmodal-info-val">A valid credit card in the main driver's name is required as a security deposit. Debit cards and prepaid cards are not accepted.</div></div>
-                    <div class="carmodal-info-row"><div class="carmodal-info-key">Fuel policy</div><div class="carmodal-info-val"><strong>Full to Full:</strong> The car is provided with a full tank. Return it full to avoid additional charges.</div></div>
-                    <div class="carmodal-info-row"><div class="carmodal-info-key">Mileage</div><div class="carmodal-info-val">Unlimited mileage included. No extra charges for distance driven.</div></div>
+                    <div class="carmodal-info-row"><div class="carmodal-info-key">Payment at pick-up</div><div class="carmodal-info-val">A valid credit card in the main driver's name is required. Debit and prepaid cards are not accepted.</div></div>
+                    <div class="carmodal-info-row"><div class="carmodal-info-key">Fuel policy</div><div class="carmodal-info-val"><strong>Full to Full:</strong> Car provided with full tank. Return it full to avoid charges.</div></div>
+                    <div class="carmodal-info-row"><div class="carmodal-info-key">Mileage</div><div class="carmodal-info-val">Unlimited mileage included.</div></div>
                 </div>
             </div>
         </div>
@@ -655,222 +497,39 @@
     </div>
 </div>
 
-<!-- ══ SCRIPTS ══ -->
+<!-- ══ SCRIPTS — auth-header first, then auth-modal injects modal ══ -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="auth-header.js"></script>
+<script src="auth-modal.js"></script>
 <script src="db-search-tracker.js"></script>
 <script src="service-panels.js"></script>
 <script src="service-ads-carousel.js"></script>
 
 <script>
 /* ═══════════════════════════════════════════════
-   AUTH CORE
+   PAGE-SPECIFIC JS ONLY — no auth code here
+   Auth fully handled by auth-modal.js
 ═══════════════════════════════════════════════ */
-function isSignedIn() {
-    try { return !!JSON.parse(localStorage.getItem('easyNavigateAuth')); } catch(_){ return false; }
-}
+
 function getApiUrl(path) {
     if (window.location.protocol === 'file:')
         return 'http://localhost/platform-technologies-proj-v1-main/api/' + path;
     var href = window.location.href.split('?')[0];
     return href.substring(0, href.lastIndexOf('/') + 1) + 'api/' + path;
 }
-function openAuthModal(tab) {
-    var m = document.getElementById('authModal');
-    var sw = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = 'hidden';
-    if (sw > 0) document.body.style.paddingRight = sw + 'px';
-    m.setAttribute('aria-hidden','false');
-    m.classList.add('open');
-    authSwitchTab(tab || 'signin');
-    document.getElementById('siStatus').textContent = '';
-    document.getElementById('regStatus').textContent = '';
-}
-function closeAuthModal() {
-    var m = document.getElementById('authModal');
-    m.classList.remove('open');
-    m.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = '';
-}
-function authSwitchTab(tab) {
-    var siT=document.getElementById('authTabSignin'), regT=document.getElementById('authTabRegister');
-    var siP=document.getElementById('authPanelSignin'), regP=document.getElementById('authPanelRegister');
-    if (tab==='signin') {
-        siT.classList.add('active'); siT.setAttribute('aria-selected','true');
-        regT.classList.remove('active'); regT.setAttribute('aria-selected','false');
-        siP.classList.add('active'); regP.classList.remove('active');
-        setTimeout(function(){ document.getElementById('siEmail').focus(); },80);
-    } else {
-        regT.classList.add('active'); regT.setAttribute('aria-selected','true');
-        siT.classList.remove('active'); siT.setAttribute('aria-selected','false');
-        regP.classList.add('active'); siP.classList.remove('active');
-        document.getElementById('regSuccess').classList.remove('show');
-        document.getElementById('regForm').style.display='flex';
-        setTimeout(function(){ document.getElementById('regFirstName').focus(); },80);
-    }
-}
-function authTogglePw(id,btn) {
-    var inp=document.getElementById(id), h=inp.type==='password';
-    inp.type=h?'text':'password';
-    btn.querySelector('i').className=h?'fas fa-eye-slash':'fas fa-eye';
-}
-function authCheckPwStrength(pw) {
-    var wrap=document.getElementById('regStrengthWrap'),fill=document.getElementById('regStrengthFill'),lbl=document.getElementById('regStrengthLabel');
-    if (!pw){wrap.style.display='none';authCheckRegReady();return;}
-    wrap.style.display='block';
-    var s=0;
-    if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;
-    var lvls=[{p:'20%',b:'#ef4444',t:'Very weak'},{p:'40%',b:'#f97316',t:'Weak'},{p:'60%',b:'#eab308',t:'Fair'},{p:'80%',b:'#22c55e',t:'Strong'},{p:'100%',b:'#16a34a',t:'Very strong'}];
-    var l=lvls[Math.min(s-1,4)]||lvls[0];
-    fill.style.width=l.p;fill.style.background=l.b;lbl.textContent=l.t;lbl.style.color=l.b;
-    authCheckRegReady();
-}
-function authCheckRegReady() {
-    var ok=document.getElementById('regFirstName').value.trim()&&
-           document.getElementById('regLastName').value.trim()&&
-           document.getElementById('regEmail').value.trim()&&
-           document.getElementById('regPassword').value.length>=8&&
-           document.getElementById('regPassword').value===document.getElementById('regConfirmPw').value&&
-           document.getElementById('regTerms').checked;
-    document.getElementById('regSubmitBtn').classList.toggle('ready',!!ok);
-}
-async function authSignIn() {
-    var email=document.getElementById('siEmail').value.trim(), pw=document.getElementById('siPassword').value;
-    var status=document.getElementById('siStatus'), btn=document.getElementById('siSubmitBtn');
-    if (!email||!pw) return;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){status.style.color='#b62020';status.textContent='Please enter a valid email.';return;}
-    btn.disabled=true;btn.textContent='Signing in…';status.textContent='';
-    try {
-        var res=await fetch(getApiUrl('signin.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
-        var data=await res.json();
-        if (data.ok) {
-            var auth={email:data.user.email,name:data.user.first_name+' '+data.user.last_name,id:data.user.id};
-            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
-            status.style.color='#16a34a';status.textContent='Signed in!';
-            if (typeof window.updateHeaderForAuth==='function') window.updateHeaderForAuth(auth);
-            updateHeaderBtn(auth);
-            setTimeout(function(){
-                closeAuthModal();
-                if (typeof window._pendingAuthAction==='function'){var fn=window._pendingAuthAction;window._pendingAuthAction=null;setTimeout(fn,150);}
-            },800);
-        } else { status.style.color='#b62020';status.textContent=data.message||'Sign in failed.'; }
-    } catch(_){status.style.color='#b62020';status.textContent='Could not connect. Try again.';}
-    finally{btn.disabled=false;btn.textContent='Sign In';}
-}
-async function authRegister() {
-    var fname=document.getElementById('regFirstName').value.trim(),lname=document.getElementById('regLastName').value.trim();
-    var email=document.getElementById('regEmail').value.trim(),pw=document.getElementById('regPassword').value;
-    var cpw=document.getElementById('regConfirmPw').value,terms=document.getElementById('regTerms').checked;
-    var status=document.getElementById('regStatus'),btn=document.getElementById('regSubmitBtn');
-    if (!fname||!lname||!email||!pw||!cpw) return;
-    if (pw.length<8){status.style.color='#b62020';status.textContent='Password min 8 chars.';return;}
-    if (pw!==cpw){status.style.color='#b62020';status.textContent='Passwords do not match.';return;}
-    if (!terms){status.style.color='#b62020';status.textContent='Please agree to Terms.';return;}
-    btn.disabled=true;btn.textContent='Creating…';status.textContent='';
-    try {
-        var res=await fetch(getApiUrl('register.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({first_name:fname,last_name:lname,email,password:pw})});
-        var data=await res.json();
-        if (data.ok) {
-            var auth={email:data.user.email,name:data.user.first_name+' '+data.user.last_name,id:data.user.id};
-            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
-            if (typeof window.updateHeaderForAuth==='function') window.updateHeaderForAuth(auth);
-            updateHeaderBtn(auth);
-            document.getElementById('regForm').style.display='none';
-            document.getElementById('regSuccess').classList.add('show');
-        } else {status.style.color='#b62020';status.textContent=data.message||'Registration failed.';}
-    } catch(_){status.style.color='#b62020';status.textContent='Could not connect. Try again.';}
-    finally{btn.disabled=false;btn.textContent='Create Account';authCheckRegReady();}
-}
-function authSocial(provider) {
-    var auth={email:provider+'_user@easynav.com',name:'Easy Navigate User',provider};
-    localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
-    if (typeof window.updateHeaderForAuth==='function') window.updateHeaderForAuth(auth);
-    updateHeaderBtn(auth);
-    closeAuthModal();
-    if (typeof window._pendingAuthAction==='function'){var fn=window._pendingAuthAction;window._pendingAuthAction=null;setTimeout(fn,150);}
-}
-function authForgotPassword() {
-    var email=document.getElementById('siEmail').value.trim(),s=document.getElementById('siStatus');
-    if (!email){s.style.color='#1f3f87';s.textContent='Enter your email above first.';return;}
-    s.style.color='#16a34a';s.textContent='Reset link sent to '+email;
-}
-function updateHeaderBtn(auth) {
-    var btn=document.getElementById('openAuthModalBtn');
-    if (!btn) return;
-    if (auth) {
-        var name=(auth.name||auth.email||'Account').split(' ')[0];
-        btn.innerHTML='<i class="fas fa-user-circle" style="font-size:15px;margin-right:6px"></i>'+name;
-        btn.onclick = null; // already signed in, no action needed
-    } else {
-        btn.innerHTML='Sign In / Register';
-        btn.onclick = function(){ openAuthModal('signin'); };
-    }
-}
-var _toastTimer;
-function showAuthToast(msg) {
-    var t=document.getElementById('authToast'),m=document.getElementById('authToastMsg');
-    if (m) m.textContent=msg||'Please sign in to continue';
-    t.classList.add('show');
-    clearTimeout(_toastTimer);
-    _toastTimer=setTimeout(function(){t.classList.remove('show');},4000);
-}
-function requireAuth(callback, msg) {
-    if (isSignedIn()){if(typeof callback==='function') callback();return;}
-    window._pendingAuthAction=callback||null;
-    showAuthToast(msg||'Please sign in to continue');
-    setTimeout(function(){openAuthModal('signin');},250);
-}
 
-/* ═══════════════════════════════════════════════
-   DOM READY — auth bindings
-═══════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('authModalCloseBtn').addEventListener('click', closeAuthModal);
-    document.getElementById('authModal').addEventListener('click', function(e){ if(e.target===this) closeAuthModal(); });
-    document.querySelector('.auth-modal-shell').addEventListener('click', function(e){ e.stopPropagation(); });
-    document.addEventListener('keydown', function(e){
-        if(e.key==='Escape'){ closeAuthModal(); carModalHide(); }
-    });
-    ['regFirstName','regLastName','regEmail','regConfirmPw'].forEach(function(id){
-        document.getElementById(id).addEventListener('input',authCheckRegReady);
-    });
-    ['siEmail','siPassword'].forEach(function(id){
-        document.getElementById(id).addEventListener('input',function(){
-            var ok=document.getElementById('siEmail').value.trim()&&document.getElementById('siPassword').value;
-            document.getElementById('siSubmitBtn').classList.toggle('ready',!!ok);
-        });
-    });
-    // Restore auth state
-    try { var saved=JSON.parse(localStorage.getItem('easyNavigateAuth')); if(saved) updateHeaderBtn(saved); } catch(_){}
-    // Close dropdowns on outside click
-    document.addEventListener('click',function(e){
-        if(!e.target.closest('.dropdown-menu')&&!e.target.closest('.selector-pill')&&!e.target.closest('.dropdown-pill'))
-            document.querySelectorAll('.dropdown-menu.open').forEach(function(m){m.classList.remove('open');});
-    });
-    // Flatpickr dates
-    if (window.flatpickr) {
-        document.querySelectorAll('.date-picker,input[type=date]').forEach(function(inp){
-            flatpickr(inp,{dateFormat:'Y-m-d',altInput:true,altFormat:'D, M j',showMonths:2,monthSelectorType:'static',disableMobile:true});
-        });
-    }
-    carRender();
-});
-
-/* ═══════════════════════════════════════════════
-   MISC UI
-═══════════════════════════════════════════════ */
-function toggleDropdown(id,event) {
+function toggleDropdown(id, event) {
     if (event) event.stopPropagation();
-    var menu=document.getElementById(id), was=menu.classList.contains('open');
-    document.querySelectorAll('.dropdown-menu.open').forEach(function(m){m.classList.remove('open');});
+    var menu = document.getElementById(id), was = menu.classList.contains('open');
+    document.querySelectorAll('.dropdown-menu.open').forEach(function(m){ m.classList.remove('open'); });
     if (!was) menu.classList.add('open');
 }
 function selectFindBooking(tab) {
     document.getElementById('findBookingsMenu').classList.remove('open');
-    var pages={hotel:'hotel & homes.html',car:'car-rental.html',flights:'flights.html',attractions:'attractions.html',taxi:'airport-taxis.html'};
-    if (pages[tab]) window.location.href=pages[tab];
+    var pages = {hotel:'hotel & homes.html',car:'car-rental.html',flights:'flights.html',attractions:'attractions.html',taxi:'airport-taxis.html'};
+    if (pages[tab]) window.location.href = pages[tab];
 }
+
 var _carAge = 18;
 function updateCarDriverAge(change) {
     _carAge = Math.max(18, Math.min(99, _carAge + change));
@@ -879,9 +538,7 @@ function updateCarDriverAge(change) {
     document.getElementById('carAgeMinus').style.opacity = _carAge <= 18 ? '0.35' : '1';
 }
 
-/* ═══════════════════════════════════════════════
-   CAR DATA
-═══════════════════════════════════════════════ */
+/* ── CAR DATA ── */
 const CAR_DATA = [
     { id:1,  car_name:'Ford Everest',         brand:'Ford',       category:'SUV',    rent_per_day:3500, seats:7,  luggage_capacity:4, transmission:'Automatic', doors:5, rating:4.6, reviews:1250, fuel_type:'Diesel', car_image:'car_rental/Ford_Everest.png',         rental_days:7 },
     { id:2,  car_name:'Ford Explorer',        brand:'Ford',       category:'SUV',    rent_per_day:4000, seats:7,  luggage_capacity:5, transmission:'Automatic', doors:5, rating:4.7, reviews:980,  fuel_type:'Petrol', car_image:'car_rental/Ford_Explorer.png',        rental_days:7 },
@@ -894,7 +551,7 @@ const CAR_DATA = [
     { id:9,  car_name:'Hyundai Stargazer',    brand:'Hyundai',    category:'MPV',    rent_per_day:3200, seats:7,  luggage_capacity:4, transmission:'Automatic', doors:5, rating:4.6, reviews:700,  fuel_type:'Petrol', car_image:'car_rental/Hyundai_Stargazer.png',    rental_days:7 },
     { id:10, car_name:'Hyundai Staria',       brand:'Hyundai',    category:'Van',    rent_per_day:3500, seats:7,  luggage_capacity:5, transmission:'Automatic', doors:5, rating:4.7, reviews:540,  fuel_type:'Diesel', car_image:'car_rental/Hyundai_Staria.png',       rental_days:7 },
     { id:11, car_name:'MG 5',                 brand:'MG',         category:'Sedan',  rent_per_day:2700, seats:5,  luggage_capacity:3, transmission:'Automatic', doors:4, rating:4.4, reviews:430,  fuel_type:'Petrol', car_image:'car_rental/Mg_5.png',                 rental_days:7 },
-    { id:12, car_name:'Mitsubishi Mirage G4', brand:'Mitsubishi', category:'Sedan',  rent_per_day:2500, seats:5,  luggage_capacity:2, transmission:'Automatic', doors:4, rating:4.3, reviews:600,  fuel_type:'Petrol', car_image:'car_rental/Mitsubishi_MirrageG4.png',  rental_days:7 },
+    { id:12, car_name:'Mitsubishi Mirage G4', brand:'Mitsubishi', category:'Sedan',  rent_per_day:2500, seats:5,  luggage_capacity:2, transmission:'Automatic', doors:4, rating:4.3, reviews:600,  fuel_type:'Petrol', car_image:'car_rental/Mitsubishi_MirrageG4.png', rental_days:7 },
     { id:13, car_name:'Mitsubishi Montero',   brand:'Mitsubishi', category:'SUV',    rent_per_day:4000, seats:7,  luggage_capacity:4, transmission:'Automatic', doors:5, rating:4.5, reviews:480,  fuel_type:'Diesel', car_image:'car_rental/Mitsubishi_Montero.png',   rental_days:7 },
     { id:14, car_name:'Mitsubishi Triton',    brand:'Mitsubishi', category:'Pickup', rent_per_day:3300, seats:5,  luggage_capacity:3, transmission:'Manual',    doors:4, rating:4.4, reviews:500,  fuel_type:'Diesel', car_image:'car_rental/Mitsubishi_Triton.png',    rental_days:7 },
     { id:15, car_name:'Mitsubishi Xpander',   brand:'Mitsubishi', category:'MPV',    rent_per_day:3200, seats:7,  luggage_capacity:4, transmission:'Automatic', doors:5, rating:4.5, reviews:670,  fuel_type:'Petrol', car_image:'car_rental/Mitsubishi_Xpander.png',   rental_days:7 },
@@ -910,26 +567,22 @@ const CAR_DATA = [
     { id:25, car_name:'Toyota Vios',          brand:'Toyota',     category:'Sedan',  rent_per_day:2700, seats:5,  luggage_capacity:3, transmission:'Automatic', doors:4, rating:4.4, reviews:1300, fuel_type:'Petrol', car_image:'car_rental/Toyota_Vios.png',          rental_days:7 },
 ];
 
-/* ═══════════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════════ */
+/* ── STATE ── */
 let carState = {
     priceMin:0, priceMax:999999, transmission:'', minSeats:0,
     fuelTypes:[], categories:[], minRating:0, sort:'recommended',
 };
 
-/* ═══════════════════════════════════════════════
-   FILTER HELPERS
-═══════════════════════════════════════════════ */
+/* ── FILTER HELPERS ── */
 function carSetPrice(btn) {
-    document.querySelectorAll('#carPriceFilters .filter-price-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('#carPriceFilters .filter-price-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     carState.priceMin = parseFloat(btn.dataset.min);
     carState.priceMax = parseFloat(btn.dataset.max);
     carRender();
 }
 function carSetSeats(btn) {
-    document.querySelectorAll('#carSeatFilters .filter-price-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('#carSeatFilters .filter-price-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     carState.minSeats = parseInt(btn.dataset.seats);
     carRender();
@@ -943,30 +596,28 @@ function carSetSort(key, label) {
 function carApplyFilters() {
     const transRadio = document.querySelector('[name="carTrans"]:checked');
     carState.transmission = transRadio ? transRadio.value : '';
-    carState.fuelTypes = [...document.querySelectorAll('#carFuelFilters input:checked')].map(i=>i.value);
-    carState.categories = [...document.querySelectorAll('#carCategoryFilters input:checked')].map(i=>i.value);
+    carState.fuelTypes = [...document.querySelectorAll('#carFuelFilters input:checked')].map(i => i.value);
+    carState.categories = [...document.querySelectorAll('#carCategoryFilters input:checked')].map(i => i.value);
     const ratingRadio = document.querySelector('[name="carRating"]:checked');
     carState.minRating = ratingRadio ? parseFloat(ratingRadio.value) : 0;
     carRender();
 }
 function carClearFilters() {
-    document.querySelectorAll('#carPriceFilters .filter-price-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+    document.querySelectorAll('#carPriceFilters .filter-price-btn').forEach((b,i) => b.classList.toggle('active', i===0));
     carState.priceMin=0; carState.priceMax=999999;
     document.querySelector('[name="carTrans"][value=""]').checked=true; carState.transmission='';
-    document.querySelectorAll('#carSeatFilters .filter-price-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+    document.querySelectorAll('#carSeatFilters .filter-price-btn').forEach((b,i) => b.classList.toggle('active', i===0));
     carState.minSeats=0;
-    document.querySelectorAll('#carFuelFilters input').forEach(i=>i.checked=false); carState.fuelTypes=[];
-    document.querySelectorAll('#carCategoryFilters input').forEach(i=>i.checked=false); carState.categories=[];
+    document.querySelectorAll('#carFuelFilters input').forEach(i => i.checked=false); carState.fuelTypes=[];
+    document.querySelectorAll('#carCategoryFilters input').forEach(i => i.checked=false); carState.categories=[];
     document.querySelector('[name="carRating"][value="0"]').checked=true; carState.minRating=0;
     carRender();
 }
 function carSearch() { carRender(); }
 
-/* ═══════════════════════════════════════════════
-   FILTER + SORT
-═══════════════════════════════════════════════ */
+/* ── FILTER + SORT ── */
 function carFilterData() {
-    return CAR_DATA.filter(c=>{
+    return CAR_DATA.filter(c => {
         if (c.rent_per_day < carState.priceMin || c.rent_per_day > carState.priceMax) return false;
         if (carState.transmission && c.transmission !== carState.transmission) return false;
         if (c.seats < carState.minSeats) return false;
@@ -974,27 +625,23 @@ function carFilterData() {
         if (carState.categories.length && !carState.categories.includes(c.category)) return false;
         if (c.rating < carState.minRating) return false;
         return true;
-    }).sort((a,b)=>{
+    }).sort((a,b) => {
         switch(carState.sort){
-            case 'price_asc':  return a.rent_per_day-b.rent_per_day;
-            case 'price_desc': return b.rent_per_day-a.rent_per_day;
-            case 'rating':     return b.rating-a.rating;
-            case 'reviews':    return b.reviews-a.reviews;
-            default:           return b.rating*Math.log(b.reviews+1)-a.rating*Math.log(a.reviews+1);
+            case 'price_asc':  return a.rent_per_day - b.rent_per_day;
+            case 'price_desc': return b.rent_per_day - a.rent_per_day;
+            case 'rating':     return b.rating - a.rating;
+            case 'reviews':    return b.reviews - a.reviews;
+            default:           return b.rating*Math.log(b.reviews+1) - a.rating*Math.log(a.reviews+1);
         }
     });
 }
 
-/* ═══════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════ */
+/* ── HELPERS ── */
 function carRatingLabel(r){ return r>=4.8?'Exceptional':r>=4.5?'Excellent':r>=4.0?'Very Good':r>=3.5?'Good':'Average'; }
 function carTransBadge(t){ return t==='Automatic'?'A':'M'; }
 function carFuelIcon(f){ const m={Petrol:'fa-gas-pump',Gasoline:'fa-gas-pump',Diesel:'fa-oil-can',Electric:'fa-bolt',Hybrid:'fa-leaf'}; return m[f]||'fa-gas-pump'; }
 
-/* ═══════════════════════════════════════════════
-   RENDER
-═══════════════════════════════════════════════ */
+/* ── RENDER ── */
 function carRender() {
     const data  = carFilterData();
     const list  = document.getElementById('carResultsList');
@@ -1003,7 +650,7 @@ function carRender() {
     count.textContent = `Showing ${data.length} car${data.length!==1?'s':''}`;
     if (!data.length){ list.innerHTML=''; empty.style.display='block'; return; }
     empty.style.display='none';
-    list.innerHTML = data.map(c=>{
+    list.innerHTML = data.map(c => {
         const totalPrice = c.rent_per_day * c.rental_days;
         return `
         <div class="car-card">
@@ -1023,7 +670,7 @@ function carRender() {
                     <span class="car-spec-item"><i class="fas fa-user-friends"></i> ${c.seats} seats</span>
                     <span class="car-spec-item"><i class="fas fa-suitcase"></i> ${c.luggage_capacity} bags</span>
                     <span class="car-spec-item"><i class="fas fa-door-open"></i> ${c.doors} doors</span>
-                    <span class="car-spec-item car-spec-transmission">
+                    <span class="car-spec-item">
                         <span class="car-trans-badge">${carTransBadge(c.transmission)}</span>
                         ${c.transmission}
                     </span>
@@ -1051,20 +698,16 @@ function carRender() {
     }).join('');
 }
 
-/* ═══════════════════════════════════════════════
-   AUTH-GATED SELECT  ← KEY CHANGE
-═══════════════════════════════════════════════ */
+/* ── AUTH-GATED SELECT ── */
 function onCarSelect(id) {
-    requireAuth(function(){ carModalShow(id); }, 'Sign in to select a car');
+    window.requireAuth(function(){ carModalShow(id); }, 'Sign in to select a car');
 }
 
-/* ═══════════════════════════════════════════════
-   MODAL
-═══════════════════════════════════════════════ */
+/* ── MODAL ── */
 let _currentModalCar = null;
 
 function carModalShow(id) {
-    const c = CAR_DATA.find(x=>x.id===id);
+    const c = CAR_DATA.find(x => x.id===id);
     if (!c) return;
     _currentModalCar = c;
     document.getElementById('cmImg').src = c.car_image;
@@ -1086,42 +729,57 @@ function carModalShow(id) {
     document.getElementById('cmFooterTotal').textContent = 'Total PHP '+(c.rent_per_day*c.rental_days).toLocaleString()+' · '+c.rental_days+' days';
     carModalSwitchTab(1);
     document.getElementById('carModalOverlay').classList.add('open');
-    document.body.style.overflow='hidden';
+    document.body.style.overflow = 'hidden';
 }
 
 function carModalHide() {
     document.getElementById('carModalOverlay').classList.remove('open');
-    // Only restore scroll if auth modal is also closed
-    if (!document.getElementById('authModal').classList.contains('open'))
-        document.body.style.overflow='';
+    if (!document.getElementById('authModal') || !document.getElementById('authModal').classList.contains('open'))
+        document.body.style.overflow = '';
 }
 
 function carModalSwitchTab(n) {
-    document.getElementById('carModalTab1').classList.toggle('active',n===1);
-    document.getElementById('carModalTab2').classList.toggle('active',n===2);
-    document.getElementById('carModalPanel1').classList.toggle('active',n===1);
-    document.getElementById('carModalPanel2').classList.toggle('active',n===2);
-    document.querySelector('.carmodal-body').scrollTop=0;
+    document.getElementById('carModalTab1').classList.toggle('active', n===1);
+    document.getElementById('carModalTab2').classList.toggle('active', n===2);
+    document.getElementById('carModalPanel1').classList.toggle('active', n===1);
+    document.getElementById('carModalPanel2').classList.toggle('active', n===2);
+    document.querySelector('.carmodal-body').scrollTop = 0;
 }
 
+/* ── AUTH-GATED BOOK NOW ── */
 function goToCarBooking() {
     const c = _currentModalCar;
     if (!c) return;
-    requireAuth(function(){
+    window.requireAuth(function(){
         const params = new URLSearchParams({
-            id:c.id,name:c.car_name,brand:c.brand,category:c.category,
-            trans:c.transmission,fuel:c.fuel_type,seats:c.seats,doors:c.doors,
-            luggage:c.luggage_capacity,rating:c.rating,reviews:c.reviews,
-            price:c.rent_per_day,days:c.rental_days,image:c.car_image,
+            id:c.id, name:c.car_name, brand:c.brand, category:c.category,
+            trans:c.transmission, fuel:c.fuel_type, seats:c.seats, doors:c.doors,
+            luggage:c.luggage_capacity, rating:c.rating, reviews:c.reviews,
+            price:c.rent_per_day, days:c.rental_days, image:c.car_image,
         });
-        window.location.href=`car-booking.html?${params.toString()}`;
+        window.location.href = `car-booking.html?${params.toString()}`;
     }, 'Sign in to book this car');
 }
 
-document.getElementById('carModalOverlay').addEventListener('click', function(e){
-    if (e.target===this) carModalHide();
+/* ── DOM READY ── */
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('carModalOverlay').addEventListener('click', function(e){
+        if (e.target === this) carModalHide();
+    });
+    document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') carModalHide();
+    });
+    document.addEventListener('click', function(e){
+        if (!e.target.closest('.dropdown-menu') && !e.target.closest('.selector-pill') && !e.target.closest('.dropdown-pill'))
+            document.querySelectorAll('.dropdown-menu.open').forEach(function(m){ m.classList.remove('open'); });
+    });
+    if (window.flatpickr) {
+        document.querySelectorAll('.date-picker, input[type=date]').forEach(function(inp){
+            flatpickr(inp, {dateFormat:'Y-m-d',altInput:true,altFormat:'D, M j',showMonths:2,monthSelectorType:'static',disableMobile:true});
+        });
+    }
+    carRender();
 });
 </script>
-
 </body>
 </html>

@@ -6,9 +6,6 @@
  *   • openAuthModal(tab)  — open to 'signin' or 'register'
  *   • closeAuthModal()
  *   • requireAuth(callback) — gate any action behind sign-in
- *
- * Also gates "Check Availability", "Reserve Room", and any
- * element with [data-requires-auth] behind authentication.
  * ─────────────────────────────────────────────────────────────
  */
 
@@ -18,7 +15,6 @@
     // ── 1. INJECT MODAL HTML ──────────────────────────────────
     const MODAL_HTML = `
 <style>
-/* ── AUTH MODAL ── */
 .auth-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,.52);z-index:9000;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s ease,visibility .24s ease}
 .auth-modal.open{opacity:1;visibility:visible;pointer-events:auto}
 .auth-modal-shell{width:min(980px,100%);height:min(734px,calc(100vh - 40px));background:#fff;border-radius:12px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;transform:translateY(18px) scale(.98);opacity:.92;transition:transform .26s ease,opacity .26s ease}
@@ -73,13 +69,10 @@
 .auth-modal-hero{position:relative;background:center/cover no-repeat url('assets/attractions-and-tours-bg.jpg')}
 .auth-modal-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.26) 100%)}
 .auth-modal-hero-logo{position:absolute;right:26px;bottom:24px;width:160px;z-index:1}
-
-/* Auth gate nudge toast */
 .auth-gate-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(12px);background:#1a2140;color:#fff;padding:14px 24px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;z-index:9100;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.22);display:flex;align-items:center;gap:12px}
 .auth-gate-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .auth-gate-toast-btn{background:#282D9E;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
 .auth-gate-toast-btn:hover{background:#1f2480}
-
 @media(max-width:900px){
   .auth-modal-shell{grid-template-columns:1fr;overflow-y:auto}
   .auth-modal-hero{min-height:220px;order:-1}
@@ -87,16 +80,13 @@
 }
 </style>
 
-<!-- AUTH MODAL -->
 <div class="auth-modal" id="authModal" aria-hidden="true">
-  <div class="auth-modal-shell" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+  <div class="auth-modal-shell" role="dialog" aria-modal="true">
     <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close dialog"><i class="fas fa-times"></i></button>
     <section class="auth-modal-panel">
       <div class="auth-modal-inner">
         <img class="auth-modal-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
         <div class="auth-modal-divider" aria-hidden="true"></div>
-
-        <!-- Tabs -->
         <div class="auth-tabs" role="tablist">
           <button class="auth-tab-btn active" id="authTabSignin" role="tab" aria-selected="true"
                   onclick="authSwitchTab('signin')">Sign In</button>
@@ -144,7 +134,7 @@
           <div class="auth-success-box" id="regSuccess">
             <div class="auth-success-icon"><i class="fas fa-circle-check"></i></div>
             <div class="auth-success-title">Account Created!</div>
-            <div class="auth-success-sub">Welcome to Easy Navigate.<br>You can now sign in.</div>
+            <div class="auth-success-sub">Welcome to Easy Navigate.<br>Please sign in to continue.</div>
             <button type="button" class="auth-modal-btn auth-modal-btn-submit ready"
                     style="margin-top:8px;" onclick="authSwitchTab('signin')">Go to Sign In</button>
           </div>
@@ -186,13 +176,11 @@
   </div>
 </div>
 
-<!-- AUTH GATE TOAST -->
 <div class="auth-gate-toast" id="authGateToast">
   <span id="authGateToastMsg">Please sign in to continue</span>
   <button class="auth-gate-toast-btn" onclick="openAuthModal('signin')">Sign In</button>
 </div>`;
 
-    // Only inject if not already present
     if (!document.getElementById('authModal')) {
         document.body.insertAdjacentHTML('afterbegin', MODAL_HTML);
     }
@@ -207,12 +195,15 @@
         return base + 'api/' + path;
     }
 
+    // ── SINGLE SOURCE OF TRUTH for auth check ─────────────────
     function isSignedIn() {
         try {
-            const auth = localStorage.getItem('easyNavigateAuth');
-            return !!(auth && JSON.parse(auth));
+            const auth = JSON.parse(localStorage.getItem('easyNavigateAuth'));
+            return !!(auth && auth.isLoggedIn);
         } catch (_) { return false; }
     }
+
+    window.isSignedIn = isSignedIn;
 
     // ── 3. TOAST ──────────────────────────────────────────────
 
@@ -227,20 +218,16 @@
         toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
     };
 
+    // Also expose as showAuthToast so pages that use that name still work
+    window.showAuthToast = window.showAuthGateToast;
+
     // ── 4. AUTH GATE ──────────────────────────────────────────
 
-    /**
-     * requireAuth(callback, message)
-     * If signed in → runs callback immediately.
-     * If not → shows toast + opens sign-in modal.
-     * After successful sign-in, callback is queued automatically.
-     */
     window.requireAuth = function (callback, message) {
         if (isSignedIn()) {
             if (typeof callback === 'function') callback();
             return;
         }
-        // Store pending action
         window._authPendingAction = callback || null;
         window.showAuthGateToast(message || 'Please sign in to continue');
         setTimeout(() => window.openAuthModal('signin'), 300);
@@ -257,7 +244,8 @@
         m.classList.add('open');
         m.setAttribute('aria-hidden', 'false');
         authSwitchTab(tab || 'signin');
-        const si = document.getElementById('siStatus'), re = document.getElementById('regStatus');
+        const si = document.getElementById('siStatus');
+        const re = document.getElementById('regStatus');
         if (si) si.textContent = '';
         if (re) re.textContent = '';
     };
@@ -281,7 +269,7 @@
         if (!signinTab || !registerTab || !signinPanel || !registerPanel) return;
 
         if (tab === 'signin') {
-            signinTab.classList.add('active');    signinTab.setAttribute('aria-selected', 'true');
+            signinTab.classList.add('active');      signinTab.setAttribute('aria-selected', 'true');
             registerTab.classList.remove('active'); registerTab.setAttribute('aria-selected', 'false');
             signinPanel.classList.add('active');
             registerPanel.classList.remove('active');
@@ -291,7 +279,8 @@
             signinTab.classList.remove('active');  signinTab.setAttribute('aria-selected', 'false');
             registerPanel.classList.add('active');
             signinPanel.classList.remove('active');
-            const suc = document.getElementById('regSuccess'), frm = document.getElementById('regForm');
+            const suc = document.getElementById('regSuccess');
+            const frm = document.getElementById('regForm');
             if (suc) suc.classList.remove('show');
             if (frm) frm.style.display = 'flex';
             setTimeout(() => document.getElementById('regFirstName')?.focus(), 80);
@@ -310,18 +299,18 @@
     };
 
     window.authCheckPwStrength = function (pw) {
-        const wrap  = document.getElementById('regStrengthWrap');
-        const fill  = document.getElementById('regStrengthFill');
-        const lbl   = document.getElementById('regStrengthLabel');
+        const wrap = document.getElementById('regStrengthWrap');
+        const fill = document.getElementById('regStrengthFill');
+        const lbl  = document.getElementById('regStrengthLabel');
         if (!wrap || !fill || !lbl) return;
         if (!pw) { wrap.style.display = 'none'; authCheckRegReady(); return; }
         wrap.style.display = 'block';
         let score = 0;
-        if (pw.length >= 8)            score++;
-        if (pw.length >= 12)           score++;
-        if (/[A-Z]/.test(pw))          score++;
-        if (/[0-9]/.test(pw))          score++;
-        if (/[^A-Za-z0-9]/.test(pw))   score++;
+        if (pw.length >= 8)           score++;
+        if (pw.length >= 12)          score++;
+        if (/[A-Z]/.test(pw))         score++;
+        if (/[0-9]/.test(pw))         score++;
+        if (/[^A-Za-z0-9]/.test(pw))  score++;
         const levels = [
             { pct: '20%', bg: '#ef4444', txt: 'Very weak'   },
             { pct: '40%', bg: '#f97316', txt: 'Weak'        },
@@ -369,29 +358,44 @@
 
         try {
             const res  = await fetch(getApiUrl('signin.php'), {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password: pw }),
             });
             const data = await res.json();
+
             if (data.ok) {
-                const auth = { email: data.user.email, name: data.user.first_name + ' ' + data.user.last_name, id: data.user.id };
+                // ── isLoggedIn: true — required by isSignedIn() and auth-header.js ──
+                const auth = {
+                    isLoggedIn : true,
+                    id         : data.user.id,
+                    email      : data.user.email,
+                    name       : data.user.first_name + ' ' + data.user.last_name,
+                };
                 localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
+
                 if (status) { status.textContent = 'Signed in successfully!'; status.style.color = '#16a34a'; }
+
+                // Update header button immediately without waiting for reload
                 if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
+
                 setTimeout(() => {
                     window.closeAuthModal();
-                    // Run any pending gated action
+
+                    // If there was a pending action (e.g. open fare modal, book car),
+                    // run it instead of reloading so the user lands in the right place.
                     if (typeof window._authPendingAction === 'function') {
                         const fn = window._authPendingAction;
                         window._authPendingAction = null;
                         setTimeout(fn, 200);
+                    } else {
+                        // No pending action — reload so header + profile icon refresh
+                        location.reload();
                     }
                 }, 800);
+
             } else {
                 if (status) { status.textContent = data.message || 'Sign in failed.'; status.style.color = '#b62020'; }
-                if (res.status === 401 && !(data.message || '').toLowerCase().includes('incorrect')) {
-                    setTimeout(() => authSwitchTab('register'), 1400);
-                }
             }
         } catch (_) {
             if (status) { status.textContent = 'Could not connect to server. Please try again.'; status.style.color = '#b62020'; }
@@ -411,32 +415,41 @@
         const terms  = document.getElementById('regTerms')?.checked;
         const status = document.getElementById('regStatus');
         const btn    = document.getElementById('regSubmitBtn');
+
         if (!fname || !lname || !email || !pw || !cpw) return;
+
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            if (status) { status.textContent = 'Please enter a valid email address.'; status.style.color = '#b62020'; } return;
+            if (status) { status.textContent = 'Please enter a valid email address.'; status.style.color = '#b62020'; }
+            return;
         }
         if (pw.length < 8) {
-            if (status) { status.textContent = 'Password must be at least 8 characters.'; status.style.color = '#b62020'; } return;
+            if (status) { status.textContent = 'Password must be at least 8 characters.'; status.style.color = '#b62020'; }
+            return;
         }
         if (pw !== cpw) {
-            if (status) { status.textContent = 'Passwords do not match.'; status.style.color = '#b62020'; } return;
+            if (status) { status.textContent = 'Passwords do not match.'; status.style.color = '#b62020'; }
+            return;
         }
         if (!terms) {
-            if (status) { status.textContent = 'Please agree to the Terms & Privacy Policy.'; status.style.color = '#b62020'; } return;
+            if (status) { status.textContent = 'Please agree to the Terms & Privacy Policy.'; status.style.color = '#b62020'; }
+            return;
         }
+
         if (btn) { btn.disabled = true; btn.textContent = 'Creating account…'; }
         if (status) status.textContent = '';
+
         try {
             const res  = await fetch(getApiUrl('register.php'), {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ first_name: fname, last_name: lname, email, password: pw }),
             });
             const data = await res.json();
+
             if (data.ok) {
-                const auth = { email: data.user.email, name: data.user.first_name + ' ' + data.user.last_name, id: data.user.id };
-                localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
-                if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
-                const frm = document.getElementById('regForm'), suc = document.getElementById('regSuccess');
+                // Registration success — show success box, user must sign in manually
+                const frm = document.getElementById('regForm');
+                const suc = document.getElementById('regSuccess');
                 if (frm) frm.style.display = 'none';
                 if (suc) suc.classList.add('show');
             } else {
@@ -455,14 +468,23 @@
     // ── 10. SOCIAL / FORGOT ───────────────────────────────────
 
     window.authSocial = function (provider) {
-        const auth = { email: provider + '_user@easynav.com', name: 'Easy Navigate User', provider };
+        const auth = {
+            isLoggedIn : true,
+            email      : provider + '_user@easynav.com',
+            name       : 'Easy Navigate User',
+            provider,
+        };
         localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
         if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
         window.closeAuthModal();
+
         if (typeof window._authPendingAction === 'function') {
             const fn = window._authPendingAction;
             window._authPendingAction = null;
             setTimeout(fn, 200);
+        } else {
+            // Reload so header updates
+            setTimeout(() => location.reload(), 200);
         }
     };
 
@@ -476,7 +498,7 @@
         if (status) { status.textContent = 'Password reset link sent to ' + email; status.style.color = '#16a34a'; }
     };
 
-    // ── 11. WIRE CLOSE BUTTONS & BACKDROP ────────────────────
+    // ── 11. WIRE EVENTS ON DOM READY ─────────────────────────
 
     document.addEventListener('DOMContentLoaded', function () {
         const closeBtn = document.getElementById('authModalCloseBtn');
@@ -487,19 +509,19 @@
         if (modal)    modal.addEventListener('click', window.closeAuthModal);
         if (shell)    shell.addEventListener('click', e => e.stopPropagation());
 
-        // Wire the header "Sign In / Register" button
+        // Wire header Sign In / Register button only if not already handled by auth-header.js
         const openBtn = document.getElementById('openAuthModalBtn');
         if (openBtn && !openBtn.dataset.authWired) {
             openBtn.dataset.authWired = '1';
             openBtn.addEventListener('click', () => window.openAuthModal('signin'));
         }
 
-        // Wire real-time validation for register inputs
+        // Real-time register validation
         ['regFirstName', 'regLastName', 'regEmail', 'regConfirmPw'].forEach(id => {
             document.getElementById(id)?.addEventListener('input', authCheckRegReady);
         });
 
-        // Wire sign-in button enable/disable
+        // Sign-in button enable/disable
         ['siEmail', 'siPassword'].forEach(id => {
             document.getElementById(id)?.addEventListener('input', () => {
                 const btn     = document.getElementById('siSubmitBtn');
@@ -509,42 +531,39 @@
             });
         });
 
-        // Escape key closes modal
+        // Escape key
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') window.closeAuthModal();
         });
 
-        // ── 12. AUTH GATE: booking / reserve buttons ──────────
-        // Runs after a short delay so hotel-results.js has time to render cards
+        // Gate booking buttons — slight delay so dynamic cards have rendered
         setTimeout(gateBookingButtons, 800);
 
-        // Also observe for dynamically added cards (hotel results loaded async)
+        // Watch for dynamically added cards
         const observer = new MutationObserver(() => gateBookingButtons());
         const container = document.getElementById('hotelResultsList') || document.body;
         observer.observe(container, { childList: true, subtree: true });
     });
 
-    // ── 13. GATE BOOKING BUTTONS ──────────────────────────────
+    // ── 12. GATE BOOKING BUTTONS ──────────────────────────────
 
     function gateBookingButtons() {
-        // Selectors for all booking-action buttons across all service pages
         const selectors = [
-            '[data-requires-auth]',          // generic attribute-based gate
-            '.check-availability-btn',        // hotel results
-            '.reserve-room-btn',              // hotel modal
-            '.book-now-btn',                  // generic
-            '.confirm-booking-btn',           // checkout
-            '.proceed-checkout-btn',          // checkout
+            '[data-requires-auth]',
+            '.check-availability-btn',
+            '.reserve-room-btn',
+            '.book-now-btn',
+            '.confirm-booking-btn',
+            '.proceed-checkout-btn',
         ];
 
         selectors.forEach(sel => {
             document.querySelectorAll(sel).forEach(btn => {
-                if (btn.dataset.authGated) return; // already processed
+                if (btn.dataset.authGated) return;
                 btn.dataset.authGated = '1';
 
-                // Wrap original onclick/handler
                 const originalOnclick = btn.onclick;
-                btn.onclick = null; // detach inline handler
+                btn.onclick = null;
 
                 btn.addEventListener('click', function (e) {
                     if (!isSignedIn()) {
@@ -552,22 +571,18 @@
                         e.stopImmediatePropagation();
                         window.requireAuth(
                             function () {
-                                // Re-fire the original action after sign-in
                                 if (typeof originalOnclick === 'function') originalOnclick.call(btn, e);
-                                else btn.dispatchEvent(new MouseEvent('click-auth', { bubbles: true }));
                             },
                             'Sign in to book this property'
                         );
                         return false;
                     }
-                    // Already signed in — let original handler run
                     if (typeof originalOnclick === 'function') originalOnclick.call(btn, e);
-                }, true); // capture phase so we intercept before other handlers
+                }, true);
             });
         });
     }
 
-    // Expose so hotel-results.js can call after it renders cards
     window.gateBookingButtons = gateBookingButtons;
 
 })();

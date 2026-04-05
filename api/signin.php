@@ -1,25 +1,11 @@
 <?php
-/**
- * signin.php
- * Authenticates an existing user.
- *
- * Method : POST
- * Body   : JSON  { "email", "password" }
- *
- * Returns:
- *   200  { ok: true,  message: "...", user: { id, first_name, last_name, email } }
- *   400  { ok: false, message: "..." }   — missing fields
- *   401  { ok: false, message: "..." }   — wrong credentials
- *   500  { ok: false, message: "..." }   — server error
- *
- * Place in: api/signin.php
- */
+// api/signin.php
+
+declare(strict_types=1);
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-
-// ── CORS & headers ────────────────────────────────────────
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -36,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// ── Parse body ────────────────────────────────────────────
 $raw  = file_get_contents('php://input');
 $data = json_decode($raw, true);
 
@@ -47,7 +32,7 @@ if (!is_array($data)) {
 }
 
 $email    = trim($data['email']    ?? '');
-$password = $data['password']      ?? '';
+$password =      $data['password'] ?? '';
 
 if ($email === '' || $password === '') {
     http_response_code(400);
@@ -61,7 +46,6 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// ── Connect & query ───────────────────────────────────────
 require_once __DIR__ . '/db_connect.php';
 
 try {
@@ -76,30 +60,25 @@ try {
     $stmt->execute([':email' => $email]);
     $user = $stmt->fetch();
 
-    // Use a constant-time comparison regardless of whether user exists
-    // to prevent email enumeration via timing attacks.
-    $hashToCheck = $user ? $user['password_hash'] : '$2y$12$invalidhashfortimingprotection000000000000000000000';
-    $passwordOk  = password_verify($password, $hashToCheck);
+    // Timing-safe: always run password_verify even if user not found
+    $hashToCheck = $user
+        ? $user['password_hash']
+        : '$2y$12$invalidhashfortimingprotection000000000000000000000';
+
+    $passwordOk = password_verify($password, $hashToCheck);
 
     if (!$user || !$passwordOk) {
         http_response_code(401);
-        echo json_encode([
-            'ok'      => false,
-            'message' => 'Incorrect email or password.',
-        ]);
+        echo json_encode(['ok' => false, 'message' => 'Incorrect email or password.']);
         exit;
     }
 
     if (!(int)$user['is_active']) {
         http_response_code(401);
-        echo json_encode([
-            'ok'      => false,
-            'message' => 'This account has been deactivated. Please contact support.',
-        ]);
+        echo json_encode(['ok' => false, 'message' => 'This account has been deactivated. Please contact support.']);
         exit;
     }
 
-    // ── Success ───────────────────────────────────────────
     http_response_code(200);
     echo json_encode([
         'ok'      => true,
@@ -115,8 +94,5 @@ try {
 } catch (PDOException $e) {
     error_log('signin.php PDOException: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode([
-        'ok'      => false,
-        'message' => 'A server error occurred. Please try again later.',
-    ]);
+    echo json_encode(['ok' => false, 'message' => 'A server error occurred. Please try again later.']);
 }

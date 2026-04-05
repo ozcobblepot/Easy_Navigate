@@ -1025,7 +1025,9 @@ function setErr(fieldId, errId, hasError){
 function submitBooking(){
   var fn    = $('firstName')   ? $('firstName').value.trim()   : '';
   var ln    = $('lastName')    ? $('lastName').value.trim()    : '';
-  var email = $('guestEmail')  ? $('guestEmail').value.trim()  : '';
+  var authEmail = '';
+try { var _a = JSON.parse(localStorage.getItem('easyNavigateAuth')); authEmail = (_a && _a.email) ? _a.email : ''; } catch(e){}
+var email = authEmail || ($('guestEmail') ? $('guestEmail').value.trim() : '');
   var phone = $('guestPhone')  ? $('guestPhone').value.trim()  : '';
   var ci    = $('checkinDate') ? $('checkinDate').value         : '';
   var co    = $('checkoutDate')? $('checkoutDate').value        : '';

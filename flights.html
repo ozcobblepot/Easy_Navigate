@@ -12,10 +12,12 @@
 
     <style>
         /* ══════════════════════════════════════════════════════════════
+           AUTH MODAL
+           ══════════════════════════════════════════════════════════════ *
+
+        /* ══════════════════════════════════════════════════════════════
            FLIGHT FARE SELECTION MODAL
            ══════════════════════════════════════════════════════════════ */
-
-        /* Overlay */
         .fl-fare-modal-overlay {
             display: none;
             position: fixed;
@@ -36,8 +38,6 @@
             from { opacity: 0; }
             to   { opacity: 1; }
         }
-
-        /* Modal box */
         .fl-fare-modal {
             background: #fff;
             border-radius: 18px;
@@ -54,8 +54,6 @@
             from { opacity: 0; transform: translateY(20px) scale(0.97); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        /* Close button */
         .fl-fare-modal-close {
             position: absolute;
             top: 14px;
@@ -76,8 +74,6 @@
             line-height: 1;
         }
         .fl-fare-modal-close:hover { background: #fff; color: var(--text); }
-
-        /* ── MODAL HEADER ── */
         .fl-fare-modal-header {
             padding: 22px 26px 16px;
             border-bottom: 1px solid var(--gray-100);
@@ -92,216 +88,68 @@
             gap: 10px;
         }
         .fl-fare-modal-route i { font-size: 14px; color: var(--blue); }
-
-        /* Flight legs */
-        .fl-fare-legs {
-            display: flex;
-            gap: 0;
-            flex-wrap: wrap;
-        }
-        .fl-fare-leg {
-            flex: 1;
-            min-width: 260px;
-            padding-right: 24px;
-        }
-        .fl-fare-leg + .fl-fare-leg {
-            padding-left: 24px;
-            padding-right: 0;
-            border-left: 1px solid var(--gray-200);
-        }
-        .fl-fare-leg-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-        }
+        .fl-fare-legs { display: flex; gap: 0; flex-wrap: wrap; }
+        .fl-fare-leg { flex: 1; min-width: 260px; padding-right: 24px; }
+        .fl-fare-leg + .fl-fare-leg { padding-left: 24px; padding-right: 0; border-left: 1px solid var(--gray-200); }
+        .fl-fare-leg-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; }
         .fl-fare-leg-badge.depart       { background: var(--blue); color: #fff; }
         .fl-fare-leg-badge.return-badge { background: #e0f2fe; color: #0369a1; }
         .fl-fare-leg-date     { font-size: 13px; color: var(--gray-500); font-weight: 500; margin-left: 4px; }
         .fl-fare-leg-duration { font-size: 12px; color: var(--gray-400); font-weight: 500; margin-left: 8px; }
-        .fl-fare-leg-flight {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-top: 6px;
-        }
-        .fl-fare-leg-logo {
-            width: 30px; height: 30px;
-            border-radius: 8px;
-            background: var(--gray-100);
-            border: 1px solid var(--gray-200);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; flex-shrink: 0;
-        }
+        .fl-fare-leg-flight   { display: flex; align-items: flex-start; gap: 12px; margin-top: 6px; }
+        .fl-fare-leg-logo { width: 30px; height: 30px; border-radius: 8px; background: var(--gray-100); border: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
         .fl-fare-leg-logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
         .fl-fare-leg-logo-abbr { font-size: 11px; font-weight: 800; color: var(--blue); }
         .fl-fare-leg-times { display: flex; flex-direction: column; gap: 2px; }
         .fl-fare-leg-time-row { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1; }
         .fl-fare-leg-airports { font-size: 12px; color: var(--gray-600); font-weight: 500; }
         .fl-fare-leg-info     { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
-
-        /* ── FARE TIERS GRID ── */
         .fl-fare-body { padding: 20px 26px; }
-        .fl-fare-tiers {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-        .fl-fare-card {
-            border: 2px solid var(--gray-200);
-            border-radius: 14px;
-            padding: 16px 16px 14px;
-            cursor: pointer;
-            position: relative;
-            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
-            background: #fff;
-        }
-        .fl-fare-card:hover {
-            border-color: var(--blue);
-            box-shadow: 0 4px 18px rgba(40, 45, 158, 0.12);
-            transform: translateY(-2px);
-        }
-        .fl-fare-card.selected {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(40, 45, 158, 0.13);
-        }
+        .fl-fare-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+        .fl-fare-card { border: 2px solid var(--gray-200); border-radius: 14px; padding: 16px 16px 14px; cursor: pointer; position: relative; transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s; background: #fff; }
+        .fl-fare-card:hover { border-color: var(--blue); box-shadow: 0 4px 18px rgba(40, 45, 158, 0.12); transform: translateY(-2px); }
+        .fl-fare-card.selected { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(40, 45, 158, 0.13); }
         .fl-fare-card.recommended { border-color: var(--blue); }
-
-        /* Recommended ribbon */
-        .fl-fare-recommended-badge {
-            position: absolute;
-            top: -1px; left: 14px;
-            background: #0f766e;
-            color: #fff;
-            font-size: 10px; font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 0 0 8px 8px;
-            letter-spacing: 0.3px;
-        }
-
-        /* Card header & radio */
-        .fl-fare-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            margin-top: 8px;
-        }
+        .fl-fare-recommended-badge { position: absolute; top: -1px; left: 14px; background: #0f766e; color: #fff; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 0 0 8px 8px; letter-spacing: 0.3px; }
+        .fl-fare-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; margin-top: 8px; }
         .fl-fare-card-title-group { display: flex; flex-direction: column; gap: 3px; }
         .fl-fare-card-name     { font-size: 15px; font-weight: 800; color: var(--text); }
         .fl-fare-card-subtitle { font-size: 11px; color: var(--gray-400); font-weight: 500; }
-        .fl-fare-radio {
-            width: 20px; height: 20px;
-            border: 2px solid var(--gray-300);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            transition: border-color 0.15s;
-        }
+        .fl-fare-radio { width: 20px; height: 20px; border: 2px solid var(--gray-300); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.15s; }
         .fl-fare-radio.checked { border-color: var(--blue); background: var(--blue); }
-        .fl-fare-radio.checked::after {
-            content: '';
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #fff;
-        }
-
-        /* Feature rows */
-        .fl-fare-section-title {
-            font-size: 11.5px; font-weight: 700;
-            color: var(--text); margin: 12px 0 6px;
-        }
-        .fl-fare-feature {
-            display: flex; align-items: flex-start; gap: 8px;
-            font-size: 12px; color: var(--gray-700);
-            font-weight: 500; margin-bottom: 5px; line-height: 1.4;
-        }
+        .fl-fare-radio.checked::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+        .fl-fare-section-title { font-size: 11.5px; font-weight: 700; color: var(--text); margin: 12px 0 6px; }
+        .fl-fare-feature { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--gray-700); font-weight: 500; margin-bottom: 5px; line-height: 1.4; }
         .fl-fare-feature i { font-size: 12px; flex-shrink: 0; margin-top: 1px; }
         .fl-fare-feature.ok  i { color: #16a34a; }
         .fl-fare-feature.no  i { color: #dc2626; }
         .fl-fare-feature.bag i { color: var(--blue); }
-
-        /* Price inside card */
-        .fl-fare-card-price-row {
-            margin-top: 14px; padding-top: 12px;
-            border-top: 1px solid var(--gray-100);
-        }
-        .fl-fare-card-price {
-            font-size: 20px; font-weight: 800;
-            color: var(--blue); letter-spacing: -0.5px; line-height: 1;
-        }
-        .fl-fare-card-original {
-            font-size: 12px; color: var(--gray-400);
-            text-decoration: line-through; margin-left: 6px;
-        }
+        .fl-fare-card-price-row { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--gray-100); }
+        .fl-fare-card-price { font-size: 20px; font-weight: 800; color: var(--blue); letter-spacing: -0.5px; line-height: 1; }
+        .fl-fare-card-original { font-size: 12px; color: var(--gray-400); text-decoration: line-through; margin-left: 6px; }
         .fl-fare-card-trip-label { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
-
-        /* Payment method row */
-        .fl-fare-payment-row {
-            display: flex; align-items: center; justify-content: space-between;
-            border: 1px solid var(--gray-200); border-radius: 8px;
-            padding: 8px 12px; margin-top: 10px;
-            font-size: 12.5px; color: var(--gray-700);
-            font-weight: 600; cursor: pointer; gap: 6px;
-        }
+        .fl-fare-payment-row { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--gray-200); border-radius: 8px; padding: 8px 12px; margin-top: 10px; font-size: 12.5px; color: var(--gray-700); font-weight: 600; cursor: pointer; gap: 6px; }
         .fl-fare-payment-row i           { color: var(--blue); font-size: 13px; }
         .fl-fare-payment-row .fa-chevron-down { color: var(--gray-400); font-size: 10px; }
-
-        /* ── Hotel cross-sell banner ── */
-        .fl-fare-crosssell {
-            display: flex; align-items: center; gap: 10px;
-            background: #fffbeb; border: 1px solid #fcd34d;
-            border-radius: 10px; padding: 10px 16px;
-            font-size: 12.5px; color: #78350f; font-weight: 600;
-            margin-bottom: 4px;
-        }
+        .fl-fare-crosssell { display: flex; align-items: center; gap: 10px; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 10px; padding: 10px 16px; font-size: 12.5px; color: #78350f; font-weight: 600; margin-bottom: 4px; }
         .fl-fare-crosssell span.highlight { color: #b45309; font-weight: 800; }
         .fl-fare-crosssell i { font-size: 22px; flex-shrink: 0; }
-
-        /* ── MODAL FOOTER ── */
-        .fl-fare-modal-footer {
-            display: flex; align-items: center;
-            justify-content: flex-end; gap: 16px;
-            padding: 14px 26px 18px;
-            border-top: 1px solid var(--gray-200);
-            background: var(--gray-50);
-            flex-wrap: wrap;
-        }
+        .fl-fare-modal-footer { display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding: 14px 26px 18px; border-top: 1px solid var(--gray-200); background: var(--gray-50); flex-wrap: wrap; }
         .fl-fare-footer-price-block { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-        .fl-fare-footer-original    { font-size: 13px; color: var(--gray-400); text-decoration: line-through; }
-        .fl-fare-footer-price       { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; line-height: 1; }
-        .fl-fare-footer-trip        { font-size: 11px; color: var(--gray-500); }
-        .fl-fare-continue-btn {
-            background: var(--blue); color: #fff; border: none;
-            border-radius: 10px; padding: 13px 36px;
-            font-size: 15px; font-weight: 700;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.15s;
-            box-shadow: 0 4px 14px rgba(40, 45, 158, 0.28);
-            white-space: nowrap;
-        }
+        .fl-fare-footer-original { font-size: 13px; color: var(--gray-400); text-decoration: line-through; }
+        .fl-fare-footer-price    { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; line-height: 1; }
+        .fl-fare-footer-trip     { font-size: 11px; color: var(--gray-500); }
+        .fl-fare-continue-btn { background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 13px 36px; font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.15s, transform 0.15s; box-shadow: 0 4px 14px rgba(40, 45, 158, 0.28); white-space: nowrap; }
         .fl-fare-continue-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
 
-        /* Responsive */
         @media (max-width: 720px) {
             .fl-fare-tiers { grid-template-columns: 1fr; }
             .fl-fare-legs  { flex-direction: column; }
-            .fl-fare-leg + .fl-fare-leg {
-                border-left: none; border-top: 1px solid var(--gray-200);
-                padding-left: 0; padding-top: 14px; margin-top: 14px;
-            }
+            .fl-fare-leg + .fl-fare-leg { border-left: none; border-top: 1px solid var(--gray-200); padding-left: 0; padding-top: 14px; margin-top: 14px; }
             .fl-fare-modal-footer { justify-content: space-between; }
         }
         @media (max-width: 500px) {
-            .fl-fare-modal-header,
-            .fl-fare-body,
-            .fl-fare-modal-footer { padding-left: 16px; padding-right: 16px; }
+            .fl-fare-modal-header, .fl-fare-body, .fl-fare-modal-footer { padding-left: 16px; padding-right: 16px; }
         }
     </style>
 </head>
@@ -309,6 +157,7 @@
 <script src="service-search-suggestions.js"></script>
 
 <body class="service-page service-flights">
+
 
     <!-- ══ HEADER ══ -->
     <header class="header">
@@ -331,42 +180,28 @@
                         <div class="dropdown-menu" id="findBookingsMenu">
                             <div class="dropdown-item" onclick="selectFindBooking('hotel')">
                                 <i class="fas fa-bed fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Hotel &amp; Homes</span>
-                                    <span class="fb-desc">Book hotels, rooms, and homes for your stay.</span>
-                                </div>
+                                <div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div>
                             </div>
                             <div class="dropdown-item" onclick="selectFindBooking('car')">
                                 <i class="fas fa-car fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Car Rental</span>
-                                    <span class="fb-desc">Find and reserve cars for flexible local travel.</span>
-                                </div>
+                                <div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div>
                             </div>
                             <div class="dropdown-item" onclick="selectFindBooking('flights')">
                                 <i class="fas fa-plane fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Flights</span>
-                                    <span class="fb-desc">Search flights and manage your air bookings fast.</span>
-                                </div>
+                                <div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div>
                             </div>
                             <div class="dropdown-item" onclick="selectFindBooking('attractions')">
                                 <i class="fas fa-ticket-alt fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Attraction &amp; Tours</span>
-                                    <span class="fb-desc">Discover tickets, tours, and activities in one place.</span>
-                                </div>
+                                <div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div>
                             </div>
                             <div class="dropdown-item" onclick="selectFindBooking('taxi')">
                                 <i class="fas fa-taxi fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Airport Taxis</span>
-                                    <span class="fb-desc">Pre-book airport transfers and private taxi rides.</span>
-                                </div>
+                                <div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div>
                             </div>
                         </div>
                     </div>
-                   <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+                    <!-- No inline onclick — wired via updateHeaderBtn() in DOMContentLoaded -->
+                    <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
                 </div>
             </div>
         </div>
@@ -563,26 +398,10 @@
         <div class="benefits-container">
             <h2>Why book flights with Easy Navigate?</h2>
             <div class="cards">
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-route"></i></div>
-                    <h3>Global airline choices</h3>
-                    <p>Compare routes across major and low-cost carriers</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-tags"></i></div>
-                    <h3>Smart fare deals</h3>
-                    <p>Find value fares and seasonal offers</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-ticket"></i></div>
-                    <h3>Simple booking flow</h3>
-                    <p>Fast checkout with clear fare breakdown</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-bell"></i></div>
-                    <h3>Real-time flight updates</h3>
-                    <p>Get alerts for delays, gate changes, and schedules</p>
-                </div>
+                <div class="card"><div class="card-icon"><i class="fas fa-route"></i></div><h3>Global airline choices</h3><p>Compare routes across major and low-cost carriers</p></div>
+                <div class="card"><div class="card-icon"><i class="fas fa-tags"></i></div><h3>Smart fare deals</h3><p>Find value fares and seasonal offers</p></div>
+                <div class="card"><div class="card-icon"><i class="fas fa-ticket"></i></div><h3>Simple booking flow</h3><p>Fast checkout with clear fare breakdown</p></div>
+                <div class="card"><div class="card-icon"><i class="fas fa-bell"></i></div><h3>Real-time flight updates</h3><p>Get alerts for delays, gate changes, and schedules</p></div>
             </div>
         </div>
     </section>
@@ -610,39 +429,11 @@
         <div class="footer-inner">
             <div class="footer-content">
                 <div class="footer-columns">
-                    <div class="footer-column">
-                        <h4>Contact Us</h4>
-                        <ul>
-                            <li><a href="#">Customer Support</a></li>
-                            <li><a href="#">Service Guarantee</a></li>
-                            <li><a href="#">More Service Info</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>About</h4>
-                        <ul>
-                            <li><a href="#">About Easy Navigate</a></li>
-                            <li><a href="#">News</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Terms &amp; Condition</a></li>
-                            <li><a href="#">Privacy Statement</a></li>
-                            <li><a href="#">Accessibility Statement</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Other Services</h4>
-                        <ul>
-                            <li><a href="#">Investor Relations</a></li>
-                            <li><a href="#">Affiliate Program</a></li>
-                            <li><a href="#">List Your Property</a></li>
-                            <li><a href="#">Become Supplier</a></li>
-                            <li><a href="#">Security</a></li>
-                        </ul>
-                    </div>
+                    <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
+                    <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li><li><a href="#">Accessibility Statement</a></li></ul></div>
+                    <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li><li><a href="#">Security</a></li></ul></div>
                 </div>
-                <div class="footer-logo">
-                    <img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
-                </div>
+                <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
             </div>
             <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved. Site Operator: Easy Navigate Travel</p>
         </div>
@@ -651,13 +442,9 @@
     <!-- ══ FLIGHT FARE MODAL ══ -->
     <div class="fl-fare-modal-overlay" id="flFareModalOverlay" onclick="closeFareModal(event)">
         <div class="fl-fare-modal" id="flFareModal">
-
-            <!-- Close -->
             <button class="fl-fare-modal-close" onclick="closeFareModalBtn()" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
-
-            <!-- Header: route + flight legs -->
             <div class="fl-fare-modal-header">
                 <div class="fl-fare-modal-route">
                     <span id="flFareOriginName"></span>
@@ -666,39 +453,160 @@
                 </div>
                 <div class="fl-fare-legs" id="flFareLegs"></div>
             </div>
-
-            <!-- Fare tier cards -->
             <div class="fl-fare-body">
                 <div class="fl-fare-tiers" id="flFareTiers"></div>
-
-                <!-- Hotel cross-sell -->
                 <div class="fl-fare-crosssell">
                     <i class="fas fa-hotel"></i>
                     <span>Get up to <span class="highlight">25% off</span> stays by booking a flight, plus free cancellation for your stay if your flight is rescheduled &nbsp;<i class="fas fa-circle-info" style="font-size:12px;color:#b45309;"></i></span>
                 </div>
             </div>
-
-            <!-- Footer -->
             <div class="fl-fare-modal-footer">
                 <div class="fl-fare-footer-price-block">
                     <span class="fl-fare-footer-original" id="flFareFooterOriginal"></span>
                     <div style="display:flex;align-items:baseline;gap:8px;">
                         <span class="fl-fare-footer-price" id="flFareFooterPrice"></span>
-                        <span class="fl-fare-footer-trip" id="flFareFooterTrip"></span>
+                        <span class="fl-fare-footer-trip"  id="flFareFooterTrip"></span>
                     </div>
                 </div>
                 <button class="fl-fare-continue-btn" onclick="fareModalContinue()">Continue</button>
             </div>
-
         </div>
     </div>
 
     <!-- ══ SCRIPTS ══ -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="auth-header.js"></script>
-    <script src="db-search-tracker.js"></script>
-    <script src="service-panels.js"></script>
-    <script src="service-ads-carousel.js"></script>
+<script src="auth-header.js"></script>
+<script src="auth-modal.js"></script>
+<script src="db-search-tracker.js"></script>
+<script src="service-panels.js"></script>
+<script src="service-ads-carousel.js"></script>
+<script>
+    /* your inline page script with openFareModal, requireAuth wiring, etc. */
+</script>
+<script src="flight-results.js"></script>  <!-- ← MUST be LAST -->════════════════════════════════
+       AUTH CORE
+    ═══════════════════════════════════════════════ */
+   
+
+    var _toastTimer;
+    function showAuthToast(msg) {
+        var t=document.getElementById('authToast'), m=document.getElementById('authToastMsg');
+        if (m) m.textContent = msg || 'Please sign in to continue';
+        t.classList.add('show');
+        clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 4000);
+    }
+
+    /* ─────────────────────────────────────────────
+       requireAuth — no setTimeout, opens immediately
+    ───────────────────────────────────────────── */
+    function requireAuth(callback, msg) {
+        if (isSignedIn()) {
+            if (typeof callback === 'function') callback();
+            return;
+        }
+        window._pendingAuthAction = callback || null;
+        showAuthToast(msg || 'Please sign in to continue');
+        openAuthModal('signin');
+    }
+    window.requireAuth   = requireAuth;
+    window.openAuthModal = openAuthModal;
+    window.isSignedIn    = isSignedIn;
+
+    /* ═══════════════════════════════════════════════
+       DOM READY
+    ═══════════════════════════════════════════════ */
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('authModalCloseBtn').addEventListener('click', closeAuthModal);
+        document.getElementById('authModal').addEventListener('click', function(e){ if(e.target===this) closeAuthModal(); });
+        document.querySelector('.auth-modal-shell').addEventListener('click', function(e){ e.stopPropagation(); });
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeAuthModal(); });
+
+        ['regFirstName','regLastName','regEmail','regConfirmPw'].forEach(function(id){
+            document.getElementById(id).addEventListener('input', authCheckRegReady);
+        });
+        ['siEmail','siPassword'].forEach(function(id){
+            document.getElementById(id).addEventListener('input', function(){
+                var ok = document.getElementById('siEmail').value.trim() && document.getElementById('siPassword').value;
+                document.getElementById('siSubmitBtn').classList.toggle('ready', !!ok);
+            });
+        });
+
+        // Always wire the header button — passes null for first-time visitors
+        try {
+    var saved = JSON.parse(localStorage.getItem('easyNavigateAuth'));
+    updateHeaderBtn((saved && saved.isLoggedIn) ? saved : null);
+} catch(_) {
+    updateHeaderBtn(null);
+}
+
+        document.addEventListener('click', function(e){
+            if (!e.target.closest('.dropdown-menu') && !e.target.closest('.selector-pill') && !e.target.closest('.dropdown-pill'))
+                document.querySelectorAll('.dropdown-menu.open').forEach(function(m){ m.classList.remove('open'); });
+        });
+
+        if (window.flatpickr) {
+            document.querySelectorAll('.date-picker, input[type=date]').forEach(function(inp){
+                flatpickr(inp, {dateFormat:'Y-m-d', altInput:true, altFormat:'D, M j', showMonths:2, monthSelectorType:'static', disableMobile:true});
+            });
+        }
+    });
+
+    /* ═══════════════════════════════════════════════
+       MISC UI
+    ═══════════════════════════════════════════════ */
+    function toggleDropdown(id, event) {
+        if (event) event.stopPropagation();
+        var menu = document.getElementById(id), was = menu.classList.contains('open');
+        document.querySelectorAll('.dropdown-menu.open').forEach(function(m){ m.classList.remove('open'); });
+        if (!was) menu.classList.add('open');
+    }
+    function selectFindBooking(tab) {
+        document.getElementById('findBookingsMenu').classList.remove('open');
+        var pages={hotel:'hotel & homes.html',car:'car-rental.html',flights:'flights.html',attractions:'attractions.html',taxi:'airport-taxis.html'};
+        if (pages[tab]) window.location.href = pages[tab];
+    }
+    function swapFlight() {
+        var from = document.getElementById('fl-from'), to = document.getElementById('fl-to');
+        var tmp = from.value; from.value = to.value; to.value = tmp;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FARE MODAL HELPERS — called by flight-results.js
+       KEY FIX: openFareModal() now requires auth first
+       before showing the fare selection modal.
+    ═══════════════════════════════════════════════ */
+    function closeFareModal(event) {
+        if (event && event.target !== document.getElementById('flFareModalOverlay')) return;
+        document.getElementById('flFareModalOverlay').classList.remove('open');
+    }
+    function closeFareModalBtn() {
+        document.getElementById('flFareModalOverlay').classList.remove('open');
+    }
+
+    /* ─────────────────────────────────────────────
+       openFareModal — NEW function flight-results.js
+       should call instead of directly opening the
+       overlay. Gates with requireAuth first.
+    ───────────────────────────────────────────── */
+    function openFareModal() {
+        requireAuth(function() {
+            document.getElementById('flFareModalOverlay').classList.add('open');
+        }, 'Sign in to view fare options');
+    }
+    window.openFareModal = openFareModal;
+
+    function fareModalContinue() {
+        requireAuth(function(){
+            if (typeof window.onFareModalContinue === 'function') window.onFareModalContinue();
+        }, 'Sign in to book this flight');
+    }
+    window.closeFareModal    = closeFareModal;
+    window.closeFareModalBtn = closeFareModalBtn;
+    window.fareModalContinue = fareModalContinue;
+    </script>
+
+    <!-- flight-results.js loaded last so openAuthModal / requireAuth are already defined -->
     <script src="flight-results.js"></script>
 
 </body>

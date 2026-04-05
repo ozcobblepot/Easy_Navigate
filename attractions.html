@@ -12,9 +12,81 @@
 
     <style>
     /* ══════════════════════════════════════════════════════════
+       AUTH MODAL
+       ══════════════════════════════════════════════════════════ */
+    .auth-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,.55);z-index:9000;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s,visibility .24s}
+    .auth-modal.open{opacity:1;visibility:visible;pointer-events:auto}
+    .auth-modal-shell{width:min(980px,100%);height:min(734px,calc(100vh - 40px));background:#fff;border-radius:12px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;transform:translateY(18px) scale(.98);transition:transform .26s,opacity .26s;opacity:.9}
+    .auth-modal.open .auth-modal-shell{transform:translateY(0) scale(1);opacity:1}
+    .auth-modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid #d5dae2;border-radius:50%;background:#fff;color:#364152;cursor:pointer;font-size:16px;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .15s}
+    .auth-modal-close:hover{background:#f5f6fa}
+    .auth-modal-panel{display:flex;justify-content:center;align-items:stretch;background:#fff}
+    .auth-modal-inner{width:min(380px,100%);padding:36px 0 28px;display:flex;flex-direction:column;overflow-y:auto;box-sizing:border-box}
+    .auth-modal-inner::-webkit-scrollbar{width:0}
+    .auth-modal-logo{width:160px;height:auto;margin:0 auto 20px;display:block}
+    .auth-modal-divider{height:1px;background:#e0e2ea;margin-bottom:16px}
+    .auth-tabs{display:flex;border-bottom:2px solid #e8eaf0;margin-bottom:18px}
+    .auth-tab-btn{flex:1;padding:10px 0;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#8892aa;background:none;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;cursor:pointer;transition:color .18s,border-color .18s}
+    .auth-tab-btn.active{color:#282D9E;border-bottom-color:#282D9E}
+    .auth-tab-btn:hover:not(.active){color:#1a2140}
+    .auth-form-panel{display:none;flex-direction:column;gap:0}
+    .auth-form-panel.active{display:flex}
+    .auth-field-group{display:flex;flex-direction:column;gap:10px}
+    .auth-modal-input{width:100%;border-radius:4px;border:1px solid #d5dae2;min-height:45px;font-family:'Inter',sans-serif;font-size:15px;padding:0 16px;color:#273142;outline:none;background:#fff;box-sizing:border-box;transition:border-color .15s}
+    .auth-modal-input:focus{border-color:#282D9E}
+    .auth-modal-input::placeholder{color:#a5acb7}
+    .auth-modal-btn{width:100%;border-radius:4px;border:1px solid #d5dae2;min-height:45px;font-family:'Inter',sans-serif;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s;box-sizing:border-box}
+    .auth-modal-or-row{margin:18px 0 14px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+    .auth-modal-or-line{height:1px;background:#d7dce5}
+    .auth-modal-or-text{color:#a5acb7;font-weight:600;font-size:18px;line-height:1}
+    .auth-modal-social{display:grid;gap:10px}
+    .auth-modal-btn-google{background:#4b82e0;border-color:#4b82e0;color:#fff}
+    .auth-modal-btn-google:hover{background:#3a6ec0}
+    .auth-modal-btn-social{background:#fff;color:#252b36}
+    .auth-modal-btn-social:hover{background:#f5f6fa}
+    .auth-modal-icon{width:22px;display:inline-flex;justify-content:center;align-items:center;font-size:22px}
+    .auth-fb-icon{color:#1e78df}
+    .auth-modal-terms{margin:16px 0 0;color:#515864;font-size:12px;line-height:1.4}
+    .auth-modal-status{min-height:18px;margin-top:8px;font-size:13px;color:#1f3f87}
+    .auth-pw-wrap{position:relative}
+    .auth-pw-wrap .auth-modal-input{padding-right:44px}
+    .auth-pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#8892aa;font-size:14px;padding:0;display:flex;align-items:center;transition:color .15s}
+    .auth-pw-toggle:hover{color:#282D9E}
+    .auth-name-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .auth-strength-wrap{margin-top:-4px}
+    .auth-strength-bar{height:3px;border-radius:2px;background:#e8eaf0;overflow:hidden;margin-bottom:4px}
+    .auth-strength-fill{height:100%;border-radius:2px;width:0%;transition:width .3s,background .3s}
+    .auth-strength-label{font-size:11px;color:#8892aa}
+    .auth-forgot{display:block;text-align:right;margin-top:-4px;font-size:12px;font-weight:600;color:#282D9E;cursor:pointer;text-decoration:none;transition:opacity .15s}
+    .auth-forgot:hover{opacity:.7}
+    .auth-terms-check{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#515864;line-height:1.4;cursor:pointer;margin-top:2px}
+    .auth-terms-check input{width:14px;height:14px;margin-top:1px;accent-color:#282D9E;flex-shrink:0;cursor:pointer}
+    .auth-submit-btn{background:#282D9E;border-color:#282D9E;color:#fff;opacity:.42;pointer-events:none}
+    .auth-submit-btn.ready{opacity:1;pointer-events:auto}
+    .auth-submit-btn:hover{background:#1f2480;border-color:#1f2480}
+    .auth-success-box{display:none;flex-direction:column;align-items:center;gap:10px;padding:28px 0 12px;text-align:center}
+    .auth-success-box.show{display:flex}
+    .auth-success-icon{font-size:44px;color:#16a34a}
+    .auth-success-title{font-size:18px;font-weight:800;color:#1a2140}
+    .auth-success-sub{font-size:13px;color:#8892aa}
+    .auth-modal-hero{position:relative;background:center/cover no-repeat url('assets/attractions-and-tours-bg.jpg')}
+    .auth-modal-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.28) 100%)}
+    .auth-modal-hero-logo{position:absolute;right:26px;bottom:24px;width:148px;z-index:1}
+    @media(max-width:860px){
+        .auth-modal-shell{grid-template-columns:1fr;overflow-y:auto}
+        .auth-modal-hero{min-height:200px;order:-1}
+        .auth-modal-inner{width:min(440px,calc(100% - 32px));padding-top:24px}
+    }
+
+    /* ── AUTH TOAST ── */
+    .auth-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:#1a2140;color:#fff;padding:13px 22px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;z-index:9100;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px}
+    .auth-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+    .auth-toast-btn{background:#282D9E;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .15s}
+    .auth-toast-btn:hover{background:#1f2480}
+
+    /* ══════════════════════════════════════════════════════════
        ATTRACTIONS LISTING — inline styles
        ══════════════════════════════════════════════════════════ */
-
     .att-section {
         max-width: 1280px;
         margin: 40px auto 0;
@@ -190,7 +262,6 @@
 
     .att-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 56px 24px; text-align: center; }
 
-    /* ── Image placeholder while loading ── */
     .att-card-img-wrap::before {
         content: '';
         position: absolute;
@@ -376,6 +447,87 @@
 </head>
 
 <body class="service-page service-attractions">
+
+    <!-- ══ AUTH MODAL ══ -->
+    <div class="auth-modal" id="authModal" aria-hidden="true">
+        <div class="auth-modal-shell" role="dialog" aria-modal="true">
+            <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close"><i class="fas fa-times"></i></button>
+            <section class="auth-modal-panel">
+                <div class="auth-modal-inner">
+                    <img class="auth-modal-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
+                    <div class="auth-modal-divider"></div>
+                    <div class="auth-tabs" role="tablist">
+                        <button class="auth-tab-btn active" id="authTabSignin"   onclick="authSwitchTab('signin')"   role="tab" aria-selected="true">Sign In</button>
+                        <button class="auth-tab-btn"        id="authTabRegister" onclick="authSwitchTab('register')" role="tab" aria-selected="false">Create Account</button>
+                    </div>
+                    <!-- SIGN IN -->
+                    <div class="auth-form-panel active" id="authPanelSignin" role="tabpanel">
+                        <div class="auth-field-group">
+                            <input id="siEmail"    type="email"    class="auth-modal-input" placeholder="Email address"  autocomplete="email">
+                            <div class="auth-pw-wrap">
+                                <input id="siPassword" type="password" class="auth-modal-input" placeholder="Password" autocomplete="current-password">
+                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('siPassword',this)" aria-label="Show/hide password"><i class="fas fa-eye"></i></button>
+                            </div>
+                            <a class="auth-forgot" onclick="authForgotPassword()">Forgot password?</a>
+                            <button type="button" id="siSubmitBtn" class="auth-modal-btn auth-submit-btn" onclick="authSignIn()">Sign In</button>
+                        </div>
+                        <div class="auth-modal-or-row"><span class="auth-modal-or-line"></span><span class="auth-modal-or-text">or</span><span class="auth-modal-or-line"></span></div>
+                        <div class="auth-modal-social">
+                            <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="authSocial('google')"><span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span><span>Continue with Google</span></button>
+                            <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')"><span class="auth-modal-icon"><i class="fa-brands fa-microsoft"></i></span><span>Continue with Microsoft</span></button>
+                            <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('facebook')"><span class="auth-modal-icon auth-fb-icon"><i class="fa-brands fa-facebook-f"></i></span><span>Continue with Facebook</span></button>
+                        </div>
+                        <p class="auth-modal-terms">By signing in you agree to Easy Navigate's <a href="#" style="color:#282D9E;">Terms</a> &amp; <a href="#" style="color:#282D9E;">Privacy Policy</a>.</p>
+                        <p id="siStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
+                    </div>
+                    <!-- REGISTER -->
+                    <div class="auth-form-panel" id="authPanelRegister" role="tabpanel">
+                        <div class="auth-success-box" id="regSuccess">
+                            <div class="auth-success-icon"><i class="fas fa-circle-check"></i></div>
+                            <div class="auth-success-title">Account Created!</div>
+                            <div class="auth-success-sub">Welcome to Easy Navigate.<br>You can now sign in.</div>
+                            <button type="button" class="auth-modal-btn auth-submit-btn ready" style="margin-top:10px;" onclick="authSwitchTab('signin')">Go to Sign In</button>
+                        </div>
+                        <div id="regForm" class="auth-field-group">
+                            <div class="auth-name-row">
+                                <input id="regFirstName" type="text"  class="auth-modal-input" placeholder="First name" autocomplete="given-name">
+                                <input id="regLastName"  type="text"  class="auth-modal-input" placeholder="Last name"  autocomplete="family-name">
+                            </div>
+                            <input id="regEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
+                            <div class="auth-pw-wrap">
+                                <input id="regPassword" type="password" class="auth-modal-input" placeholder="Password (min. 8 characters)" autocomplete="new-password" oninput="authCheckPwStrength(this.value)">
+                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regPassword',this)" aria-label="Show/hide"><i class="fas fa-eye"></i></button>
+                            </div>
+                            <div class="auth-strength-wrap" id="regStrengthWrap" style="display:none">
+                                <div class="auth-strength-bar"><div class="auth-strength-fill" id="regStrengthFill"></div></div>
+                                <span class="auth-strength-label" id="regStrengthLabel"></span>
+                            </div>
+                            <div class="auth-pw-wrap">
+                                <input id="regConfirmPw" type="password" class="auth-modal-input" placeholder="Confirm password" autocomplete="new-password">
+                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regConfirmPw',this)" aria-label="Show/hide"><i class="fas fa-eye"></i></button>
+                            </div>
+                            <label class="auth-terms-check">
+                                <input type="checkbox" id="regTerms" onchange="authCheckRegReady()">
+                                I agree to Easy Navigate's <a href="#" style="color:#282D9E;margin-left:3px;">Terms &amp; Privacy Policy</a>
+                            </label>
+                            <button type="button" id="regSubmitBtn" class="auth-modal-btn auth-submit-btn" onclick="authRegister()">Create Account</button>
+                        </div>
+                        <p id="regStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+            <section class="auth-modal-hero" aria-hidden="true">
+                <div class="auth-modal-hero-overlay"></div>
+                <img class="auth-modal-hero-logo" src="assets/easy-navigate-logo-white.png" alt="">
+            </section>
+        </div>
+    </div>
+
+    <!-- ══ AUTH TOAST ══ -->
+    <div class="auth-toast" id="authToast">
+        <span id="authToastMsg">Please sign in to continue</span>
+        <button class="auth-toast-btn" onclick="openAuthModal('signin')">Sign In</button>
+    </div>
 
     <!-- ══ HEADER ══ -->
     <header class="header">
@@ -649,7 +801,7 @@
         <div class="attm-box" id="attModalBox">
             <button class="attm-close" onclick="attCloseModal()" aria-label="Close">✕</button>
             <div class="attm-gallery" id="attmGallery">
-                <img id="attmMainImg" src="" alt="" onerror="attImgFallback(this, this.src)">
+                <img id="attmMainImg" src="" alt="" onerror="attImgFallback(this)">
                 <button class="attm-gallery-prev" onclick="attmSlide(-1)" aria-label="Previous image"></button>
                 <button class="attm-gallery-next" onclick="attmSlide(1)"  aria-label="Next image"></button>
                 <div class="attm-gallery-dots" id="attmDots"></div>
@@ -701,6 +853,7 @@
                             <li>Trip.com discount</li>
                             <li>Book now for tomorrow</li>
                         </ul>
+                        <!-- ── AUTH-GATED: Book now button inside modal ── -->
                         <button class="attm-book-btn" id="attmBookBtn" onclick="goToAttBooking()">Book now</button>
                     </div>
                 </div>
@@ -715,9 +868,213 @@
     <script src="service-ads-carousel.js"></script>
 
     <script>
-    // ════════════════════════════════════════════════════════════
-    //  DROPDOWN + NAVIGATION HELPERS
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       AUTH CORE
+    ═══════════════════════════════════════════════ */
+    function isSignedIn() {
+    try { var a = JSON.parse(localStorage.getItem('easyNavigateAuth')); return !!(a && a.isLoggedIn); } catch(_){ return false; }
+}
+    function getApiUrl(path) {
+        if (window.location.protocol === 'file:')
+            return 'http://localhost/platform-technologies-proj-v1-main/api/' + path;
+        var href = window.location.href.split('?')[0];
+        return href.substring(0, href.lastIndexOf('/') + 1) + 'api/' + path;
+    }
+    function openAuthModal(tab) {
+        var m = document.getElementById('authModal');
+        var sw = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.overflow = 'hidden';
+        if (sw > 0) document.body.style.paddingRight = sw + 'px';
+        m.setAttribute('aria-hidden', 'false');
+        m.classList.add('open');
+        authSwitchTab(tab || 'signin');
+        document.getElementById('siStatus').textContent = '';
+        document.getElementById('regStatus').textContent = '';
+    }
+    function closeAuthModal() {
+        var m = document.getElementById('authModal');
+        m.classList.remove('open');
+        m.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+    function authSwitchTab(tab) {
+        var siT = document.getElementById('authTabSignin'), regT = document.getElementById('authTabRegister');
+        var siP = document.getElementById('authPanelSignin'), regP = document.getElementById('authPanelRegister');
+        if (tab === 'signin') {
+            siT.classList.add('active'); siT.setAttribute('aria-selected','true');
+            regT.classList.remove('active'); regT.setAttribute('aria-selected','false');
+            siP.classList.add('active'); regP.classList.remove('active');
+            setTimeout(function(){ document.getElementById('siEmail').focus(); }, 80);
+        } else {
+            regT.classList.add('active'); regT.setAttribute('aria-selected','true');
+            siT.classList.remove('active'); siT.setAttribute('aria-selected','false');
+            regP.classList.add('active'); siP.classList.remove('active');
+            document.getElementById('regSuccess').classList.remove('show');
+            document.getElementById('regForm').style.display = 'flex';
+            setTimeout(function(){ document.getElementById('regFirstName').focus(); }, 80);
+        }
+    }
+    function authTogglePw(id, btn) {
+        var inp = document.getElementById(id), h = inp.type === 'password';
+        inp.type = h ? 'text' : 'password';
+        btn.querySelector('i').className = h ? 'fas fa-eye-slash' : 'fas fa-eye';
+    }
+    function authCheckPwStrength(pw) {
+        var wrap = document.getElementById('regStrengthWrap'), fill = document.getElementById('regStrengthFill'), lbl = document.getElementById('regStrengthLabel');
+        if (!pw){ wrap.style.display='none'; authCheckRegReady(); return; }
+        wrap.style.display = 'block';
+        var s = 0;
+        if(pw.length>=8)s++; if(pw.length>=12)s++; if(/[A-Z]/.test(pw))s++; if(/[0-9]/.test(pw))s++; if(/[^A-Za-z0-9]/.test(pw))s++;
+        var lvls=[{p:'20%',b:'#ef4444',t:'Very weak'},{p:'40%',b:'#f97316',t:'Weak'},{p:'60%',b:'#eab308',t:'Fair'},{p:'80%',b:'#22c55e',t:'Strong'},{p:'100%',b:'#16a34a',t:'Very strong'}];
+        var l = lvls[Math.min(s-1,4)] || lvls[0];
+        fill.style.width=l.p; fill.style.background=l.b; lbl.textContent=l.t; lbl.style.color=l.b;
+        authCheckRegReady();
+    }
+    function authCheckRegReady() {
+        var ok = document.getElementById('regFirstName').value.trim() &&
+                 document.getElementById('regLastName').value.trim() &&
+                 document.getElementById('regEmail').value.trim() &&
+                 document.getElementById('regPassword').value.length >= 8 &&
+                 document.getElementById('regPassword').value === document.getElementById('regConfirmPw').value &&
+                 document.getElementById('regTerms').checked;
+        document.getElementById('regSubmitBtn').classList.toggle('ready', !!ok);
+    }
+    async function authSignIn() {
+        var email = document.getElementById('siEmail').value.trim(), pw = document.getElementById('siPassword').value;
+        var status = document.getElementById('siStatus'), btn = document.getElementById('siSubmitBtn');
+        if (!email || !pw) return;
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ status.style.color='#b62020'; status.textContent='Please enter a valid email.'; return; }
+        btn.disabled=true; btn.textContent='Signing in…'; status.textContent='';
+        try {
+            var res = await fetch(getApiUrl('signin.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
+            var data = await res.json();
+            if (data.ok) {
+                var auth = {email:data.user.email, name:data.user.first_name+' '+data.user.last_name, id:data.user.id, isLoggedIn:true};
+                localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
+                status.style.color='#16a34a'; status.textContent='Signed in!';
+                if (typeof window.updateHeaderForAuth==='function') window.updateHeaderForAuth(auth);
+                updateHeaderBtn(auth);
+                setTimeout(function(){
+                    closeAuthModal();
+                    if (typeof window._pendingAuthAction==='function'){ var fn=window._pendingAuthAction; window._pendingAuthAction=null; setTimeout(fn,150); }
+                }, 800);
+            } else { status.style.color='#b62020'; status.textContent=data.message||'Sign in failed.'; }
+        } catch(_){ status.style.color='#b62020'; status.textContent='Could not connect. Try again.'; }
+        finally{ btn.disabled=false; btn.textContent='Sign In'; }
+    }
+    async function authRegister() {
+        var fname=document.getElementById('regFirstName').value.trim(), lname=document.getElementById('regLastName').value.trim();
+        var email=document.getElementById('regEmail').value.trim(), pw=document.getElementById('regPassword').value;
+        var cpw=document.getElementById('regConfirmPw').value, terms=document.getElementById('regTerms').checked;
+        var status=document.getElementById('regStatus'), btn=document.getElementById('regSubmitBtn');
+        if (!fname||!lname||!email||!pw||!cpw) return;
+        if (pw.length<8){ status.style.color='#b62020'; status.textContent='Password min 8 chars.'; return; }
+        if (pw!==cpw){ status.style.color='#b62020'; status.textContent='Passwords do not match.'; return; }
+        if (!terms){ status.style.color='#b62020'; status.textContent='Please agree to Terms.'; return; }
+        btn.disabled=true; btn.textContent='Creating…'; status.textContent='';
+        try {
+            var res=await fetch(getApiUrl('register.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({first_name:fname,last_name:lname,email,password:pw})});
+            var data=await res.json();
+            if (data.ok) {
+                var auth={email:data.user.email,name:data.user.first_name+' '+data.user.last_name,id:data.user.id,isLoggedIn:true};
+                localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+                if (typeof window.updateHeaderForAuth==='function') window.updateHeaderForAuth(auth);
+                updateHeaderBtn(auth);
+                document.getElementById('regForm').style.display='none';
+                document.getElementById('regSuccess').classList.add('show');
+            } else { status.style.color='#b62020'; status.textContent=data.message||'Registration failed.'; }
+        } catch(_){ status.style.color='#b62020'; status.textContent='Could not connect. Try again.'; }
+        finally{ btn.disabled=false; btn.textContent='Create Account'; authCheckRegReady(); }
+    }
+    function authSocial(provider) {
+        var auth={email:provider+'_user@easynav.com',name:'Easy Navigate User',provider,isLoggedIn:true};
+        localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+        if (typeof window.updateHeaderForAuth==='function') window.updateHeaderForAuth(auth);
+        updateHeaderBtn(auth);
+        closeAuthModal();
+        if (typeof window._pendingAuthAction==='function'){ var fn=window._pendingAuthAction; window._pendingAuthAction=null; setTimeout(fn,150); }
+    }
+    function authForgotPassword() {
+        var email=document.getElementById('siEmail').value.trim(), s=document.getElementById('siStatus');
+        if (!email){ s.style.color='#1f3f87'; s.textContent='Enter your email above first.'; return; }
+        s.style.color='#16a34a'; s.textContent='Reset link sent to '+email;
+    }
+   function updateHeaderBtn(auth) {
+    var btn = document.getElementById('openAuthModalBtn');
+    if (!btn) return;
+    if (auth && auth.isLoggedIn) {
+        btn.classList.add('profile-icon-btn');
+        btn.innerHTML = '<i class="fas fa-user-circle"></i>';
+        btn.setAttribute('aria-label', 'Profile');
+        btn.onclick = function() { window.location.href = 'profile.html'; };
+    } else {
+        btn.classList.remove('profile-icon-btn');
+        btn.removeAttribute('aria-label');
+        btn.innerHTML = 'Sign In / Register';
+        btn.onclick = function() { openAuthModal('signin'); };
+    }
+}
+    var _toastTimer;
+    function showAuthToast(msg) {
+        var t=document.getElementById('authToast'), m=document.getElementById('authToastMsg');
+        if (m) m.textContent = msg || 'Please sign in to continue';
+        t.classList.add('show');
+        clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 4000);
+    }
+    function requireAuth(callback, msg) {
+        if (isSignedIn()) { if (typeof callback === 'function') callback(); return; }
+        window._pendingAuthAction = callback || null;
+        showAuthToast(msg || 'Please sign in to continue');
+        openAuthModal('signin');
+    }
+    window.requireAuth   = requireAuth;
+    window.openAuthModal = openAuthModal;
+    window.isSignedIn    = isSignedIn;
+
+    /* ═══════════════════════════════════════════════
+       DOM READY — auth bindings
+    ═══════════════════════════════════════════════ */
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('authModalCloseBtn').addEventListener('click', closeAuthModal);
+        document.getElementById('authModal').addEventListener('click', function(e){ if(e.target===this) closeAuthModal(); });
+        document.querySelector('.auth-modal-shell').addEventListener('click', function(e){ e.stopPropagation(); });
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeAuthModal(); attCloseModal(); } });
+
+        ['regFirstName','regLastName','regEmail','regConfirmPw'].forEach(function(id){
+            document.getElementById(id).addEventListener('input', authCheckRegReady);
+        });
+        ['siEmail','siPassword'].forEach(function(id){
+            document.getElementById(id).addEventListener('input', function(){
+                var ok = document.getElementById('siEmail').value.trim() && document.getElementById('siPassword').value;
+                document.getElementById('siSubmitBtn').classList.toggle('ready', !!ok);
+            });
+        });
+
+        // Restore auth state in header
+        try {
+            var saved = JSON.parse(localStorage.getItem('easyNavigateAuth'));
+            updateHeaderBtn(saved || null);
+        } catch(_) { updateHeaderBtn(null); }
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', function(e){
+            if (!e.target.closest('.dropdown-menu') && !e.target.closest('.support-btn') && !e.target.closest('.dropdown-pill'))
+                document.querySelectorAll('.dropdown-menu.open').forEach(function(m){ m.classList.remove('open'); });
+        });
+
+        // Flatpickr
+        if (window.flatpickr) {
+            document.querySelectorAll('.date-picker, input[type=date]').forEach(function(inp){
+                flatpickr(inp, {dateFormat:'Y-m-d', altInput:true, altFormat:'D, M j', showMonths:2, monthSelectorType:'static', disableMobile:true});
+            });
+        }
+    });
+
+    /* ═══════════════════════════════════════════════
+       DROPDOWN + NAVIGATION HELPERS
+    ═══════════════════════════════════════════════ */
     function toggleDropdown(id, event) {
         if (event) event.stopPropagation();
         const menu = document.getElementById(id);
@@ -726,7 +1083,6 @@
         document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
         if (!isOpen) menu.classList.add('open');
     }
-
     function selectFindBooking(tabName) {
         const menu = document.getElementById('findBookingsMenu');
         if (menu) menu.classList.remove('open');
@@ -737,30 +1093,21 @@
         if (pages[tabName]) window.location.href = pages[tabName];
     }
 
-    document.addEventListener('click', e => {
-        if (!e.target.closest('.dropdown-menu') && !e.target.closest('.support-btn') && !e.target.closest('.dropdown-pill')) {
-            document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-        }
-    });
-
-    // ════════════════════════════════════════════════════════════
-    //  PASSENGER COUNTER
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       PASSENGER COUNTER
+    ═══════════════════════════════════════════════ */
     let attractionPax = { adults: 1, children: 0, infants: 0 };
-
     function updateAttractionPax(type, change) {
         attractionPax[type] = Math.max(type === 'adults' ? 1 : 0, Math.min(9, attractionPax[type] + change));
         document.getElementById('attractionsAdults').textContent   = attractionPax.adults;
         document.getElementById('attractionsChildren').textContent = attractionPax.children;
         document.getElementById('attractionsInfants').textContent  = attractionPax.infants;
-
         const minusBtns = { adults:'attractionsAdultsMinus', children:'attractionsChildrenMinus', infants:'attractionsInfantsMinus' };
         const minimums  = { adults: 1, children: 0, infants: 0 };
         Object.entries(minusBtns).forEach(([t, id]) => {
             const btn = document.getElementById(id);
             if (btn) { btn.style.color = attractionPax[t] <= minimums[t] ? 'var(--gray-300)' : ''; btn.style.cursor = attractionPax[t] <= minimums[t] ? 'default' : 'pointer'; }
         });
-
         const parts = [attractionPax.adults + ' Adult' + (attractionPax.adults > 1 ? 's' : '')];
         if (attractionPax.children > 0) parts.push(attractionPax.children + ' Child' + (attractionPax.children > 1 ? 'ren' : ''));
         if (attractionPax.infants  > 0) parts.push(attractionPax.infants  + ' Infant' + (attractionPax.infants > 1 ? 's' : ''));
@@ -768,96 +1115,24 @@
         if (lbl) lbl.textContent = parts.join(' + ');
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  ATTRACTIONS DATA  ← FIXED: all paths now use attractions/
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       ATTRACTIONS DATA
+    ═══════════════════════════════════════════════ */
     const ATT_DATA = [
-        {
-            id:1, name:'Bohol Chocolate Hills',
-            location:'Chocolate Hills Complex', city:'Bohol', country:'Philippines',
-            images:['attractions/bohol_1.png','attractions/bohol_2.png','attractions/bohol_3.png'],
-            price:1500, rating:4.7, reviews:5400, duration:'4 hours', category:'Nature',
-            is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1,
-            snippet:'Marvel at over 1,700 perfectly cone-shaped hills blanketed in chocolate-brown grass during the dry season.',
-            tripbest:'No. 1 of Best Things to Do in Bohol', instant:true
-        },
-        {
-            id:2, name:'Coron Island Hopping',
-            location:'Coron Bay', city:'Coron', country:'Philippines',
-            images:['attractions/coron_1.png','attractions/coron_2.png','attractions/coron_3.png'],
-            price:2800, rating:4.9, reviews:6200, duration:'Full day', category:'Island Tour',
-            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
-            snippet:"Explore crystal-clear lagoons, WWII wrecks, and pristine beaches in one of the world's top dive destinations.",
-            tripbest:'No. 1 of Best Things to Do in Coron', instant:true
-        },
-        {
-            id:3, name:'El Nido Island Hopping',
-            location:'Bacuit Bay', city:'El Nido', country:'Philippines',
-            images:['attractions/elnido_1.png','attractions/elnido_2.png','attractions/elnido_3.png','attractions/elnido_4.png','attractions/elnido_5.png'],
-            price:2500, rating:4.9, reviews:8800, duration:'Full day', category:'Island Tour',
-            is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1,
-            snippet:'Navigate towering limestone karsts, secret lagoons, and hidden beaches across the Bacuit Archipelago.',
-            tripbest:'No. 1 of Best Things to Do in El Nido', instant:true
-        },
-        {
-            id:4, name:'Manila Bay Sunset Walk',
-            location:'Roxas Boulevard', city:'Manila', country:'Philippines',
-            images:['attractions/manila_bay_1.png'],
-            price:0, rating:4.5, reviews:3100, duration:'1-2 hours', category:'Scenic',
-            is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:0,
-            snippet:"Stroll along the iconic Roxas Boulevard boardwalk and witness Manila's legendary golden sunsets over the bay.",
-            tripbest:'No. 3 of Best Things to Do in Manila', instant:false
-        },
-        {
-            id:5, name:'Pandin Lake',
-            location:'San Pablo', city:'Laguna', country:'Philippines',
-            images:['attractions/pandin_lake_laguna_1.png'],
-            price:360, rating:4.8, reviews:2700, duration:'2 hours', category:'Nature',
-            is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:1,
-            snippet:'Drift across the serene twin crater lakes on a bamboo raft while local boatmen share stories of the area.',
-            tripbest:null, instant:true
-        },
-        {
-            id:6, name:'Puerto Princesa Underground River',
-            location:'Sabang', city:'Puerto Princesa', country:'Philippines',
-            images:['attractions/puerto_princesa_1.png','attractions/puerto_princesa_2.png','attractions/puerto_princesa_3.png'],
-            price:2200, rating:4.8, reviews:7500, duration:'Full day', category:'Nature',
-            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
-            snippet:"Paddle through a UNESCO World Heritage cave system, one of the world's longest navigable underground rivers.",
-            tripbest:'No. 1 of Best Things to Do in Puerto Princesa', instant:true
-        },
-        {
-            id:7, name:'Sto. Niño Cold Springs',
-            location:'Catarman', city:'Camiguin', country:'Philippines',
-            images:['attractions/sto_nino_cold_springs_1.png'],
-            price:50, rating:4.6, reviews:1800, duration:'Half day', category:'Relaxation',
-            is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:0,
-            snippet:'Soak in naturally cold freshwater springs surrounded by lush volcanic island greenery at an unbeatable price.',
-            tripbest:null, instant:false
-        },
-        {
-            id:8, name:'Taal Volcano Tour',
-            location:'Tagaytay Ridge', city:'Tagaytay', country:'Philippines',
-            images:['attractions/taal_volcano_1.png'],
-            price:1200, rating:4.7, reviews:4300, duration:'3 hours', category:'Nature',
-            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
-            snippet:"Hike or ride to the crater of one of the world's smallest active volcanoes set within a lake inside a lake.",
-            tripbest:'No. 2 of Best Things to Do in Tagaytay', instant:true
-        },
-        {
-            id:9, name:'White Water Kayaking',
-            location:'Cagayan River', city:'Cagayan de Oro', country:'Philippines',
-            images:['attractions/white_water_kayaking_cagayan_1.png'],
-            price:1800, rating:4.9, reviews:5100, duration:'3-4 hours', category:'Adventure',
-            is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1,
-            snippet:"Paddle through thrilling rapids on the legendary Cagayan River — the Philippines' most exciting whitewater run.",
-            tripbest:'No. 1 of Best Things to Do in CDO', instant:true
-        },
+        { id:1, name:'Bohol Chocolate Hills', location:'Chocolate Hills Complex', city:'Bohol', country:'Philippines', images:['attractions/bohol_1.png','attractions/bohol_2.png','attractions/bohol_3.png'], price:1500, rating:4.7, reviews:5400, duration:'4 hours', category:'Nature', is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1, snippet:'Marvel at over 1,700 perfectly cone-shaped hills blanketed in chocolate-brown grass during the dry season.', tripbest:'No. 1 of Best Things to Do in Bohol', instant:true },
+        { id:2, name:'Coron Island Hopping', location:'Coron Bay', city:'Coron', country:'Philippines', images:['attractions/coron_1.png','attractions/coron_2.png','attractions/coron_3.png'], price:2800, rating:4.9, reviews:6200, duration:'Full day', category:'Island Tour', is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Explore crystal-clear lagoons, WWII wrecks, and pristine beaches in one of the world's top dive destinations.", tripbest:'No. 1 of Best Things to Do in Coron', instant:true },
+        { id:3, name:'El Nido Island Hopping', location:'Bacuit Bay', city:'El Nido', country:'Philippines', images:['attractions/elnido_1.png','attractions/elnido_2.png','attractions/elnido_3.png','attractions/elnido_4.png','attractions/elnido_5.png'], price:2500, rating:4.9, reviews:8800, duration:'Full day', category:'Island Tour', is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:1, snippet:'Navigate towering limestone karsts, secret lagoons, and hidden beaches across the Bacuit Archipelago.', tripbest:'No. 1 of Best Things to Do in El Nido', instant:true },
+        { id:4, name:'Manila Bay Sunset Walk', location:'Roxas Boulevard', city:'Manila', country:'Philippines', images:['attractions/manila_bay_1.png'], price:0, rating:4.5, reviews:3100, duration:'1-2 hours', category:'Scenic', is_popular:1, is_recommended:1, is_best_value:1, is_free_cancellation:0, snippet:"Stroll along the iconic Roxas Boulevard boardwalk and witness Manila's legendary golden sunsets over the bay.", tripbest:'No. 3 of Best Things to Do in Manila', instant:false },
+        { id:5, name:'Pandin Lake', location:'San Pablo', city:'Laguna', country:'Philippines', images:['attractions/pandin_lake_laguna_1.png'], price:360, rating:4.8, reviews:2700, duration:'2 hours', category:'Nature', is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:1, snippet:'Drift across the serene twin crater lakes on a bamboo raft while local boatmen share stories of the area.', tripbest:null, instant:true },
+        { id:6, name:'Puerto Princesa Underground River', location:'Sabang', city:'Puerto Princesa', country:'Philippines', images:['attractions/puerto_princesa_1.png','attractions/puerto_princesa_2.png','attractions/puerto_princesa_3.png'], price:2200, rating:4.8, reviews:7500, duration:'Full day', category:'Nature', is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Paddle through a UNESCO World Heritage cave system, one of the world's longest navigable underground rivers.", tripbest:'No. 1 of Best Things to Do in Puerto Princesa', instant:true },
+        { id:7, name:'Sto. Niño Cold Springs', location:'Catarman', city:'Camiguin', country:'Philippines', images:['attractions/sto_nino_cold_springs_1.png'], price:50, rating:4.6, reviews:1800, duration:'Half day', category:'Relaxation', is_popular:0, is_recommended:1, is_best_value:1, is_free_cancellation:0, snippet:'Soak in naturally cold freshwater springs surrounded by lush volcanic island greenery at an unbeatable price.', tripbest:null, instant:false },
+        { id:8, name:'Taal Volcano Tour', location:'Tagaytay Ridge', city:'Tagaytay', country:'Philippines', images:['attractions/taal_volcano_1.png'], price:1200, rating:4.7, reviews:4300, duration:'3 hours', category:'Nature', is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Hike or ride to the crater of one of the world's smallest active volcanoes set within a lake inside a lake.", tripbest:'No. 2 of Best Things to Do in Tagaytay', instant:true },
+        { id:9, name:'White Water Kayaking', location:'Cagayan River', city:'Cagayan de Oro', country:'Philippines', images:['attractions/white_water_kayaking_cagayan_1.png'], price:1800, rating:4.9, reviews:5100, duration:'3-4 hours', category:'Adventure', is_popular:1, is_recommended:1, is_best_value:0, is_free_cancellation:1, snippet:"Paddle through thrilling rapids on the legendary Cagayan River — the Philippines' most exciting whitewater run.", tripbest:'No. 1 of Best Things to Do in CDO', instant:true },
     ];
 
-    // ════════════════════════════════════════════════════════════
-    //  FILTER STATE
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       FILTER STATE
+    ═══════════════════════════════════════════════ */
     let attState = { priceMin:0, priceMax:99999, categories:[], minRating:0, features:[], duration:'', sort:'popular' };
     let attWishlist = new Set();
     const attCarouselIdx = {};
@@ -902,9 +1177,9 @@
         attRender();
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  FILTER + SORT
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       FILTER + SORT
+    ═══════════════════════════════════════════════ */
     function attFilterData() {
         return ATT_DATA.filter(a => {
             const p = a.price;
@@ -944,9 +1219,9 @@
         return s;
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  RENDER CARDS
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       RENDER CARDS
+    ═══════════════════════════════════════════════ */
     function attRender() {
         const data  = attFilterData();
         const grid  = document.getElementById('attGrid');
@@ -973,14 +1248,14 @@
 
             const tripbestHTML = a.tripbest ? `<div class="att-card-tripbest"><span class="att-card-tripbest-icon">🏆 Trip.Best</span><span>${a.tripbest}</span></div>` : '';
             const instantHTML  = a.instant  ? `<div class="att-instant">Instant confirmation</div>` : '';
-
-            const dotsHTML   = multi ? `<div class="att-carousel-dots">${imgs.map((_,i)=>`<span class="att-carousel-dot${i===idx?' active':''}" onclick="attGoSlide(event,${a.id},${i})"></span>`).join('')}</div>` : '';
-            const arrowsHTML = multi ? `<button class="att-carousel-arrow att-carousel-prev" onclick="attSlide(event,${a.id},-1)" aria-label="Previous image"></button><button class="att-carousel-arrow att-carousel-next" onclick="attSlide(event,${a.id},1)" aria-label="Next image"></button>` : '';
+            const dotsHTML     = multi ? `<div class="att-carousel-dots">${imgs.map((_,i)=>`<span class="att-carousel-dot${i===idx?' active':''}" onclick="attGoSlide(event,${a.id},${i})"></span>`).join('')}</div>` : '';
+            const arrowsHTML   = multi ? `<button class="att-carousel-arrow att-carousel-prev" onclick="attSlide(event,${a.id},-1)" aria-label="Previous image"></button><button class="att-carousel-arrow att-carousel-next" onclick="attSlide(event,${a.id},1)" aria-label="Next image"></button>` : '';
 
             return `
             <div class="att-card" data-id="${a.id}">
                 <div class="att-card-img-wrap">
-                    <img class="att-card-img" id="attImg-${a.id}" src="${imgs[idx]}" alt="${a.name}" loading="lazy">
+                    <img class="att-card-img" id="attImg-${a.id}" src="${imgs[idx]}" alt="${a.name}" loading="lazy" onerror="attImgFallback(this)">
+
                     ${arrowsHTML}
                     <button class="att-card-wishlist ${isWished?'active':''}" onclick="attToggleWishlist(event,${a.id})" title="Save to wishlist">${isWished?'❤️':'🤍'}</button>
                     ${dotsHTML}
@@ -1007,17 +1282,18 @@
         }).join('');
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  IMAGE FALLBACK  ← simplified, no more wrong paths to try
-    // ════════════════════════════════════════════════════════════
-    function attImgFallback(el, originalSrc) {
-        el.onerror = null;
-        el.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80';
-    }
+    /* ═══════════════════════════════════════════════
+       IMAGE FALLBACK
+    ═══════════════════════════════════════════════ */
+    function attImgFallback(el) {
+    el.onerror = null;
+    el.style.opacity = '1';
+    el.src = 'assets/car-rentals-bg.png';
+}
 
-    // ════════════════════════════════════════════════════════════
-    //  CAROUSEL CONTROLS
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       CAROUSEL CONTROLS
+    ═══════════════════════════════════════════════ */
     function attSlide(e, id, dir) {
         e.stopPropagation();
         const a = ATT_DATA.find(x => x.id===id); if (!a) return;
@@ -1041,9 +1317,9 @@
         if (wrap) wrap.querySelectorAll('.att-carousel-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  WISHLIST
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       WISHLIST
+    ═══════════════════════════════════════════════ */
     function attToggleWishlist(e, id) {
         e.stopPropagation();
         if (attWishlist.has(id)) attWishlist.delete(id); else attWishlist.add(id);
@@ -1051,9 +1327,11 @@
         if (card) { const btn=card.querySelector('.att-card-wishlist'), w=attWishlist.has(id); btn.classList.toggle('active',w); btn.innerHTML=w?'❤️':'🤍'; }
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  BOOKING MODAL
-    // ════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════
+       BOOKING MODAL
+       KEY CHANGE: attOpenModal now gates with requireAuth
+       before opening the modal detail view.
+    ═══════════════════════════════════════════════ */
     let attmCurrentId=null, attmImgIdx=0, attmImgs=[];
 
     const ATT_REVIEWS = {
@@ -1064,14 +1342,24 @@
         ],
     };
 
+    /* ── AUTH-GATED card "Book now →" button ── */
     function attOpenModal(e, id) {
         e.stopPropagation();
+        requireAuth(function() {
+            _attOpenModalInner(id);
+        }, 'Sign in to view this experience');
+    }
+
+    /* ── inner open logic (runs only when signed in) ── */
+    function _attOpenModalInner(id) {
         const a = ATT_DATA.find(x => x.id===id); if (!a) return;
         attmCurrentId=id; attmImgs=a.images; attmImgIdx=attCarouselIdx[id]||0;
 
         const mainImg = document.getElementById('attmMainImg');
-        mainImg.src=attmImgs[attmImgIdx]; mainImg.alt=a.name; mainImg.style.opacity='1';
-        mainImg.onerror=()=>attImgFallback(mainImg, attmImgs[attmImgIdx]);
+mainImg.alt = a.name;
+mainImg.style.opacity = '1';
+mainImg.onerror = () => attImgFallback(mainImg);
+mainImg.src = attmImgs[attmImgIdx];
 
         const multi = attmImgs.length>1;
         document.querySelector('.attm-gallery-prev').style.display=multi?'':'none';
@@ -1113,7 +1401,7 @@
         document.getElementById('attmDesc').textContent=a.snippet+' This is a must-visit destination offering unforgettable memories for travelers of all ages. Book early to secure your spot and enjoy the best of what the Philippines has to offer.';
 
         const priceEl=document.getElementById('attmPriceCurrent'), origEl=document.getElementById('attmPriceOrig'), badgePrEl=document.getElementById('attmPriceBadge');
-        if(a.price===0) { priceEl.textContent='Free entry'; priceEl.className='attm-price-current free'; origEl.textContent=''; badgePrEl.style.display='none'; }
+        if(a.price===0){ priceEl.textContent='Free entry'; priceEl.className='attm-price-current free'; origEl.textContent=''; badgePrEl.style.display='none'; }
         else { const disc=Math.round(a.price*0.85); priceEl.textContent=`PHP ${disc.toLocaleString()}`; priceEl.className='attm-price-current'; origEl.textContent=`PHP ${a.price.toLocaleString()}`; badgePrEl.textContent=`-PHP ${(a.price-disc).toLocaleString()}`; badgePrEl.style.display=''; }
 
         const reviews=ATT_REVIEWS[id]||ATT_REVIEWS.default;
@@ -1128,15 +1416,23 @@
         document.body.style.overflow='hidden';
     }
 
-    function attCloseModal() { document.getElementById('attModal').classList.remove('open'); document.body.style.overflow=''; attmCurrentId=null; }
+    function attCloseModal() {
+        document.getElementById('attModal').classList.remove('open');
+        if (!document.getElementById('authModal').classList.contains('open'))
+            document.body.style.overflow='';
+        attmCurrentId=null;
+    }
     function attModalOverlayClick(e) { if(e.target===document.getElementById('attModal')) attCloseModal(); }
-    document.addEventListener('keydown', e => { if(e.key==='Escape') attCloseModal(); });
 
     function attmGoImg(idx) {
         attmImgIdx=(idx+attmImgs.length)%attmImgs.length;
         const mainImg=document.getElementById('attmMainImg');
         mainImg.style.opacity='0'; mainImg.style.transition='opacity 0.22s ease';
-        setTimeout(()=>{ mainImg.src=attmImgs[attmImgIdx]; mainImg.onerror=()=>attImgFallback(mainImg,attmImgs[attmImgIdx]); mainImg.style.opacity='1'; },120);
+        setTimeout(()=>{
+    mainImg.onerror = () => attImgFallback(mainImg);
+    mainImg.src = attmImgs[attmImgIdx];
+    mainImg.style.opacity='1';
+}, 120);
         document.querySelectorAll('#attmDots .attm-gdot').forEach((d,i)=>d.classList.toggle('active',i===attmImgIdx));
         const c=document.getElementById('attmCounter'); if(c) c.textContent=`${attmImgIdx+1} / ${attmImgs.length}`;
     }
@@ -1151,13 +1447,22 @@
         if(card){ const btn=card.querySelector('.att-card-wishlist'); btn.classList.toggle('active',wished); btn.innerHTML=wished?'❤️':'🤍'; }
     }
 
+    /* ── AUTH-GATED modal "Book now" button ── */
     function goToAttBooking() {
-        const a=ATT_DATA.find(x=>x.id===attmCurrentId); if(!a) return;
-        const params=new URLSearchParams({ id:a.id, name:a.name, city:a.city, country:a.country, location:a.location, category:a.category, duration:a.duration, price:a.price, rating:a.rating, reviews:a.reviews, instant:a.instant?'1':'0', cancel:a.is_free_cancellation?'1':'0', tripbest:a.tripbest||'', image:encodeURIComponent(a.images[0]||'') });
-        window.location.href=`attraction-booking.html?${params.toString()}`;
+        requireAuth(function() {
+            const a=ATT_DATA.find(x=>x.id===attmCurrentId); if(!a) return;
+            const params=new URLSearchParams({
+                id:a.id, name:a.name, city:a.city, country:a.country,
+                location:a.location, category:a.category, duration:a.duration,
+                price:a.price, rating:a.rating, reviews:a.reviews,
+                instant:a.instant?'1':'0', cancel:a.is_free_cancellation?'1':'0',
+                tripbest:a.tripbest||'', image:encodeURIComponent(a.images[0]||'')
+            });
+            window.location.href=`attraction-booking.html?${params.toString()}`;
+        }, 'Sign in to book this experience');
     }
 
-    // ── Init ──
+    /* ── Init ── */
     document.addEventListener('DOMContentLoaded', attRender);
     if (document.readyState !== 'loading') attRender();
     </script>
