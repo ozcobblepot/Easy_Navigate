@@ -156,16 +156,7 @@
         }
         .tab-pill.active { color: #282D9E !important; }
         .tab-pill:hover:not(.active) { color: #fff; }
-
-        /* Tab pill icon — same size as Find Bookings dropdown icons */
-        .tab-pill i {
-            font-size: 14px;
-            width: 16px;
-            text-align: center;
-            flex-shrink: 0;
-            /* Ensure glyph shows even if font loads slightly late */
-            font-display: block;
-        }
+        .tab-pill i { font-size: 14px; width: 16px; text-align: center; flex-shrink: 0; font-display: block; }
 
         /* ══════════════════════════════════════════
            SEARCH CARD
@@ -292,7 +283,6 @@
         }
         .search-btn:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(40,45,158,0.4); }
 
-        /* Dropdown pill */
         .dropdown-pill-bordless {
             display: inline-flex; align-items: center; gap: 6px;
             border: none; border-radius: 8px; padding: 7px 10px;
@@ -303,7 +293,6 @@
         .dropdown-pill-bordless:hover { background: var(--gray-100); }
         .selector-pill { height: 38px; padding: 0 10px; gap: 5px; }
 
-        /* Dropdown menus */
         .dropdown-menu {
             position: absolute; top: calc(100% + 6px); left: 0;
             background: #fff; border-radius: 12px;
@@ -324,23 +313,16 @@
             width: 420px; max-width: 420px; padding: 8px;
             left: 50%; margin-left: -210px; top: calc(100% + 12px);
         }
-        #findBookingsMenu .dropdown-item {
-            padding: 12px 14px; border-radius: 10px;
-            display: flex; align-items: center; gap: 12px;
-        }
+        #findBookingsMenu .dropdown-item { padding: 12px 14px; border-radius: 10px; display: flex; align-items: center; gap: 12px; }
         #findBookingsMenu .fb-icon { width: 24px; font-size: 18px; color: var(--blue); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
         #findBookingsMenu .fb-content { display: flex; flex-direction: column; gap: 2px; }
         #findBookingsMenu .fb-title { font-size: 15px; font-weight: 700; color: var(--text); }
         #findBookingsMenu .fb-desc  { font-size: 12px; color: var(--gray-500); }
         #findBookingsMenu .dropdown-item:hover .fb-title { color: var(--blue); }
 
-        /* Passenger picker */
         .passenger-dropdown { min-width: 300px; padding: 8px 16px; }
         .passenger-note { font-size: 12px; color: var(--gray-500); margin-bottom: 12px; line-height: 1.4; }
-        .passenger-row {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 11px 0; border-bottom: 1px solid var(--gray-100);
-        }
+        .passenger-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--gray-100); }
         .passenger-row:last-child { border-bottom: none; }
         .passenger-label { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
         .passenger-type { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -351,7 +333,6 @@
         .pax-value { font-size: 16px; font-weight: 700; color: var(--text); min-width: 22px; text-align: center; }
         #cabinPicker { min-width: 360px; max-width: calc(100vw - 32px); }
 
-        /* Suggestion dropdown */
         .dest-suggestion-menu {
             position: absolute; top: calc(100% + 6px); left: 0;
             min-width: 280px; max-width: min(460px, calc(100vw - 32px));
@@ -367,28 +348,13 @@
         .dest-menu-section-title { font-size: 11px; font-weight: 700; color: var(--gray-400); letter-spacing: .5px; text-transform: uppercase; padding: 0 14px 8px; }
         .dest-menu-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px 6px; padding: 0 8px 4px; }
         .dest-menu-grid.two-col { grid-template-columns: repeat(2,1fr); }
-        .dest-menu-item {
-            display: flex; align-items: flex-start; gap: 7px;
-            padding: 7px 8px; border-radius: 8px; cursor: pointer;
-            font-size: 12.5px; font-weight: 600; color: var(--text);
-            transition: background .13s; border: none; background: none;
-            text-align: left; width: 100%; font-family: 'Inter', sans-serif;
-        }
+        .dest-menu-item { display: flex; align-items: flex-start; gap: 7px; padding: 7px 8px; border-radius: 8px; cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--text); transition: background .13s; border: none; background: none; text-align: left; width: 100%; font-family: 'Inter', sans-serif; }
         .dest-menu-item:hover { background: var(--gray-50); color: var(--blue); }
         .dest-menu-item i { font-size: 11px; color: var(--gray-300); flex-shrink: 0; margin-top: 2px; }
         .dest-menu-item:hover i { color: var(--blue); }
         .dest-menu-no-results { padding: 10px 14px 6px; font-size: 13px; color: var(--gray-400); }
 
-        /* Flatpickr */
-        .search-field .flatpickr-input[readonly],
-        .fl-date-half .flatpickr-input[readonly] {
-            display: block; width: 100%; border: none; outline: none;
-            background: transparent; color: var(--text) !important;
-            font-size: 14px !important; font-weight: 700 !important;
-            cursor: pointer; padding: 0 !important; margin: 0;
-            min-height: 20px; line-height: 20px; box-sizing: border-box;
-            font-family: 'Inter', sans-serif !important;
-        }
+        .search-field .flatpickr-input[readonly], .fl-date-half .flatpickr-input[readonly] { display: block; width: 100%; border: none; outline: none; background: transparent; color: var(--text) !important; font-size: 14px !important; font-weight: 700 !important; cursor: pointer; padding: 0 !important; margin: 0; min-height: 20px; line-height: 20px; box-sizing: border-box; font-family: 'Inter', sans-serif !important; }
         .flatpickr-input { font-weight: 700 !important; font-size: 14px !important; color: var(--text) !important; }
         input.date-picker { font-weight: 700 !important; font-size: 14px !important; color: var(--text) !important; }
         .search-field .flatpickr-wrapper, .fl-date-half .flatpickr-wrapper { width: 100%; display: block; }
@@ -399,13 +365,7 @@
         .flatpickr-weekday { color: var(--gray-400); font-weight: 600; font-size: 11px; }
         .flatpickr-current-month { font-size: 16px !important; font-weight: 700 !important; }
 
-        /* Time picker */
-        .fl-date-half input.time-picker {
-            width: 100%; border: none; outline: none; background: transparent;
-            color: var(--text); font-size: 14px; font-weight: 700;
-            min-height: 20px; line-height: 20px; padding: 0; cursor: pointer;
-            font-family: 'Inter', sans-serif;
-        }
+        .fl-date-half input.time-picker { width: 100%; border: none; outline: none; background: transparent; color: var(--text); font-size: 14px; font-weight: 700; min-height: 20px; line-height: 20px; padding: 0; cursor: pointer; font-family: 'Inter', sans-serif; }
         .fl-date-half input.time-picker::placeholder { color: var(--gray-400); font-weight: 500; }
         .time-dropdown-modal { position: fixed; inset: 0; display: none; background: transparent; z-index: 1200; }
         .time-dropdown-modal.active { display: block; }
@@ -501,7 +461,6 @@
         ══════════════════════════════════════════ */
         .main { max-width: 1200px; margin: 0 auto; padding: 16px 24px 60px; }
 
-        /* ── Promo Banner ── */
         .promo-banner {
             background: linear-gradient(135deg, #1f237e 0%, #282D9E 50%, #3a40c4 100%) !important;
             border-radius: var(--radius); padding: 28px 36px;
@@ -510,25 +469,12 @@
             gap: 20px; flex-wrap: wrap; box-shadow: var(--shadow-md);
             position: relative; overflow: hidden;
         }
-        .promo-banner::after {
-            content: '';
-            position: absolute; right: -40px; top: -40px;
-            width: 220px; height: 220px; border-radius: 50%;
-            background: rgba(255,255,255,0.05); pointer-events: none;
-        }
+        .promo-banner::after { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.05); pointer-events: none; }
         .promo-text h2 { font-size: 22px; font-weight: 900; color: var(--accent); margin-bottom: 5px; font-family: 'Inter', sans-serif; }
         .promo-text p  { font-size: 14px; opacity: .85; font-family: 'Inter', sans-serif; }
-        .promo-btn {
-            background: var(--accent); color: var(--blue-dark); border: none;
-            border-radius: 10px; padding: 12px 26px;
-            font-weight: 800; font-size: 14px; cursor: pointer;
-            transition: transform .15s, box-shadow .15s;
-            box-shadow: 0 4px 14px rgba(0,0,0,.2); white-space: nowrap; position: relative; z-index: 1;
-            font-family: 'Inter', sans-serif;
-        }
+        .promo-btn { background: var(--accent); color: var(--blue-dark); border: none; border-radius: 10px; padding: 12px 26px; font-weight: 800; font-size: 14px; cursor: pointer; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 14px rgba(0,0,0,.2); white-space: nowrap; position: relative; z-index: 1; font-family: 'Inter', sans-serif; }
         .promo-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
 
-        /* ── Photo Carousel ── */
         .photo-carousel { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 auto 36px; max-width: 1100px; padding: 0; }
         .carousel-arrow { background: #fff; border: 1px solid var(--gray-200); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--blue); transition: all .25s; font-size: 16px; flex-shrink: 0; padding: 0; }
         .carousel-arrow:hover { background: var(--blue); color: #fff; border-color: var(--blue); transform: scale(1.05); }
@@ -537,47 +483,24 @@
         .carousel-item { flex-shrink: 0; width: calc(50% - 8px); height: 220px; border-radius: 14px; overflow: hidden; }
         .carousel-image { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-        /* ── Benefit Cards ── */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 40px;
-        }
-        .card {
-            background: #fff; border-radius: 14px; padding: 24px 20px;
-            border: 1.5px solid transparent;
-            box-shadow: 0 2px 12px rgba(40,45,158,0.07);
-            transition: border-color .2s, box-shadow .2s, transform .2s;
-        }
+        .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+        .card { background: #fff; border-radius: 14px; padding: 24px 20px; border: 1.5px solid transparent; box-shadow: 0 2px 12px rgba(40,45,158,0.07); transition: border-color .2s, box-shadow .2s, transform .2s; }
         .card:hover { border-color: var(--blue); box-shadow: var(--shadow); transform: translateY(-3px); }
-        .card-icon {
-            width: 46px; height: 46px; background: rgba(40,45,158,0.08);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: var(--blue); margin-bottom: 14px;
-        }
+        .card-icon { width: 46px; height: 46px; background: rgba(40,45,158,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--blue); margin-bottom: 14px; }
         .card h3 { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px; font-family: 'Inter', sans-serif; }
         .card p  { font-size: 13px; color: var(--gray-500); line-height: 1.55; font-family: 'Inter', sans-serif; }
 
-        /* ── Section Title ── */
         .section-title { font-size: 24px; font-weight: 900; color: #000; margin-bottom: 20px; font-family: 'Inter', sans-serif; }
         .destinations-title { text-align: center; margin-bottom: 8px; }
 
-        /* ── Destinations Carousel ── */
         .destinations-carousel { overflow: hidden; width: 100%; margin: 0 0 36px; }
-        .destinations-track {
-            display: flex; gap: 20px; padding: 12px 20px;
-            --loop-distance: 0px;
-            animation: scrollDestinations 90s linear infinite;
-            width: max-content;
-        }
+        .destinations-track { display: flex; gap: 20px; padding: 12px 20px; --loop-distance: 0px; animation: scrollDestinations 90s linear infinite; width: max-content; }
         @keyframes scrollDestinations { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--loop-distance))); } }
         .destinations-track:hover { animation-play-state: paused; }
         .destination-card { flex-shrink: 0; width: 260px; border-radius: 14px; overflow: hidden; background: #fff; transition: transform .3s, box-shadow .3s; cursor: pointer; box-shadow: 0 2px 12px rgba(40,45,158,0.07); }
         .destination-card:hover { transform: scale(1.06); box-shadow: var(--shadow); }
         .destination-image { width: 100%; height: 100%; display: block; object-fit: cover; }
 
-        /* ── Banner Carousel ── */
         .banner-carousel { position: relative; width: 100%; max-width: 100%; margin: 0 auto 36px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
         .banner-frame { position: relative; width: 100%; height: 280px; border-radius: 16px; overflow: hidden; }
         .banner-track { display: flex; width: 200%; height: 100%; transform: translateX(0); transition: transform 1s ease; }
@@ -589,25 +512,10 @@
         .banner-dot { width: 9px; height: 9px; border-radius: 50%; border: none; background: rgba(255,255,255,.5); cursor: pointer; transition: background .2s; padding: 0; }
         .banner-dot.active { background: #fff; }
 
-        /* ── Trust Section ── */
-        .trust-section {
-            margin: 8px 0 12px;
-            padding: 40px 32px;
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: 0 2px 12px rgba(40,45,158,0.07);
-        }
+        .trust-section { margin: 8px 0 12px; padding: 40px 32px; background: #fff; border-radius: var(--radius); box-shadow: 0 2px 12px rgba(40,45,158,0.07); }
         .trust-section h3 { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 32px; text-align: center; font-family: 'Inter', sans-serif; }
-        .trust-stats {
-            display: flex; align-items: stretch;
-            justify-content: center; gap: 32px; flex-wrap: wrap;
-        }
-        .trust-item {
-            display: flex; align-items: center; gap: 20px;
-            background: var(--gray-50); border-radius: 14px;
-            padding: 20px 28px; border: 1.5px solid var(--gray-100);
-            flex: 1; min-width: 240px; max-width: 340px;
-        }
+        .trust-stats { display: flex; align-items: stretch; justify-content: center; gap: 32px; flex-wrap: wrap; }
+        .trust-item { display: flex; align-items: center; gap: 20px; background: var(--gray-50); border-radius: 14px; padding: 20px 28px; border: 1.5px solid var(--gray-100); flex: 1; min-width: 240px; max-width: 340px; }
         .trust-score { font-size: 40px; font-weight: 900; color: var(--text); line-height: 1; min-width: 56px; font-family: 'Inter', sans-serif; }
         .trust-details { display: flex; flex-direction: column; gap: 6px; }
         .trust-stars { display: flex; gap: 4px; color: #f5a623; font-size: 18px; }
@@ -615,9 +523,6 @@
         .trust-badge { display: flex; align-items: center; }
         .trust-badge-image { height: 22px; width: auto; display: block; object-fit: contain; }
 
-        /* ══════════════════════════════════════════
-           FOOTER
-        ══════════════════════════════════════════ */
         .footer { background: #f0f2f8; padding: 52px 32px 36px; }
         .footer-inner { max-width: 1120px; margin: 0 auto; }
         .footer-content { display: flex; align-items: flex-start; justify-content: space-between; gap: 48px; flex-wrap: wrap; }
@@ -630,12 +535,7 @@
         .footer-logo img { width: 260px; max-width: 100%; height: auto; display: block; }
         .footer-copy { margin-top: 48px; text-align: center; color: var(--blue-dark); font-weight: 600; font-size: 12px; font-family: 'Inter', sans-serif; }
 
-        /* ══════════════════════════════════════════
-           RESPONSIVE
-        ══════════════════════════════════════════ */
-        @media (max-width: 980px) {
-            .cards-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        @media (max-width: 980px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 700px) {
             .top-right .currency-btn, .top-right .support-btn { display: none; }
             .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -645,14 +545,8 @@
             .footer-columns { grid-template-columns: 1fr 1fr; }
             .tab-pill { padding: 0 12px !important; font-size: 12px; }
         }
-        @media (max-width: 480px) {
-            .cards-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 26px; }
-            .footer-columns { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 900px) {
-            .tab-bar { width: 100% !important; max-width: 100% !important; }
-        }
+        @media (max-width: 480px) { .cards-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 26px; } .footer-columns { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .tab-bar { width: 100% !important; max-width: 100% !important; } }
     </style>
 </head>
 <body>
@@ -725,6 +619,8 @@
                     <button class="auth-tab-btn active" id="authTabSignin" role="tab" aria-selected="true" onclick="authSwitchTab('signin')">Sign In</button>
                     <button class="auth-tab-btn" id="authTabRegister" role="tab" aria-selected="false" onclick="authSwitchTab('register')">Create Account</button>
                 </div>
+
+                <!-- ══ SIGN IN PANEL ══ -->
                 <div class="auth-form-panel active" id="authPanelSignin" role="tabpanel">
                     <input id="siEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
                     <div class="auth-pw-wrap">
@@ -733,15 +629,31 @@
                     </div>
                     <a class="auth-forgot" onclick="authForgotPassword()">Forgot password?</a>
                     <button type="button" id="siSubmitBtn" class="auth-modal-btn auth-modal-btn-submit" onclick="authSignIn()">Sign In</button>
-                    <div class="auth-modal-or-row" aria-hidden="true"><span class="auth-modal-or-line"></span><span class="auth-modal-or-text">or</span><span class="auth-modal-or-line"></span></div>
+                    <div class="auth-modal-or-row" aria-hidden="true">
+                        <span class="auth-modal-or-line"></span>
+                        <span class="auth-modal-or-text">or</span>
+                        <span class="auth-modal-or-line"></span>
+                    </div>
                     <div class="auth-modal-social">
-                        <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="authSocial('google')"><span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span><span>Continue with Google</span></button>
-                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')"><span class="auth-modal-icon"><i class="fa-brands fa-microsoft"></i></span><span>Continue with Microsoft</span></button>
-                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('facebook')"><span class="auth-modal-icon auth-modal-facebook-icon"><i class="fa-brands fa-facebook-f"></i></span><span>Continue with Facebook</span></button>
+                        <!-- ✅ FIXED: Correct Google button calling signInWithGoogle() from firebase-config.js -->
+                        <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="signInWithGoogle()">
+                            <span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span>
+                            <span>Continue with Google</span>
+                        </button>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')">
+                            <span class="auth-modal-icon"><i class="fa-brands fa-microsoft"></i></span>
+                            <span>Continue with Microsoft</span>
+                        </button>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('facebook')">
+                            <span class="auth-modal-icon auth-modal-facebook-icon"><i class="fa-brands fa-facebook-f"></i></span>
+                            <span>Continue with Facebook</span>
+                        </button>
                     </div>
                     <p class="auth-modal-terms">By signing in you agree to Easy Navigate's <a href="#" style="color:var(--blue);">Terms</a> &amp; <a href="#" style="color:var(--blue);">Privacy Policy</a>.</p>
                     <p id="siStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
                 </div>
+
+                <!-- ══ REGISTER PANEL ══ -->
                 <div class="auth-form-panel" id="authPanelRegister" role="tabpanel">
                     <div class="auth-success-box" id="regSuccess">
                         <div class="auth-success-icon"><i class="fa-solid fa-circle-check"></i></div>
@@ -777,6 +689,7 @@
                     </div>
                     <p id="regStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
                 </div>
+
             </div>
         </section>
         <section class="auth-modal-hero" aria-hidden="true">
@@ -796,24 +709,11 @@
         <div class="tab-bar-wrap">
             <div class="tab-bar">
                 <span class="tab-indicator" id="tabIndicator" aria-hidden="true"></span>
-
-                <!-- ══ IMPORTANT: icons here use the exact same fa classes as Find Bookings dropdown ══ -->
-                <!-- The preload links at the top of <head> ensure the woff2 font is ready before these paint -->
-                <button class="tab-pill active" data-tab="hotel"       onclick="switchTab('hotel')">
-                    <i class="fa-solid fa-bed"></i> Hotel &amp; Homes
-                </button>
-                <button class="tab-pill"        data-tab="car"         onclick="switchTab('car')">
-                    <i class="fa-solid fa-car"></i> Car Rental
-                </button>
-                <button class="tab-pill"        data-tab="flights"     onclick="switchTab('flights')">
-                    <i class="fa-solid fa-plane"></i> Flights
-                </button>
-                <button class="tab-pill"        data-tab="attractions" onclick="switchTab('attractions')">
-                    <i class="fa-solid fa-ticket"></i> Attractions &amp; Tours
-                </button>
-                <button class="tab-pill"        data-tab="taxi"        onclick="switchTab('taxi')">
-                    <i class="fa-solid fa-taxi"></i> Airport Taxis
-                </button>
+                <button class="tab-pill active" data-tab="hotel"       onclick="switchTab('hotel')"><i class="fa-solid fa-bed"></i> Hotel &amp; Homes</button>
+                <button class="tab-pill"        data-tab="car"         onclick="switchTab('car')"><i class="fa-solid fa-car"></i> Car Rental</button>
+                <button class="tab-pill"        data-tab="flights"     onclick="switchTab('flights')"><i class="fa-solid fa-plane"></i> Flights</button>
+                <button class="tab-pill"        data-tab="attractions" onclick="switchTab('attractions')"><i class="fa-solid fa-ticket"></i> Attractions &amp; Tours</button>
+                <button class="tab-pill"        data-tab="taxi"        onclick="switchTab('taxi')"><i class="fa-solid fa-taxi"></i> Airport Taxis</button>
             </div>
         </div>
 
@@ -1080,7 +980,7 @@
         <button class="carousel-arrow carousel-next" onclick="scrollNext()"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 
-    <!-- ── Benefit Cards ── -->
+    <!-- Benefit Cards -->
     <div class="cards-grid">
         <div class="card"><div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div><h3>Flexible cancellation options</h3><p>Plans change? Cancel selected stays with ease</p></div>
         <div class="card"><div class="card-icon"><i class="fa-solid fa-user-check"></i></div><h3>Verified guest reviews</h3><p>Real feedback from real travelers</p></div>
@@ -1128,7 +1028,7 @@
         </div>
     </div>
 
-    <!-- ── Trust Section ── -->
+    <!-- Trust Section -->
     <section class="trust-section">
         <h3>Trusted by 83 million+ travellers worldwide</h3>
         <div class="trust-stats">
@@ -1136,11 +1036,7 @@
                 <div class="trust-score">4.7</div>
                 <div class="trust-details">
                     <div class="trust-stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star-half-stroke"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
                     </div>
                     <div class="trust-reviews">
                         <span class="trust-badge"><img src="assets/appstore-logo.png" alt="App Store" class="trust-badge-image"></span>
@@ -1152,11 +1048,7 @@
                 <div class="trust-score">4.4</div>
                 <div class="trust-details">
                     <div class="trust-stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-regular fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
                     </div>
                     <div class="trust-reviews">
                         <span class="trust-badge"><img src="assets/google-playstore-logo.png" alt="Google Play" class="trust-badge-image"></span>
@@ -1183,24 +1075,37 @@
     </div>
 </footer>
 
+<!-- ══════════════════════════════════════════
+     SCRIPTS — ORDER MATTERS, DO NOT REARRANGE
+     1. Firebase SDKs (must be first)
+     2. firebase-config.js (initializes Firebase + defines signInWithGoogle)
+     3. auth-header.js (reads localStorage, updates header UI)
+     4. flatpickr (date picker library)
+     5. db-search-tracker.js (your tracker)
+     6. Inline page scripts (last)
+══════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script src="auth-header.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="db-search-tracker.js"></script>
+
 <script>
 /* ════════ SUGGESTION DATA ════════ */
 const SUGGESTION_DATA = {
     hotelCities:    ['Manila','El Nido','Boracay','Makati','Parañaque','Cebu','Coron','Baguio'],
     flightAirports: [
-        {label:'Manila (MNL)',       sub:'Ninoy Aquino Intl'},
-        {label:'Cebu (CEB)',         sub:'Mactan–Cebu Intl'},
-        {label:'Clark (CRK)',        sub:'Diosdado Macapagal'},
-        {label:'Davao (DVO)',        sub:'Francisco Bangoy'},
-        {label:'Singapore (SIN)',    sub:'Changi Airport'},
-        {label:'Hong Kong (HKG)',    sub:'HKIA'},
-        {label:'Bangkok (BKK)',      sub:'Suvarnabhumi'},
-        {label:'Tokyo (NRT)',        sub:'Narita Intl'},
+        {label:'Manila (MNL)',      sub:'Ninoy Aquino Intl'},
+        {label:'Cebu (CEB)',        sub:'Mactan–Cebu Intl'},
+        {label:'Clark (CRK)',       sub:'Diosdado Macapagal'},
+        {label:'Davao (DVO)',       sub:'Francisco Bangoy'},
+        {label:'Singapore (SIN)',   sub:'Changi Airport'},
+        {label:'Hong Kong (HKG)',   sub:'HKIA'},
+        {label:'Bangkok (BKK)',     sub:'Suvarnabhumi'},
+        {label:'Tokyo (NRT)',       sub:'Narita Intl'},
         {label:'Kuala Lumpur (KUL)',sub:'KLIA'},
-        {label:'Dubai (DXB)',        sub:'Dubai Intl'},
+        {label:'Dubai (DXB)',       sub:'Dubai Intl'},
     ],
     carLocations:     ['Manila','Ninoy Aquino Airport (MNL)','Cebu City','Mactan Airport (CEB)','Clark','Davao City','Makati','Pasay'],
     taxiAirports:     ['Ninoy Aquino Airport (MNL)','Mactan Airport (CEB)','Clark Airport (CRK)','Davao Airport (DVO)'],
@@ -1393,8 +1298,21 @@ function initHotelSearchRedirect(){
 }
 
 /* ════════ AUTH MODAL ════════ */
-function openAuthModal(tab){const m=document.getElementById('authModal');if(!m)return;const sw=window.innerWidth-document.documentElement.clientWidth;document.body.style.overflow='hidden';if(sw>0)document.body.style.paddingRight=sw+'px';m.classList.add('open');m.setAttribute('aria-hidden','false');authSwitchTab(tab||'signin');document.getElementById('siStatus').textContent='';document.getElementById('regStatus').textContent='';}
-function closeAuthModal(){const m=document.getElementById('authModal');if(!m)return;m.classList.remove('open');m.setAttribute('aria-hidden','true');document.body.style.overflow='';document.body.style.paddingRight='';}
+function openAuthModal(tab){
+    const m=document.getElementById('authModal');if(!m)return;
+    const sw=window.innerWidth-document.documentElement.clientWidth;
+    document.body.style.overflow='hidden';
+    if(sw>0)document.body.style.paddingRight=sw+'px';
+    m.classList.add('open');m.setAttribute('aria-hidden','false');
+    authSwitchTab(tab||'signin');
+    const si=document.getElementById('siStatus'),re=document.getElementById('regStatus');
+    if(si)si.textContent='';if(re)re.textContent='';
+}
+function closeAuthModal(){
+    const m=document.getElementById('authModal');if(!m)return;
+    m.classList.remove('open');m.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';document.body.style.paddingRight='';
+}
 function authSwitchTab(tab){
     const st=document.getElementById('authTabSignin'),rt=document.getElementById('authTabRegister'),sp=document.getElementById('authPanelSignin'),rp=document.getElementById('authPanelRegister');if(!st||!sp)return;
     if(tab==='signin'){st.classList.add('active');st.setAttribute('aria-selected','true');rt.classList.remove('active');rt.setAttribute('aria-selected','false');sp.classList.add('active');rp.classList.remove('active');setTimeout(()=>document.getElementById('siEmail')?.focus(),80);}
@@ -1403,15 +1321,60 @@ function authSwitchTab(tab){
 function authTogglePw(id,btn){const inp=document.getElementById(id);if(!inp)return;const h=inp.type==='password';inp.type=h?'text':'password';const icon=btn.querySelector('i');if(icon)icon.className=h?'fa-solid fa-eye-slash':'fa-solid fa-eye';}
 function authCheckPwStrength(pw){const wrap=document.getElementById('regStrengthWrap'),fill=document.getElementById('regStrengthFill'),lbl=document.getElementById('regStrengthLabel');if(!wrap||!fill||!lbl)return;if(!pw){wrap.style.display='none';authCheckRegReady();return;}wrap.style.display='block';let s=0;if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;const lvls=[{pct:'20%',bg:'#ef4444',txt:'Very weak'},{pct:'40%',bg:'#f97316',txt:'Weak'},{pct:'60%',bg:'#eab308',txt:'Fair'},{pct:'80%',bg:'#22c55e',txt:'Strong'},{pct:'100%',bg:'#16a34a',txt:'Very strong'}];const lvl=lvls[Math.min(s-1,4)]||lvls[0];fill.style.width=lvl.pct;fill.style.background=lvl.bg;lbl.textContent=lvl.txt;lbl.style.color=lvl.bg;authCheckRegReady();}
 function authCheckRegReady(){const btn=document.getElementById('regSubmitBtn');if(!btn)return;const fn=document.getElementById('regFirstName')?.value.trim(),ln=document.getElementById('regLastName')?.value.trim(),em=document.getElementById('regEmail')?.value.trim(),pw=document.getElementById('regPassword')?.value,cpw=document.getElementById('regConfirmPw')?.value,terms=document.getElementById('regTerms')?.checked;btn.classList.toggle('ready',!!(fn&&ln&&em&&pw&&pw.length>=8&&pw===cpw&&terms));}
-async function authSignIn(){const email=document.getElementById('siEmail')?.value.trim(),pw=document.getElementById('siPassword')?.value,status=document.getElementById('siStatus'),btn=document.getElementById('siSubmitBtn');if(!email||!pw)return;if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){if(status){status.textContent='Please enter a valid email.';status.style.color='#b62020';}return;}if(btn){btn.disabled=true;btn.textContent='Signing in…';}if(status)status.textContent='';try{const res=await fetch(getApiUrl('signin.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});const data=await res.json();if(data.ok){const auth={email:data.user.email,name:data.user.first_name+' '+data.user.last_name,id:data.user.id,isLoggedIn:true};
-localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
-if(status){status.textContent='Signed in!';status.style.color='#16a34a';}
-if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
-setTimeout(()=>{ closeAuthModal(); location.reload(); },900);}else{if(status){status.textContent=data.message||'Sign in failed.';status.style.color='#b62020';}}}catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}finally{if(btn){btn.disabled=false;btn.textContent='Sign In';}}}
-async function authRegister(){const fname=document.getElementById('regFirstName')?.value.trim(),lname=document.getElementById('regLastName')?.value.trim(),email=document.getElementById('regEmail')?.value.trim(),pw=document.getElementById('regPassword')?.value,cpw=document.getElementById('regConfirmPw')?.value,terms=document.getElementById('regTerms')?.checked,status=document.getElementById('regStatus'),btn=document.getElementById('regSubmitBtn');if(!fname||!lname||!email||!pw||!cpw)return;if(pw.length<8){if(status){status.textContent='Password must be at least 8 characters.';status.style.color='#b62020';}return;}if(pw!==cpw){if(status){status.textContent='Passwords do not match.';status.style.color='#b62020';}return;}if(!terms){if(status){status.textContent='Please agree to the Terms.';status.style.color='#b62020';}return;}if(btn){btn.disabled=true;btn.textContent='Creating…';}if(status)status.textContent='';try{const res=await fetch(getApiUrl('register.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({first_name:fname,last_name:lname,email,password:pw})});const data=await res.json();if(data.ok){const auth={email:data.user.email,name:data.user.first_name+' '+data.user.last_name,id:data.user.id,isLoggedIn:true};
-localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);document.getElementById('regForm').style.display='none';document.getElementById('regSuccess').classList.add('show');}else{if(status){status.textContent=data.message||'Registration failed.';status.style.color='#b62020';}}}catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}finally{if(btn){btn.disabled=false;btn.textContent='Create Account';authCheckRegReady();}}}
-function authSocial(provider){const auth={email:provider+'_user@easynav.com',name:'Easy Navigate User',provider,isLoggedIn:true};localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);closeAuthModal();}
-function authForgotPassword(){const email=document.getElementById('siEmail')?.value.trim(),status=document.getElementById('siStatus');if(!email){if(status){status.textContent='Enter your email above first.';status.style.color='#1f3f87';}return;}if(status){status.textContent='Reset link sent to '+email;status.style.color='#16a34a';}}
+
+async function authSignIn(){
+    const email=document.getElementById('siEmail')?.value.trim(),pw=document.getElementById('siPassword')?.value,status=document.getElementById('siStatus'),btn=document.getElementById('siSubmitBtn');
+    if(!email||!pw)return;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){if(status){status.textContent='Please enter a valid email.';status.style.color='#b62020';}return;}
+    if(btn){btn.disabled=true;btn.textContent='Signing in…';}if(status)status.textContent='';
+    try{
+        const res=await fetch(getApiUrl('signin.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
+        const data=await res.json();
+        if(data.ok){
+            const auth={email:data.user.email,name:data.user.first_name+' '+data.user.last_name,id:data.user.id,isLoggedIn:true};
+            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+            if(status){status.textContent='Signed in!';status.style.color='#16a34a';}
+            if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+            setTimeout(()=>{closeAuthModal();location.reload();},900);
+        }else{if(status){status.textContent=data.message||'Sign in failed.';status.style.color='#b62020';}}
+    }catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}
+    finally{if(btn){btn.disabled=false;btn.textContent='Sign In';}}
+}
+
+async function authRegister(){
+    const fname=document.getElementById('regFirstName')?.value.trim(),lname=document.getElementById('regLastName')?.value.trim(),email=document.getElementById('regEmail')?.value.trim(),pw=document.getElementById('regPassword')?.value,cpw=document.getElementById('regConfirmPw')?.value,terms=document.getElementById('regTerms')?.checked,status=document.getElementById('regStatus'),btn=document.getElementById('regSubmitBtn');
+    if(!fname||!lname||!email||!pw||!cpw)return;
+    if(pw.length<8){if(status){status.textContent='Password must be at least 8 characters.';status.style.color='#b62020';}return;}
+    if(pw!==cpw){if(status){status.textContent='Passwords do not match.';status.style.color='#b62020';}return;}
+    if(!terms){if(status){status.textContent='Please agree to the Terms.';status.style.color='#b62020';}return;}
+    if(btn){btn.disabled=true;btn.textContent='Creating…';}if(status)status.textContent='';
+    try{
+        const res=await fetch(getApiUrl('register.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({first_name:fname,last_name:lname,email,password:pw})});
+        const data=await res.json();
+        if(data.ok){
+            const auth={email:data.user.email,name:data.user.first_name+' '+data.user.last_name,id:data.user.id,isLoggedIn:true};
+            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+            if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+            document.getElementById('regForm').style.display='none';
+            document.getElementById('regSuccess').classList.add('show');
+        }else{if(status){status.textContent=data.message||'Registration failed.';status.style.color='#b62020';}}
+    }catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}
+    finally{if(btn){btn.disabled=false;btn.textContent='Create Account';authCheckRegReady();}}
+}
+
+/* authSocial — fallback for Microsoft/Facebook (not yet wired to real OAuth) */
+function authSocial(provider){
+    const auth={email:provider+'_user@easynav.com',name:'Easy Navigate User',provider,isLoggedIn:true};
+    localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+    if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+    closeAuthModal();
+}
+
+function authForgotPassword(){
+    const email=document.getElementById('siEmail')?.value.trim(),status=document.getElementById('siStatus');
+    if(!email){if(status){status.textContent='Enter your email above first.';status.style.color='#1f3f87';}return;}
+    if(status){status.textContent='Reset link sent to '+email;status.style.color='#16a34a';}
+}
 
 /* ════════ INIT ════════ */
 function initAuthModal(){
@@ -1420,7 +1383,10 @@ function initAuthModal(){
     if(modal)modal.addEventListener('click',e=>{if(e.target===modal)closeAuthModal();});
     if(shell)shell.addEventListener('click',e=>e.stopPropagation());
     ['regFirstName','regLastName','regEmail','regConfirmPw'].forEach(id=>document.getElementById(id)?.addEventListener('input',authCheckRegReady));
-    ['siEmail','siPassword'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{const ok=document.getElementById('siEmail')?.value.trim()&&document.getElementById('siPassword')?.value;document.getElementById('siSubmitBtn')?.classList.toggle('ready',!!ok);}));
+    ['siEmail','siPassword'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{
+        const ok=document.getElementById('siEmail')?.value.trim()&&document.getElementById('siPassword')?.value;
+        document.getElementById('siSubmitBtn')?.classList.toggle('ready',!!ok);
+    }));
     try{const saved=JSON.parse(localStorage.getItem('easyNavigateAuth'));if(saved&&typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(saved);}catch(_){}
 }
 

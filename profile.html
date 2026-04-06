@@ -546,38 +546,105 @@ function getApiUrl(path) {
 
 /* ── INIT ── */
 function initProfile() {
-    const auth = getAuth();
-    if (!auth) { document.getElementById('guestNotice').style.display = 'block'; return; }
-    document.getElementById('profileSidebar').style.display = 'flex';
-    document.getElementById('profileMain').style.display    = 'flex';
-    const parts = (auth.name||'').split(' ');
-    const f = parts[0]||'', l = parts.slice(1).join(' ')||'';
-    document.getElementById('profileInitials').textContent     = ((f[0]||'')+(l[0]||'')||'EN').toUpperCase();
-    document.getElementById('profileDisplayName').textContent  = auth.name  || 'Easy Navigate User';
-    document.getElementById('signoutName').textContent  = auth.name  || 'Easy Navigate User';
-document.getElementById('signoutEmail').textContent = auth.email || '';
-    loadProfileFromDB(auth.id);
-    loadBookings(auth.email);
+  const auth = getAuth();
+  if (!auth) {
+    document.getElementById('guestNotice').style.display = 'block';
+    return;
+  }
+ 
+  document.getElementById('profileSidebar').style.display = 'flex';
+  document.getElementById('profileMain').style.display    = 'flex';
+ 
+  // ── Resolve the display email from every possible field ──────────────────
+  // Google auth saves:  auth.email  AND  auth.displayEmail
+  // Email/password saves: auth.email
+  // Old fallback saved:  provider + '_user@easynav.com'  (authSocial stub)
+  const resolvedEmail = auth.email || auth.displayEmail || '';
+ 
+  // Update the sidebar immediately so it shows while the DB call is in-flight
+  const nameParts = (auth.name || '').split(' ');
+  const f = auth.firstName || nameParts[0] || '';
+  const l = auth.lastName  || nameParts.slice(1).join(' ') || '';
+ 
+  document.getElementById('profileInitials').textContent     = ((f[0] || '') + (l[0] || '') || 'EN').toUpperCase();
+  document.getElementById('profileDisplayName').textContent  = auth.name || 'Easy Navigate User';
+  document.getElementById('profileDisplayEmail').textContent = resolvedEmail;   // ← FIX: always set here
+ 
+  // Sign-out modal preview
+  document.getElementById('signoutName').textContent  = auth.name  || 'Easy Navigate User';
+  document.getElementById('signoutEmail').textContent = resolvedEmail;
+ 
+  loadProfileFromDB(auth.id, auth);   // pass full auth as fallback
+  loadBookings(resolvedEmail);
 }
 
 /* ── LOAD PROFILE ── */
-async function loadProfileFromDB(userId) {
-    try {
-        const res  = await fetch(getApiUrl('get_profile.php'), { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id: userId}) });
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.message);
-        fillPersonalInfo(data.user);
-        const f = data.user.first_name||'', l = data.user.last_name||'';
-        document.getElementById('profileInitials').textContent     = ((f[0]||'')+(l[0]||'')||'EN').toUpperCase();
-        document.getElementById('profileDisplayName').textContent  = (f+' '+l).trim()||'Easy Navigate User';
-        document.getElementById('profileDisplayEmail').textContent = data.user.email||'';
-    } catch(e) {
-        const auth = getAuth();
-        if (auth) { const p=(auth.name||'').split(' '); fillPersonalInfoFallback(p[0]||'', p.slice(1).join(' ')||'', auth.email||''); }
-    } finally {
-        document.getElementById('personalLoading').style.display  = 'none';
-        document.getElementById('personalInfoGrid').style.display = 'grid';
-    }
+async function loadProfileFromDB(userId, auth) {
+  // Google users have no DB row (userId is undefined).
+  // Skip the API call and go straight to the fallback for them.
+  if (!userId) {
+    _applyGoogleFallback(auth);
+    return;
+  }
+ 
+  try {
+    const res  = await fetch(getApiUrl('get_profile.php'), {
+      method  : 'POST',
+      headers : { 'Content-Type': 'application/json' },
+      body    : JSON.stringify({ id: userId }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.message);
+ 
+    fillPersonalInfo(data.user);
+ 
+    // Keep the sidebar name/email in sync with what the DB returned
+    const f = data.user.first_name || '';
+    const l = data.user.last_name  || '';
+    document.getElementById('profileInitials').textContent     = ((f[0] || '') + (l[0] || '') || 'EN').toUpperCase();
+    document.getElementById('profileDisplayName').textContent  = (f + ' ' + l).trim() || 'Easy Navigate User';
+    document.getElementById('profileDisplayEmail').textContent = data.user.email || auth?.email || '';
+ 
+  } catch (_) {
+    // DB unreachable or user not found — fall back to localStorage values
+    _applyGoogleFallback(auth);
+  } finally {
+    document.getElementById('personalLoading').style.display  = 'none';
+    document.getElementById('personalInfoGrid').style.display = 'grid';
+  }
+}
+ 
+ 
+// ── Internal helper: populate Personal Info tab from localStorage auth object ─
+function _applyGoogleFallback(auth) {
+  if (!auth) return;
+ 
+  const nameParts   = (auth.name || '').split(' ');
+  const firstName   = auth.firstName || nameParts[0] || '';
+  const lastName    = auth.lastName  || nameParts.slice(1).join(' ') || '';
+  const email       = auth.email || auth.displayEmail || '';
+ 
+  // Populate the read-only value divs
+  fillPersonalInfoFallback(firstName, lastName, email);
+ 
+  // Also pre-fill the edit inputs so "Edit" mode works for Google users
+  document.getElementById('inp-firstName').value   = firstName;
+  document.getElementById('inp-lastName').value    = lastName;
+  document.getElementById('inp-email').value       = email;
+  document.getElementById('inp-nationality').value = 'Filipino';
+ 
+  // Keep the sidebar consistent (already set in initProfile, but re-set in
+  // case loadProfileFromDB is ever called independently)
+  document.getElementById('profileDisplayEmail').textContent = email;
+  document.getElementById('profileDisplayName').textContent  =
+    auth.name || (firstName + ' ' + lastName).trim() || 'Easy Navigate User';
+ 
+  const f = firstName, l = lastName;
+  document.getElementById('profileInitials').textContent =
+    ((f[0] || '') + (l[0] || '') || 'EN').toUpperCase();
+ 
+  document.getElementById('personalLoading').style.display  = 'none';
+  document.getElementById('personalInfoGrid').style.display = 'grid';
 }
 
 function fillPersonalInfo(u) {

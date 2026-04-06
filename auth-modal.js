@@ -82,7 +82,7 @@
 
 <div class="auth-modal" id="authModal" aria-hidden="true">
   <div class="auth-modal-shell" role="dialog" aria-modal="true">
-    <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close dialog"><i class="fas fa-times"></i></button>
+    <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close dialog"><i class="fa-solid fa-xmark"></i></button>
     <section class="auth-modal-panel">
       <div class="auth-modal-inner">
         <img class="auth-modal-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
@@ -100,7 +100,7 @@
             <input id="siEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
             <div class="auth-pw-wrap">
               <input id="siPassword" type="password" class="auth-modal-input" placeholder="Password" autocomplete="current-password">
-              <button type="button" class="auth-pw-toggle" onclick="authTogglePw('siPassword',this)" tabindex="-1" aria-label="Show/hide password"><i class="fas fa-eye"></i></button>
+              <button type="button" class="auth-pw-toggle" onclick="authTogglePw('siPassword',this)" tabindex="-1" aria-label="Show/hide password"><i class="fa-solid fa-eye"></i></button>
             </div>
             <a class="auth-forgot" onclick="authForgotPassword()">Forgot password?</a>
             <button type="button" id="siSubmitBtn" class="auth-modal-btn auth-modal-btn-submit" onclick="authSignIn()">Sign In</button>
@@ -111,7 +111,7 @@
             <span class="auth-modal-or-line"></span>
           </div>
           <div class="auth-modal-social">
-            <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="authSocial('google')">
+            <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="handleGoogleSignIn()">
               <span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span><span>Continue with Google</span>
             </button>
             <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')">
@@ -132,7 +132,7 @@
         <!-- REGISTER PANEL -->
         <div class="auth-form-panel" id="authPanelRegister" role="tabpanel">
           <div class="auth-success-box" id="regSuccess">
-            <div class="auth-success-icon"><i class="fas fa-circle-check"></i></div>
+            <div class="auth-success-icon"><i class="fa-solid fa-circle-check"></i></div>
             <div class="auth-success-title">Account Created!</div>
             <div class="auth-success-sub">Welcome to Easy Navigate.<br>Please sign in to continue.</div>
             <button type="button" class="auth-modal-btn auth-modal-btn-submit ready"
@@ -148,7 +148,7 @@
               <input id="regPassword" type="password" class="auth-modal-input"
                      placeholder="Password (min. 8 characters)" autocomplete="new-password"
                      oninput="authCheckPwStrength(this.value)">
-              <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regPassword',this)" tabindex="-1" aria-label="Show/hide password"><i class="fas fa-eye"></i></button>
+              <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regPassword',this)" tabindex="-1" aria-label="Show/hide password"><i class="fa-solid fa-eye"></i></button>
             </div>
             <div class="auth-strength-wrap" id="regStrengthWrap" style="display:none;">
               <div class="auth-strength-bar"><div class="auth-strength-fill" id="regStrengthFill"></div></div>
@@ -156,7 +156,7 @@
             </div>
             <div class="auth-pw-wrap">
               <input id="regConfirmPw" type="password" class="auth-modal-input" placeholder="Confirm password" autocomplete="new-password">
-              <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regConfirmPw',this)" tabindex="-1" aria-label="Show/hide password"><i class="fas fa-eye"></i></button>
+              <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regConfirmPw',this)" tabindex="-1" aria-label="Show/hide password"><i class="fa-solid fa-eye"></i></button>
             </div>
             <label class="auth-terms-check">
               <input type="checkbox" id="regTerms" onchange="authCheckRegReady()">
@@ -180,6 +180,7 @@
   <span id="authGateToastMsg">Please sign in to continue</span>
   <button class="auth-gate-toast-btn" onclick="openAuthModal('signin')">Sign In</button>
 </div>`;
+    // ── END OF MODAL_HTML TEMPLATE LITERAL ────────────────────
 
     if (!document.getElementById('authModal')) {
         document.body.insertAdjacentHTML('afterbegin', MODAL_HTML);
@@ -202,7 +203,6 @@
             return !!(auth && auth.isLoggedIn);
         } catch (_) { return false; }
     }
-
     window.isSignedIn = isSignedIn;
 
     // ── 3. TOAST ──────────────────────────────────────────────
@@ -217,8 +217,6 @@
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
     };
-
-    // Also expose as showAuthToast so pages that use that name still work
     window.showAuthToast = window.showAuthGateToast;
 
     // ── 4. AUTH GATE ──────────────────────────────────────────
@@ -287,7 +285,26 @@
         }
     };
 
-    // ── 7. PASSWORD UTILS ─────────────────────────────────────
+    // ── 7. GOOGLE SIGN-IN — safe wrapper ─────────────────────
+    // signInWithGoogle() is defined in firebase-config.js which loads
+    // BEFORE auth-modal.js on every page. This wrapper checks it exists
+    // at click-time (not at script-parse time) so it always works.
+
+    window.handleGoogleSignIn = function () {
+        const status = document.getElementById('siStatus');
+        if (typeof window.signInWithGoogle === 'function') {
+            window.signInWithGoogle();
+        } else {
+            // Firebase not loaded on this page — show a clear error
+            if (status) {
+                status.textContent = 'Google sign-in is not available. Please use email/password.';
+                status.style.color = '#b62020';
+            }
+            console.error('signInWithGoogle() is not defined. Make sure firebase-config.js loads before auth-modal.js.');
+        }
+    };
+
+    // ── 8. PASSWORD UTILS ─────────────────────────────────────
 
     window.authTogglePw = function (inputId, btn) {
         const inp = document.getElementById(inputId);
@@ -295,7 +312,7 @@
         const isHidden = inp.type === 'password';
         inp.type = isHidden ? 'text' : 'password';
         const icon = btn.querySelector('i');
-        if (icon) icon.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+        if (icon) icon.className = isHidden ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
     };
 
     window.authCheckPwStrength = function (pw) {
@@ -339,7 +356,7 @@
         btn.classList.toggle('ready', ready);
     };
 
-    // ── 8. SIGN IN ────────────────────────────────────────────
+    // ── 9. SIGN IN ────────────────────────────────────────────
 
     window.authSignIn = async function () {
         const email  = document.getElementById('siEmail')?.value.trim();
@@ -365,7 +382,6 @@
             const data = await res.json();
 
             if (data.ok) {
-                // ── isLoggedIn: true — required by isSignedIn() and auth-header.js ──
                 const auth = {
                     isLoggedIn : true,
                     id         : data.user.id,
@@ -375,21 +391,15 @@
                 localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
 
                 if (status) { status.textContent = 'Signed in successfully!'; status.style.color = '#16a34a'; }
-
-                // Update header button immediately without waiting for reload
                 if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
 
                 setTimeout(() => {
                     window.closeAuthModal();
-
-                    // If there was a pending action (e.g. open fare modal, book car),
-                    // run it instead of reloading so the user lands in the right place.
                     if (typeof window._authPendingAction === 'function') {
                         const fn = window._authPendingAction;
                         window._authPendingAction = null;
                         setTimeout(fn, 200);
                     } else {
-                        // No pending action — reload so header + profile icon refresh
                         location.reload();
                     }
                 }, 800);
@@ -404,7 +414,7 @@
         }
     };
 
-    // ── 9. REGISTER ───────────────────────────────────────────
+    // ── 10. REGISTER ──────────────────────────────────────────
 
     window.authRegister = async function () {
         const fname  = document.getElementById('regFirstName')?.value.trim();
@@ -447,7 +457,6 @@
             const data = await res.json();
 
             if (data.ok) {
-                // Registration success — show success box, user must sign in manually
                 const frm = document.getElementById('regForm');
                 const suc = document.getElementById('regSuccess');
                 if (frm) frm.style.display = 'none';
@@ -465,7 +474,7 @@
         }
     };
 
-    // ── 10. SOCIAL / FORGOT ───────────────────────────────────
+    // ── 11. SOCIAL / FORGOT ───────────────────────────────────
 
     window.authSocial = function (provider) {
         const auth = {
@@ -483,7 +492,6 @@
             window._authPendingAction = null;
             setTimeout(fn, 200);
         } else {
-            // Reload so header updates
             setTimeout(() => location.reload(), 200);
         }
     };
@@ -498,7 +506,7 @@
         if (status) { status.textContent = 'Password reset link sent to ' + email; status.style.color = '#16a34a'; }
     };
 
-    // ── 11. WIRE EVENTS ON DOM READY ─────────────────────────
+    // ── 12. WIRE EVENTS ON DOM READY ─────────────────────────
 
     document.addEventListener('DOMContentLoaded', function () {
         const closeBtn = document.getElementById('authModalCloseBtn');
@@ -509,7 +517,7 @@
         if (modal)    modal.addEventListener('click', window.closeAuthModal);
         if (shell)    shell.addEventListener('click', e => e.stopPropagation());
 
-        // Wire header Sign In / Register button only if not already handled by auth-header.js
+        // Wire the header Sign In / Register button
         const openBtn = document.getElementById('openAuthModalBtn');
         if (openBtn && !openBtn.dataset.authWired) {
             openBtn.dataset.authWired = '1';
@@ -536,16 +544,19 @@
             if (e.key === 'Escape') window.closeAuthModal();
         });
 
-        // Gate booking buttons — slight delay so dynamic cards have rendered
+        // Gate booking buttons after cards render
         setTimeout(gateBookingButtons, 800);
 
-        // Watch for dynamically added cards
+        // Watch for dynamically added cards (hotel results list)
+        const observerTarget = document.getElementById('hotelResultsList') || document.body;
         const observer = new MutationObserver(() => gateBookingButtons());
-        const container = document.getElementById('hotelResultsList') || document.body;
-        observer.observe(container, { childList: true, subtree: true });
+        observer.observe(observerTarget, { childList: true, subtree: true });
     });
 
-    // ── 12. GATE BOOKING BUTTONS ──────────────────────────────
+    // ── 13. GATE BOOKING BUTTONS ─────────────────────────────
+    // NOTE: .check-avail-btn is NOT in this list because hotel & homes.html
+    // calls onCheckAvail() → requireAuth() directly. Adding it here would
+    // double-wrap the button and break the pending-action callback chain.
 
     function gateBookingButtons() {
         const selectors = [

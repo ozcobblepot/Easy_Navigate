@@ -5,178 +5,310 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel &amp; Homes – EasyNavigate</title>
     <link rel="icon" type="image/png" href="assets/web-icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-solid-900.woff2"   as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-brands-400.woff2"  as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="styles.css">
 
     <style>
-    /* ── PASSENGER DROPDOWN ── */
-    .passenger-dropdown{min-width:320px;padding:8px 16px}
-    .passenger-note{font-size:13px;color:#6b6b6b;margin-bottom:12px;line-height:1.25;font-weight:400;text-align:left}
-    .passenger-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #f0f2f8}
-    .passenger-row:last-child{border-bottom:none}
-    .passenger-label{display:flex;flex-direction:column;gap:4px;align-items:flex-start;width:160px}
-    .passenger-type{font-size:14px;font-weight:700;color:#1a2140;text-align:left}
-    .passenger-age{font-size:12px;color:#8892aa;text-align:left}
-    .passenger-controls{display:flex;align-items:center;gap:8px}
-    .pax-btn{background:none;border:none;cursor:pointer;padding:0;font-size:22px;color:#c8cee0;display:flex;align-items:center;transition:color .2s;line-height:1}
-    .pax-btn:hover{color:#282D9E}
-    .pax-value{font-size:16px;font-weight:700;color:#1a2140;min-width:20px;text-align:center}
+        .fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands { font-display: block; }
 
-    /* ── FILTER SIDEBAR ── */
-    .hotel-results-section{max-width:1200px;margin:0 auto;padding:32px 24px 48px}
-    .hotel-results-flex{display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start}
-    .hotel-filter-sidebar{background:#fff;border-radius:12px;border:1px solid #e8eaf0;overflow:hidden;align-self:start;position:sticky;top:20px}
-    .filter-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f0f2f8}
-    .filter-title{font-size:15px;font-weight:700;color:#1a2140}
-    .filter-clear-all{background:none;border:none;font-size:12px;font-weight:600;color:#282D9E;cursor:pointer;padding:0;font-family:'Inter',sans-serif}
-    .filter-clear-all:hover{opacity:.7}
-    .filter-body{padding:16px 20px;display:flex;flex-direction:column;gap:18px}
-    .filter-group{display:flex;flex-direction:column;gap:10px}
-    .filter-group-label{font-size:13px;font-weight:700;color:#1a2140}
-    .filter-price-buttons{display:flex;flex-direction:column;gap:6px}
-    .filter-price-btn{background:#f5f6fa;border:1px solid #e8eaf0;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;color:#1a2140;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all .15s}
-    .filter-price-btn:hover,.filter-price-btn.active{background:#eef0ff;border-color:#282D9E;color:#282D9E}
-    .filter-stars{display:flex;flex-direction:column;gap:8px}
-    .filter-stars label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#1a2140;font-weight:600}
-    .filter-stars input[type=checkbox]{accent-color:#282D9E;width:15px;height:15px;cursor:pointer}
-    .star-icons{color:#f59e0b;font-size:13px}
-    .filter-apply-btn{background:#282D9E;color:#fff;border:none;border-radius:8px;padding:11px 0;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s}
-    .filter-apply-btn:hover{background:#1f2480}
+        /* ══ AUTH MODAL — identical to index.html ══ */
+        .auth-modal { position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,.55);z-index:2000;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s,visibility .24s; }
+        .auth-modal.open { opacity:1;visibility:visible;pointer-events:auto; }
+        .auth-modal-shell { width:min(960px,100%);max-height:min(730px,calc(100vh - 40px));background:#fff;border-radius:16px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;transform:translateY(18px) scale(.98);opacity:.9;transition:transform .26s,opacity .26s;box-shadow:0 24px 64px rgba(0,0,0,.22); }
+        .auth-modal.open .auth-modal-shell { transform:translateY(0) scale(1);opacity:1; }
+        .auth-modal-close { position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid #dde1f0;border-radius:50%;background:#fff;color:#364152;cursor:pointer;font-size:15px;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .15s; }
+        .auth-modal-close:hover { background:#f7f8fc; }
+        .auth-modal-panel { display:flex;justify-content:center;align-items:stretch;background:#fff;overflow-y:auto; }
+        .auth-modal-panel::-webkit-scrollbar { width:0; }
+        .auth-modal-inner { width:min(360px,100%);padding:32px 0 28px;display:flex;flex-direction:column;box-sizing:border-box; }
+        .auth-modal-logo { width:148px;height:auto;margin:0 auto 18px;display:block; }
+        .auth-modal-divider { height:1px;background:#dde1f0;margin-bottom:16px; }
+        .auth-tabs { display:flex;border-bottom:2px solid #eef0f8;margin-bottom:18px; }
+        .auth-tab-btn { flex:1;padding:10px 0;font-size:13.5px;font-weight:700;color:#9ba5c0;background:none;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;cursor:pointer;transition:color .18s,border-color .18s;font-family:'Inter',sans-serif; }
+        .auth-tab-btn.active { color:#282D9E;border-bottom-color:#282D9E; }
+        .auth-form-panel { display:none; }
+        .auth-form-panel.active { display:flex;flex-direction:column;gap:10px; }
+        .auth-modal-input { width:100%;border-radius:8px;border:1.5px solid #dde1f0;min-height:44px;font-size:14.5px;padding:0 14px;color:#273142;outline:none;background:#fff;box-sizing:border-box;transition:border-color .15s;font-family:'Inter',sans-serif; }
+        .auth-modal-input:focus { border-color:#282D9E; }
+        .auth-modal-input::placeholder { color:#c4cce0; }
+        .auth-modal-btn { width:100%;border-radius:8px;border:1px solid #dde1f0;min-height:44px;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s;box-sizing:border-box;font-family:'Inter',sans-serif; }
+        .auth-modal-or-row { margin:12px 0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px; }
+        .auth-modal-or-line { height:1px;background:#dde1f0; }
+        .auth-modal-or-text { color:#c4cce0;font-weight:600;font-size:18px;line-height:1; }
+        .auth-modal-social { display:grid;gap:8px; }
+        .auth-modal-btn-google { background:#4b82e0;border-color:#4b82e0;color:#fff; }
+        .auth-modal-btn-google:hover { background:#3a6ec0; }
+        .auth-modal-btn-social { background:#fff;color:#252b36; }
+        .auth-modal-btn-social:hover { background:#f7f8fc; }
+        .auth-modal-icon { width:22px;display:inline-flex;justify-content:center;align-items:center;font-size:20px; }
+        .auth-modal-facebook-icon { color:#1e78df; }
+        .auth-modal-terms { color:#515864;font-size:11.5px;line-height:1.45;margin-top:4px; }
+        .auth-modal-status { min-height:18px;font-size:12.5px;color:#1f3f87; }
+        .auth-pw-wrap { position:relative; }
+        .auth-pw-wrap .auth-modal-input { padding-right:42px; }
+        .auth-pw-toggle { position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ba5c0;font-size:14px;padding:0;display:flex;align-items:center;transition:color .15s; }
+        .auth-pw-toggle:hover { color:#282D9E; }
+        .auth-name-row { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+        .auth-strength-wrap { margin-top:-4px; }
+        .auth-strength-bar { height:3px;border-radius:2px;background:#eef0f8;overflow:hidden;margin-bottom:4px; }
+        .auth-strength-fill { height:100%;border-radius:2px;width:0%;transition:width .3s,background .3s; }
+        .auth-strength-label { font-size:11px;color:#9ba5c0; }
+        .auth-forgot { text-align:right;font-size:12px;font-weight:600;color:#282D9E;cursor:pointer;text-decoration:none;transition:opacity .15s;display:block;margin-top:-4px; }
+        .auth-forgot:hover { opacity:.75; }
+        .auth-terms-check { display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#515864;line-height:1.4;cursor:pointer; }
+        .auth-terms-check input[type="checkbox"] { width:14px;height:14px;margin-top:2px;accent-color:#282D9E;flex-shrink:0;cursor:pointer; }
+        .auth-modal-btn-submit { background:#282D9E;border-color:#282D9E;color:#fff;opacity:.42;pointer-events:none; }
+        .auth-modal-btn-submit.ready { opacity:1;pointer-events:auto; }
+        .auth-modal-btn-submit:hover { background:#1f237e;border-color:#1f237e; }
+        .auth-success-box { display:none;flex-direction:column;align-items:center;gap:10px;padding:28px 0 12px;text-align:center; }
+        .auth-success-box.show { display:flex; }
+        .auth-success-icon { font-size:44px;color:#16a34a; }
+        .auth-success-title { font-size:17px;font-weight:800;color:#111827; }
+        .auth-success-sub { font-size:13px;color:#9ba5c0; }
+        .auth-modal-hero { position:relative;background:center/cover no-repeat url('assets/attractions-and-tours-bg.jpg');min-height:300px; }
+        .auth-modal-hero-overlay { position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.3) 100%); }
+        .auth-modal-hero-logo { position:absolute;right:24px;bottom:22px;width:144px;z-index:1; }
+        @media(max-width:860px){
+            .auth-modal-shell{grid-template-columns:1fr;overflow-y:auto;max-height:calc(100vh - 40px)}
+            .auth-modal-hero{min-height:180px;order:-1}
+            .auth-modal-inner{width:min(420px,calc(100% - 32px));padding-top:24px;margin:0 auto}
+        }
 
-    /* ── HOTEL CARDS ── */
-    .hotel-results-header{margin-bottom:20px}
-    .hotel-results-header h2{font-size:22px;font-weight:800;color:#1a2140;margin:0 0 4px}
-    .hotel-results-header p{font-size:14px;color:#8892aa;margin:0}
-    .hotel-results-list{display:flex;flex-direction:column;gap:18px}
-    .hotel-card{background:#fff;border-radius:12px;border:1px solid #e8eaf0;display:grid;grid-template-columns:280px 1fr;overflow:hidden;transition:box-shadow .2s;cursor:pointer}
-    .hotel-card:hover{box-shadow:0 8px 32px rgba(28,40,120,.10)}
-    .hotel-card-img-wrap{position:relative;height:200px;overflow:hidden;background:#e8eaf0}
-    .hotel-card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-    .hotel-card:hover .hotel-card-img{transform:scale(1.04)}
-    .hotel-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8eaf0,#d5dae8);color:#8892aa;font-size:40px}
-
-    /* ── BADGES ── */
-    .hotel-card-badge{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;z-index:1}
-    .badge-top-rated   {background:#16a34a;color:#fff}
-    .badge-great-value {background:#d97706;color:#fff}
-    .badge-luxury-pick {background:#7c3aed;color:#fff}
-    .badge-popular     {background:#282D9E;color:#fff}
-    .badge-staff-pick  {background:#0e7490;color:#fff}
-
-    .hotel-card-body{padding:18px 20px;display:flex;flex-direction:column;gap:8px}
-    .hotel-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-    .hotel-card-name{font-size:17px;font-weight:800;color:#1a2140;margin:0;line-height:1.25}
-    .hotel-card-stars{color:#f59e0b;font-size:13px;white-space:nowrap}
-    .hotel-card-location{font-size:13px;color:#8892aa;display:flex;align-items:center;gap:5px}
-    .hotel-card-location i{font-size:11px;color:#282D9E}
-    .hotel-card-amenities{display:flex;flex-wrap:wrap;gap:6px}
-    .amenity-tag{background:#f0f2f8;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:600;color:#4a5580}
-    .hotel-card-footer{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-top:8px;border-top:1px solid #f0f2f8}
-    .hotel-card-price{font-size:22px;font-weight:800;color:#282D9E}
-    .hotel-card-price-label{font-size:11px;color:#8892aa;font-weight:500}
-    .hotel-card-price-night{font-size:12px;color:#8892aa;font-weight:500}
-    .hotel-card-score{background:#282D9E;color:#fff;font-size:13px;font-weight:800;padding:4px 8px;border-radius:6px}
-    .hotel-card-reviews{font-size:12px;color:#8892aa}
-    .check-avail-btn{background:#282D9E;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .15s;white-space:nowrap;flex-shrink:0;align-self:flex-end}
-    .check-avail-btn:hover{background:#1f2480}
-
-    /* ── HOTEL DETAIL MODAL ── */
-    .hotel-modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s,visibility .24s}
-    .hotel-modal-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
-    .hotel-modal{background:#fff;border-radius:16px;width:min(960px,100%);max-height:calc(100vh - 40px);overflow-y:auto;position:relative;transform:translateY(20px) scale(.98);transition:transform .26s,opacity .26s;opacity:.9;display:flex;flex-direction:column}
-    .hotel-modal::-webkit-scrollbar{width:4px}
-    .hotel-modal::-webkit-scrollbar-thumb{background:#d5dae2;border-radius:4px}
-    .hotel-modal-backdrop.open .hotel-modal{transform:translateY(0) scale(1);opacity:1}
-    .hotel-modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1.5px solid rgba(255,255,255,.6);border-radius:50%;background:rgba(0,0,0,.32);color:#fff;cursor:pointer;font-size:15px;z-index:20;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:background .15s}
-    .hotel-modal-close:hover{background:rgba(0,0,0,.58)}
-    .hotel-modal-top{display:grid;grid-template-columns:420px 1fr;height:420px;flex-shrink:0}
-    .hotel-modal-gallery{position:relative;overflow:hidden;border-radius:16px 0 0 0;background:#d5dae8;height:100%}
-    .hotel-modal-gallery-inner{display:flex;height:100%;width:100%;transition:transform .4s ease;will-change:transform}
-    .hotel-modal-gallery-slide{width:100%;height:100%;flex:0 0 100%;overflow:hidden;position:relative}
-    .hotel-modal-gallery-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-    .gallery-prev,.gallery-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.38);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:13px;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;transition:background .15s}
-    .gallery-prev{left:10px}.gallery-next{right:10px}
-    .gallery-prev:hover,.gallery-next:hover{background:rgba(0,0,0,.65)}
-    .gallery-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5}
-    .gallery-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.48);border:none;cursor:pointer;padding:0;transition:background .2s,transform .2s}
-    .gallery-dot.active{background:#fff;transform:scale(1.25)}
-    .hotel-modal-info{padding:24px 24px 20px;display:flex;flex-direction:column;gap:0;border-left:1px solid #f0f2f8;overflow-y:auto;height:100%;box-sizing:border-box}
-    .hotel-modal-info::-webkit-scrollbar{width:3px}
-    .hotel-modal-info::-webkit-scrollbar-thumb{background:#e0e2ea;border-radius:3px}
-    .hotel-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:4px}
-    .hotel-modal-name{font-size:19px;font-weight:800;color:#1a2140;margin:0;line-height:1.25}
-    .hotel-modal-stars{color:#f59e0b;font-size:14px;margin-bottom:8px}
-    .hotel-modal-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-    .hotel-modal-score-badge{background:#282D9E;color:#fff;font-size:13px;font-weight:800;padding:4px 9px;border-radius:7px;flex-shrink:0}
-    .hotel-modal-reviews-txt{font-size:12px;color:#8892aa}
-    .hotel-modal-location{font-size:13px;color:#8892aa;display:flex;align-items:center;gap:5px;margin-bottom:12px}
-    .hotel-modal-location i{color:#282D9E;font-size:11px}
-    .hotel-modal-desc{font-size:13px;color:#4a5580;line-height:1.65;margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid #f0f2f8}
-    .hotel-modal-section-title{font-size:11px;font-weight:700;color:#8892aa;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
-    .hotel-modal-amenities{display:flex;flex-wrap:wrap;gap:6px}
-    .hotel-modal-amenity{background:#f0f2f8;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;color:#4a5580;display:flex;align-items:center;gap:5px}
-    .hotel-modal-amenity i{color:#282D9E;font-size:11px}
-    .hotel-modal-rooms-section{padding:20px 24px 28px;border-top:1px solid #e8eaf0;width:100%;flex-shrink:0;box-sizing:border-box}
-    .hotel-modal-rooms{display:flex;flex-direction:column;gap:10px}
-    .room-card{border:1.5px solid #e8eaf0;border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:border-color .15s,box-shadow .15s}
-    .room-card:hover{border-color:#282D9E;box-shadow:0 2px 12px rgba(40,45,158,.09)}
-    .room-card-info{flex:1;min-width:0}
-    .room-card-name{font-size:14px;font-weight:700;color:#1a2140;margin:0 0 7px}
-    .room-card-features{display:flex;flex-wrap:wrap;gap:5px}
-    .room-card-feature{background:#f5f6fa;border-radius:4px;padding:3px 8px;font-size:11px;font-weight:600;color:#6b7a99;white-space:nowrap}
-    .room-card-right{display:flex;align-items:center;gap:16px;flex-shrink:0}
-    .room-card-price-block{text-align:right}
-    .room-card-price{font-size:18px;font-weight:800;color:#282D9E;white-space:nowrap}
-    .room-card-price-sub{font-size:11px;color:#8892aa}
-    .reserve-room-btn{background:#282D9E;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:background .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
-    .reserve-room-btn:hover{background:#1f2480}
-    .no-results{text-align:center;padding:60px 20px;color:#8892aa}
-    .no-results i{font-size:48px;margin-bottom:16px;opacity:.4;display:block}
-    .no-results h3{font-size:18px;font-weight:700;color:#1a2140;margin:0 0 8px}
-    .no-results p{font-size:14px;margin:0}
-    @media(max-width:760px){
-      .hotel-modal-top{grid-template-columns:1fr;height:auto}
-      .hotel-modal-gallery{border-radius:16px 16px 0 0;height:220px}
-      .hotel-modal-gallery-inner{height:220px}
-      .hotel-modal-info{border-left:none;border-top:1px solid #f0f2f8;height:auto;max-height:360px}
-      .room-card{flex-wrap:wrap}
-      .room-card-right{width:100%;justify-content:space-between}
-    }
-    @media(max-width:900px){
-      .hotel-results-flex{grid-template-columns:1fr}
-      .hotel-filter-sidebar{position:static}
-      .hotel-card{grid-template-columns:1fr}
-      .hotel-card-img-wrap{height:180px}
-    }
+        /* ══ HOTEL DETAIL MODAL ══ */
+        .hotel-modal-backdrop { position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s,visibility .24s; }
+        .hotel-modal-backdrop.open { opacity:1;visibility:visible;pointer-events:auto; }
+        .hotel-modal { background:#fff;border-radius:16px;width:min(960px,100%);max-height:calc(100vh - 40px);overflow-y:auto;position:relative;transform:translateY(20px) scale(.98);transition:transform .26s,opacity .26s;opacity:.9;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.22); }
+        .hotel-modal::-webkit-scrollbar { width:4px; }
+        .hotel-modal::-webkit-scrollbar-thumb { background:#d5dae2;border-radius:4px; }
+        .hotel-modal-backdrop.open .hotel-modal { transform:translateY(0) scale(1);opacity:1; }
+        .hotel-modal-close { position:absolute;top:14px;right:14px;width:34px;height:34px;border:1.5px solid rgba(255,255,255,.6);border-radius:50%;background:rgba(0,0,0,.32);color:#fff;cursor:pointer;font-size:15px;z-index:20;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:background .15s; }
+        .hotel-modal-close:hover { background:rgba(0,0,0,.58); }
+        .hotel-modal-top { display:grid;grid-template-columns:420px 1fr;height:420px;flex-shrink:0; }
+        .hotel-modal-gallery { position:relative;overflow:hidden;border-radius:16px 0 0 0;background:#d5dae8;height:100%; }
+        .hotel-modal-gallery-inner { display:flex;height:100%;width:100%;transition:transform .4s ease;will-change:transform; }
+        .hotel-modal-gallery-slide { width:100%;height:100%;flex:0 0 100%;overflow:hidden;position:relative; }
+        .hotel-modal-gallery-slide img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block; }
+        .gallery-prev,.gallery-next { position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.38);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:13px;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;transition:background .15s; }
+        .gallery-prev { left:10px; } .gallery-next { right:10px; }
+        .gallery-prev:hover,.gallery-next:hover { background:rgba(0,0,0,.65); }
+        .gallery-dots { position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5; }
+        .gallery-dot { width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.48);border:none;cursor:pointer;padding:0;transition:background .2s,transform .2s; }
+        .gallery-dot.active { background:#fff;transform:scale(1.25); }
+        .hotel-modal-info { padding:24px 24px 20px;display:flex;flex-direction:column;gap:0;border-left:1px solid #f0f2f8;overflow-y:auto;height:100%;box-sizing:border-box; }
+        .hotel-modal-info::-webkit-scrollbar { width:3px; }
+        .hotel-modal-info::-webkit-scrollbar-thumb { background:#e0e2ea;border-radius:3px; }
+        .hotel-modal-name { font-size:19px;font-weight:800;color:#1a2140;margin:0 0 4px;line-height:1.25; }
+        .hotel-modal-stars { color:#f59e0b;font-size:14px;margin-bottom:8px; }
+        .hotel-modal-meta-row { display:flex;align-items:center;gap:8px;margin-bottom:10px; }
+        .hotel-modal-score-badge { background:#282D9E;color:#fff;font-size:13px;font-weight:800;padding:4px 9px;border-radius:7px;flex-shrink:0; }
+        .hotel-modal-reviews-txt { font-size:12px;color:#8892aa; }
+        .hotel-modal-location { font-size:13px;color:#8892aa;display:flex;align-items:center;gap:5px;margin-bottom:12px; }
+        .hotel-modal-location i { color:#282D9E;font-size:11px; }
+        .hotel-modal-desc { font-size:13px;color:#4a5580;line-height:1.65;margin:0 0 14px;padding-bottom:14px;border-bottom:1px solid #f0f2f8; }
+        .hotel-modal-section-title { font-size:11px;font-weight:700;color:#8892aa;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px; }
+        .hotel-modal-amenities { display:flex;flex-wrap:wrap;gap:6px; }
+        .hotel-modal-amenity { background:#f0f2f8;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;color:#4a5580;display:flex;align-items:center;gap:5px; }
+        .hotel-modal-amenity i { color:#282D9E;font-size:11px; }
+        .hotel-modal-rooms-section { padding:20px 24px 28px;border-top:1px solid #e8eaf0;flex-shrink:0; }
+        .hotel-modal-rooms { display:flex;flex-direction:column;gap:10px; }
+        .room-card { border:1.5px solid #e8eaf0;border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:border-color .15s,box-shadow .15s; }
+        .room-card:hover { border-color:#282D9E;box-shadow:0 2px 12px rgba(40,45,158,.09); }
+        .room-card-name { font-size:14px;font-weight:700;color:#1a2140;margin:0 0 7px; }
+        .room-card-features { display:flex;flex-wrap:wrap;gap:5px; }
+        .room-card-feature { background:#f5f6fa;border-radius:4px;padding:3px 8px;font-size:11px;font-weight:600;color:#6b7a99;white-space:nowrap; }
+        .room-card-right { display:flex;align-items:center;gap:16px;flex-shrink:0; }
+        .room-card-price { font-size:18px;font-weight:800;color:#282D9E;white-space:nowrap; }
+        .room-card-price-sub { font-size:11px;color:#8892aa; }
+        .reserve-room-btn { background:#282D9E;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:background .15s;white-space:nowrap;display:flex;align-items:center;gap:6px; }
+        .reserve-room-btn:hover { background:#1f2480; }
+        .hotel-card-badge { position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;z-index:1; }
+        .badge-top-rated{background:#16a34a;color:#fff} .badge-great-value{background:#d97706;color:#fff}
+        .badge-luxury-pick{background:#7c3aed;color:#fff} .badge-popular{background:#282D9E;color:#fff} .badge-staff-pick{background:#0e7490;color:#fff}
+        .hotel-results-header{margin-bottom:20px} .hotel-results-header h2{font-size:22px;font-weight:800;color:#1a2140;margin:0 0 4px} .hotel-results-header p{font-size:14px;color:#8892aa;margin:0}
+        .hotel-results-list{display:flex;flex-direction:column;gap:18px}
+        .hotel-card{background:#fff;border-radius:12px;border:1px solid #e8eaf0;display:grid;grid-template-columns:280px 1fr;overflow:hidden;transition:box-shadow .2s;cursor:pointer}
+        .hotel-card:hover{box-shadow:0 8px 32px rgba(28,40,120,.10)}
+        .hotel-card-img-wrap{position:relative;height:200px;overflow:hidden;background:#e8eaf0}
+        .hotel-card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+        .hotel-card:hover .hotel-card-img{transform:scale(1.04)}
+        .hotel-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8eaf0,#d5dae8);color:#8892aa;font-size:40px}
+        .hotel-card-body{padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+        .hotel-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+        .hotel-card-name{font-size:17px;font-weight:800;color:#1a2140;margin:0;line-height:1.25}
+        .hotel-card-stars{color:#f59e0b;font-size:13px;white-space:nowrap}
+        .hotel-card-location{font-size:13px;color:#8892aa;display:flex;align-items:center;gap:5px}
+        .hotel-card-location i{font-size:11px;color:#282D9E}
+        .hotel-card-amenities{display:flex;flex-wrap:wrap;gap:6px}
+        .amenity-tag{background:#f0f2f8;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:600;color:#4a5580}
+        .hotel-card-footer{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-top:8px;border-top:1px solid #f0f2f8}
+        .hotel-card-price{font-size:22px;font-weight:800;color:#282D9E}
+        .hotel-card-price-label{font-size:11px;color:#8892aa;font-weight:500}
+        .hotel-card-price-night{font-size:12px;color:#8892aa;font-weight:500}
+        .hotel-card-score{background:#282D9E;color:#fff;font-size:13px;font-weight:800;padding:4px 8px;border-radius:6px}
+        .hotel-card-reviews{font-size:12px;color:#8892aa}
+        .check-avail-btn{background:#282D9E;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .15s;white-space:nowrap;flex-shrink:0;align-self:flex-end}
+        .check-avail-btn:hover{background:#1f2480}
+        .hotel-results-section{max-width:1200px;margin:0 auto;padding:32px 24px 48px}
+        .hotel-results-flex{display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start}
+        .hotel-filter-sidebar{background:#fff;border-radius:12px;border:1px solid #e8eaf0;overflow:hidden;align-self:start;position:sticky;top:20px}
+        .filter-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f0f2f8}
+        .filter-title{font-size:15px;font-weight:700;color:#1a2140}
+        .filter-clear-all{background:none;border:none;font-size:12px;font-weight:600;color:#282D9E;cursor:pointer;padding:0;font-family:'Inter',sans-serif}
+        .filter-body{padding:16px 20px;display:flex;flex-direction:column;gap:18px}
+        .filter-group{display:flex;flex-direction:column;gap:10px}
+        .filter-group-label{font-size:13px;font-weight:700;color:#1a2140}
+        .filter-price-buttons{display:flex;flex-direction:column;gap:6px}
+        .filter-price-btn{background:#f5f6fa;border:1px solid #e8eaf0;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;color:#1a2140;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all .15s}
+        .filter-price-btn:hover,.filter-price-btn.active{background:#eef0ff;border-color:#282D9E;color:#282D9E}
+        .filter-stars{display:flex;flex-direction:column;gap:8px}
+        .filter-stars label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#1a2140;font-weight:600}
+        .filter-stars input[type=checkbox]{accent-color:#282D9E;width:15px;height:15px;cursor:pointer}
+        .star-icons{color:#f59e0b;font-size:13px}
+        .filter-apply-btn{background:#282D9E;color:#fff;border:none;border-radius:8px;padding:11px 0;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s}
+        .filter-apply-btn:hover{background:#1f2480}
+        .no-results{text-align:center;padding:60px 20px;color:#8892aa}
+        .no-results i{font-size:48px;margin-bottom:16px;opacity:.4;display:block}
+        .no-results h3{font-size:18px;font-weight:700;color:#1a2140;margin:0 0 8px}
+        .no-results p{font-size:14px;margin:0}
+        .passenger-dropdown{min-width:300px;padding:8px 16px}
+        .passenger-note{font-size:12px;color:#9ba5c0;margin-bottom:12px;line-height:1.4}
+        .passenger-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #eef0f8}
+        .passenger-row:last-child{border-bottom:none}
+        .passenger-label{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+        .passenger-type{font-size:14px;font-weight:700;color:#111827}
+        .passenger-age{font-size:12px;color:#9ba5c0}
+        .passenger-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+        .pax-btn{background:none;border:none;cursor:pointer;padding:0;font-size:22px;color:#c4cce0;display:flex;align-items:center;transition:color .2s;line-height:1}
+        .pax-btn:hover{color:#282D9E}
+        .pax-value{font-size:16px;font-weight:700;color:#111827;min-width:22px;text-align:center}
+        @media(max-width:900px){
+            .hotel-results-flex{grid-template-columns:1fr} .hotel-filter-sidebar{position:static}
+            .hotel-card{grid-template-columns:1fr} .hotel-card-img-wrap{height:180px}
+            .hotel-modal-top{grid-template-columns:1fr;height:auto}
+            .hotel-modal-gallery{border-radius:16px 16px 0 0;height:220px} .hotel-modal-gallery-inner{height:220px}
+            .hotel-modal-info{border-left:none;border-top:1px solid #f0f2f8;height:auto;max-height:360px}
+            .room-card{flex-wrap:wrap} .room-card-right{width:100%;justify-content:space-between}
+        }
     </style>
 </head>
 <body class="service-page service-hotel">
 
-<!-- HOTEL DETAIL MODAL -->
+<!-- ══ AUTH MODAL — same HTML structure as index.html ══ -->
+<div class="auth-modal" id="authModal" aria-hidden="true">
+    <div class="auth-modal-shell" role="dialog" aria-modal="true">
+        <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        <section class="auth-modal-panel">
+            <div class="auth-modal-inner">
+                <img class="auth-modal-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
+                <div class="auth-modal-divider"></div>
+                <div class="auth-tabs" role="tablist">
+                    <button class="auth-tab-btn active" id="authTabSignin" role="tab" aria-selected="true" onclick="authSwitchTab('signin')">Sign In</button>
+                    <button class="auth-tab-btn" id="authTabRegister" role="tab" aria-selected="false" onclick="authSwitchTab('register')">Create Account</button>
+                </div>
+                <!-- SIGN IN -->
+                <div class="auth-form-panel active" id="authPanelSignin" role="tabpanel">
+                    <input id="siEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
+                    <div class="auth-pw-wrap">
+                        <input id="siPassword" type="password" class="auth-modal-input" placeholder="Password" autocomplete="current-password">
+                        <button type="button" class="auth-pw-toggle" onclick="authTogglePw('siPassword',this)" aria-label="Show/hide password"><i class="fa-solid fa-eye"></i></button>
+                    </div>
+                    <a class="auth-forgot" onclick="authForgotPassword()">Forgot password?</a>
+                    <button type="button" id="siSubmitBtn" class="auth-modal-btn auth-modal-btn-submit" onclick="authSignIn()">Sign In</button>
+                    <div class="auth-modal-or-row" aria-hidden="true">
+                        <span class="auth-modal-or-line"></span><span class="auth-modal-or-text">or</span><span class="auth-modal-or-line"></span>
+                    </div>
+                    <div class="auth-modal-social">
+                        <!-- signInWithGoogle() is defined in firebase-config.js which loads first -->
+                        <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="signInWithGoogle()">
+                            <span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span>
+                            <span>Continue with Google</span>
+                        </button>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')">
+                            <span class="auth-modal-icon"><i class="fa-brands fa-microsoft"></i></span>
+                            <span>Continue with Microsoft</span>
+                        </button>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('facebook')">
+                            <span class="auth-modal-icon auth-modal-facebook-icon"><i class="fa-brands fa-facebook-f"></i></span>
+                            <span>Continue with Facebook</span>
+                        </button>
+                    </div>
+                    <p class="auth-modal-terms">By signing in you agree to Easy Navigate's <a href="#" style="color:#282D9E;">Terms</a> &amp; <a href="#" style="color:#282D9E;">Privacy Policy</a>.</p>
+                    <p id="siStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
+                </div>
+                <!-- REGISTER -->
+                <div class="auth-form-panel" id="authPanelRegister" role="tabpanel">
+                    <div class="auth-success-box" id="regSuccess">
+                        <div class="auth-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="auth-success-title">Account Created!</div>
+                        <div class="auth-success-sub">Welcome to Easy Navigate.<br>You can now sign in.</div>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-submit ready" style="margin-top:8px;" onclick="authSwitchTab('signin')">Go to Sign In</button>
+                    </div>
+                    <div id="regForm">
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div class="auth-name-row">
+                                <input id="regFirstName" type="text" class="auth-modal-input" placeholder="First name" autocomplete="given-name">
+                                <input id="regLastName"  type="text" class="auth-modal-input" placeholder="Last name"  autocomplete="family-name">
+                            </div>
+                            <input id="regEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
+                            <div class="auth-pw-wrap">
+                                <input id="regPassword" type="password" class="auth-modal-input" placeholder="Password (min. 8 characters)" autocomplete="new-password" oninput="authCheckPwStrength(this.value)">
+                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regPassword',this)"><i class="fa-solid fa-eye"></i></button>
+                            </div>
+                            <div class="auth-strength-wrap" id="regStrengthWrap" style="display:none;">
+                                <div class="auth-strength-bar"><div class="auth-strength-fill" id="regStrengthFill"></div></div>
+                                <span class="auth-strength-label" id="regStrengthLabel"></span>
+                            </div>
+                            <div class="auth-pw-wrap">
+                                <input id="regConfirmPw" type="password" class="auth-modal-input" placeholder="Confirm password" autocomplete="new-password">
+                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regConfirmPw',this)"><i class="fa-solid fa-eye"></i></button>
+                            </div>
+                            <label class="auth-terms-check">
+                                <input type="checkbox" id="regTerms" onchange="authCheckRegReady()">
+                                I agree to Easy Navigate's <a href="#" style="color:#282D9E;margin-left:3px;">Terms &amp; Privacy Policy</a>
+                            </label>
+                            <button type="button" id="regSubmitBtn" class="auth-modal-btn auth-modal-btn-submit" onclick="authRegister()">Create Account</button>
+                        </div>
+                    </div>
+                    <p id="regStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
+                </div>
+            </div>
+        </section>
+        <section class="auth-modal-hero" aria-hidden="true">
+            <div class="auth-modal-hero-overlay"></div>
+            <img class="auth-modal-hero-logo" src="assets/easy-navigate-logo-white.png" alt="">
+        </section>
+    </div>
+</div>
+
+<!-- ══ HOTEL DETAIL MODAL ══ -->
 <div class="hotel-modal-backdrop" id="hotelModalBackdrop">
     <div class="hotel-modal" id="hotelModal">
-        <button class="hotel-modal-close" onclick="closeHotelModal()"><i class="fas fa-times"></i></button>
+        <button class="hotel-modal-close" onclick="closeHotelModal()"><i class="fa-solid fa-xmark"></i></button>
         <div class="hotel-modal-top">
             <div class="hotel-modal-gallery" id="hotelModalGallery">
                 <div class="hotel-modal-gallery-inner" id="hotelModalGalleryInner"></div>
-                <button class="gallery-prev" id="galleryPrev" onclick="gallerySlide(-1)"><i class="fas fa-chevron-left"></i></button>
-                <button class="gallery-next" id="galleryNext" onclick="gallerySlide(1)"><i class="fas fa-chevron-right"></i></button>
+                <button class="gallery-prev" id="galleryPrev" onclick="gallerySlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="gallery-next" id="galleryNext" onclick="gallerySlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
                 <div class="gallery-dots" id="galleryDots"></div>
             </div>
             <div class="hotel-modal-info">
-                <div class="hotel-modal-header">
-                    <div>
-                        <h2 class="hotel-modal-name" id="hotelModalName"></h2>
-                        <div class="hotel-modal-stars" id="hotelModalStars"></div>
-                    </div>
-                </div>
+                <h2 class="hotel-modal-name" id="hotelModalName"></h2>
+                <div class="hotel-modal-stars" id="hotelModalStars"></div>
                 <div class="hotel-modal-meta-row">
                     <span class="hotel-modal-score-badge" id="hotelModalScore"></span>
                     <span class="hotel-modal-reviews-txt" id="hotelModalReviews"></span>
                 </div>
-                <div class="hotel-modal-location"><i class="fas fa-map-marker-alt"></i><span id="hotelModalLocation"></span></div>
+                <div class="hotel-modal-location"><i class="fa-solid fa-location-dot"></i><span id="hotelModalLocation"></span></div>
                 <p class="hotel-modal-desc" id="hotelModalDesc"></p>
                 <div class="hotel-modal-section-title">Amenities</div>
                 <div class="hotel-modal-amenities" id="hotelModalAmenities"></div>
@@ -189,7 +321,7 @@
     </div>
 </div>
 
-<!-- HEADER -->
+<!-- ══ HEADER ══ -->
 <header class="header">
     <div class="nav-container">
         <div class="top-nav">
@@ -198,25 +330,26 @@
             </a>
             <div class="top-right">
                 <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon"></button>
-                <button class="support-btn">Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+                <button class="support-btn">Customer Support <i class="fa-solid fa-chevron-down" style="font-size:10px"></i></button>
                 <div class="relative">
-                    <button class="support-btn" onclick="toggleDropdown('findBookingsMenu',event)">Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i></button>
+                    <button class="support-btn" onclick="toggleDropdown('findBookingsMenu', event)">
+                        Find Bookings <i class="fa-solid fa-chevron-down" style="font-size:10px"></i>
+                    </button>
                     <div class="dropdown-menu" id="findBookingsMenu">
-                        <div class="dropdown-item" onclick="selectFindBooking('hotel')"><i class="fas fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
-                        <div class="dropdown-item" onclick="selectFindBooking('car')"><i class="fas fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
-                        <div class="dropdown-item" onclick="selectFindBooking('flights')"><i class="fas fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
-                        <div class="dropdown-item" onclick="selectFindBooking('attractions')"><i class="fas fa-ticket-alt fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
-                        <div class="dropdown-item" onclick="selectFindBooking('taxi')"><i class="fas fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('hotel')"><i class="fa-solid fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('car')"><i class="fa-solid fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('flights')"><i class="fa-solid fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('attractions')"><i class="fa-solid fa-ticket fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('taxi')"><i class="fa-solid fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
                     </div>
                 </div>
-                <!-- auth-header.js and auth-modal.js manage this button's state -->
-                <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
+                <button class="btn-signin" id="openAuthModalBtn" onclick="openAuthModal('signin')">Sign In / Register</button>
             </div>
         </div>
     </div>
 </header>
 
-<!-- HERO -->
+<!-- ══ HERO ══ -->
 <section class="hero">
     <div class="hero-container">
         <h1>Hotel &amp; Homes</h1>
@@ -240,26 +373,26 @@
                     </div>
                     <div class="extras-right">
                         <div class="relative">
-                            <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('hotelGuestsPicker',event)">
-                                <i class="fas fa-user" style="font-size:12px"></i><span id="hotelGuestsLabel">2 Adults</span><i class="fas fa-chevron-down" style="font-size:10px"></i>
+                            <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('hotelGuestsPicker', event)">
+                                <i class="fa-solid fa-user" style="font-size:12px;"></i><span id="hotelGuestsLabel">2 Adults</span><i class="fa-solid fa-chevron-down" style="font-size:10px"></i>
                             </button>
                             <div class="dropdown-menu passenger-dropdown" id="hotelGuestsPicker">
-                                <p class="passenger-note">Please select the number of guests</p>
-                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Adults</span><span class="passenger-age">18+ years old</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelAdultsMinus" onclick="updateHotelOccupancy('adults',-1)"><i class="fas fa-minus-circle"></i></button><span class="pax-value" id="hotelAdults">2</span><button class="pax-btn" onclick="updateHotelOccupancy('adults',1)"><i class="fas fa-plus-circle"></i></button></div></div>
-                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Children</span><span class="passenger-age">0–17 years old</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelChildrenMinus" onclick="updateHotelOccupancy('children',-1)"><i class="fas fa-minus-circle"></i></button><span class="pax-value" id="hotelChildren">0</span><button class="pax-btn" onclick="updateHotelOccupancy('children',1)"><i class="fas fa-plus-circle"></i></button></div></div>
-                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Infants</span><span class="passenger-age">Under 2 years old</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelInfantsMinus" onclick="updateHotelOccupancy('infants',-1)"><i class="fas fa-minus-circle"></i></button><span class="pax-value" id="hotelInfants">0</span><button class="pax-btn" onclick="updateHotelOccupancy('infants',1)"><i class="fas fa-plus-circle"></i></button></div></div>
+                                <p class="passenger-note">Select the number of guests</p>
+                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Adults</span><span class="passenger-age">18+ years old</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelAdultsMinus" onclick="updateHotelOccupancy('adults',-1)"><i class="fa-solid fa-circle-minus"></i></button><span class="pax-value" id="hotelAdults">2</span><button class="pax-btn" onclick="updateHotelOccupancy('adults',1)"><i class="fa-solid fa-circle-plus"></i></button></div></div>
+                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Children</span><span class="passenger-age">0–17 years old</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelChildrenMinus" onclick="updateHotelOccupancy('children',-1)"><i class="fa-solid fa-circle-minus"></i></button><span class="pax-value" id="hotelChildren">0</span><button class="pax-btn" onclick="updateHotelOccupancy('children',1)"><i class="fa-solid fa-circle-plus"></i></button></div></div>
+                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Infants</span><span class="passenger-age">Under 2 years old</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelInfantsMinus" onclick="updateHotelOccupancy('infants',-1)"><i class="fa-solid fa-circle-minus"></i></button><span class="pax-value" id="hotelInfants">0</span><button class="pax-btn" onclick="updateHotelOccupancy('infants',1)"><i class="fa-solid fa-circle-plus"></i></button></div></div>
                             </div>
                         </div>
                         <div class="relative">
-                            <button class="dropdown-pill-bordless selector-pill room-pill" onclick="toggleDropdown('hotelRoomsPicker',event)">
-                                <i class="fas fa-bed" style="font-size:12px"></i><span id="hotelRoomsLabel">1 Room</span><i class="fas fa-chevron-down" style="font-size:10px"></i>
+                            <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('hotelRoomsPicker', event)">
+                                <i class="fa-solid fa-bed" style="font-size:12px;"></i><span id="hotelRoomsLabel">1 Room</span><i class="fa-solid fa-chevron-down" style="font-size:10px"></i>
                             </button>
                             <div class="dropdown-menu passenger-dropdown" id="hotelRoomsPicker">
-                                <p class="passenger-note">Please select the number of rooms</p>
-                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Rooms</span><span class="passenger-age">At least 1 room required</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelRoomsMinus" onclick="updateHotelOccupancy('rooms',-1)"><i class="fas fa-minus-circle"></i></button><span class="pax-value" id="hotelRooms">1</span><button class="pax-btn" onclick="updateHotelOccupancy('rooms',1)"><i class="fas fa-plus-circle"></i></button></div></div>
+                                <p class="passenger-note">Select the number of rooms</p>
+                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Rooms</span><span class="passenger-age">At least 1 room required</span></div><div class="passenger-controls"><button class="pax-btn" id="hotelRoomsMinus" onclick="updateHotelOccupancy('rooms',-1)"><i class="fa-solid fa-circle-minus"></i></button><span class="pax-value" id="hotelRooms">1</span><button class="pax-btn" onclick="updateHotelOccupancy('rooms',1)"><i class="fa-solid fa-circle-plus"></i></button></div></div>
                             </div>
                         </div>
-                        <button class="search-btn" onclick="searchHotels()"><i class="fas fa-search"></i> Search</button>
+                        <button class="search-btn" onclick="searchHotels()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
                     </div>
                 </div>
             </div>
@@ -267,7 +400,7 @@
     </div>
 </section>
 
-<!-- RESULTS -->
+<!-- ══ RESULTS ══ -->
 <section class="hotel-results-section">
     <div class="hotel-results-flex">
         <aside class="hotel-filter-sidebar">
@@ -303,7 +436,6 @@
                 </button>
             </div>
         </aside>
-
         <div class="hotel-results-container">
             <div class="hotel-results-header">
                 <h2 id="hotelResultsTitle">Hotel &amp; Homes</h2>
@@ -314,20 +446,18 @@
     </div>
 </section>
 
-<!-- BENEFITS -->
-<section class="benefits" style="background:#f8f9fd;padding:48px 0">
-    <div style="max-width:1100px;margin:0 auto;padding:0 24px">
-        <h2 style="text-align:center;font-size:22px;font-weight:800;color:#1a2140;margin:0 0 28px">Why book with Easy Navigate?</h2>
-        <div class="cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
-            <div class="card"><div class="card-icon"><i class="fas fa-calendar-check"></i></div><h3>Flexible cancellation</h3><p>Plans change? Cancel selected stays with ease</p></div>
-            <div class="card"><div class="card-icon"><i class="fas fa-user-check"></i></div><h3>Verified reviews</h3><p>Real feedback from real travelers</p></div>
-            <div class="card"><div class="card-icon"><i class="fas fa-hotel"></i></div><h3>Stays for every trip</h3><p>Hotels, homes, and apartments in top destinations</p></div>
-            <div class="card"><div class="card-icon"><i class="fas fa-credit-card"></i></div><h3>Pay-at-property</h3><p>Reserve now and pay later on selected properties</p></div>
+<section style="background:#f8f9fd;padding:48px 0;margin-top:32px;">
+    <div style="max-width:1100px;margin:0 auto;padding:0 24px;">
+        <h2 style="text-align:center;font-size:22px;font-weight:800;color:#1a2140;margin:0 0 28px;">Why book with Easy Navigate?</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div><h3>Flexible cancellation</h3><p>Plans change? Cancel selected stays with ease</p></div>
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-user-check"></i></div><h3>Verified reviews</h3><p>Real feedback from real travelers</p></div>
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-hotel"></i></div><h3>Stays for every trip</h3><p>Hotels, homes, and apartments in top destinations</p></div>
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-credit-card"></i></div><h3>Pay-at-property</h3><p>Reserve now and pay later on selected properties</p></div>
         </div>
     </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
     <div class="footer-inner">
         <div class="footer-content">
@@ -342,359 +472,358 @@
     </div>
 </footer>
 
-<!-- SCRIPTS -->
-<!-- auth-header.js must load first, then auth-modal.js injects the modal -->
+<!-- SCRIPT ORDER — MUST NOT CHANGE
+     1. Firebase SDKs
+     2. firebase-config.js  → defines window.signInWithGoogle() BEFORE page script runs
+     3. flatpickr
+     4. db-search-tracker.js
+     5. Inline script (this page) → auth + hotel logic
+     auth-modal.js is NOT loaded — everything is inlined so there is zero
+     race condition between firebase-config.js and the Google button. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="auth-header.js"></script>
-<script src="auth-modal.js"></script>
-
-<script src="hotel-booking.js"></script> 
 <script src="db-search-tracker.js"></script>
-<script src="service-panels.js"></script>
-<script src="hotel-booking-redirect.js"></script>
-<script src="service-ads-carousel.js"></script>
 
 <script>
 /* ═══════════════════════════════════════════════
-   PAGE-SPECIFIC JS ONLY — no auth code here
-   Auth is fully handled by auth-modal.js
+   AUTH HELPERS  (mirrors index.html exactly)
 ═══════════════════════════════════════════════ */
+function getApiUrl(path){
+    if(window.location.protocol==='file:') return 'http://localhost/platform-technologies-proj-v1-main/api/'+path;
+    const href=window.location.href.split('?')[0];
+    return href.substring(0,href.lastIndexOf('/')+1)+'api/'+path;
+}
+function isSignedIn(){
+    try{const a=JSON.parse(localStorage.getItem('easyNavigateAuth'));return!!(a&&a.isLoggedIn);}catch(_){return false;}
+}
+function openAuthModal(tab){
+    const m=document.getElementById('authModal');if(!m)return;
+    const sw=window.innerWidth-document.documentElement.clientWidth;
+    document.body.style.overflow='hidden';
+    if(sw>0)document.body.style.paddingRight=sw+'px';
+    m.classList.add('open');m.setAttribute('aria-hidden','false');
+    authSwitchTab(tab||'signin');
+    const si=document.getElementById('siStatus'),re=document.getElementById('regStatus');
+    if(si)si.textContent='';if(re)re.textContent='';
+}
+function closeAuthModal(){
+    const m=document.getElementById('authModal');if(!m)return;
+    m.classList.remove('open');m.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';document.body.style.paddingRight='';
+}
+function authSwitchTab(tab){
+    const st=document.getElementById('authTabSignin'),rt=document.getElementById('authTabRegister'),
+          sp=document.getElementById('authPanelSignin'),rp=document.getElementById('authPanelRegister');
+    if(!st||!sp)return;
+    if(tab==='signin'){
+        st.classList.add('active');st.setAttribute('aria-selected','true');
+        rt.classList.remove('active');rt.setAttribute('aria-selected','false');
+        sp.classList.add('active');rp.classList.remove('active');
+        setTimeout(()=>document.getElementById('siEmail')?.focus(),80);
+    } else {
+        rt.classList.add('active');rt.setAttribute('aria-selected','true');
+        st.classList.remove('active');st.setAttribute('aria-selected','false');
+        rp.classList.add('active');sp.classList.remove('active');
+        document.getElementById('regSuccess')?.classList.remove('show');
+        const frm=document.getElementById('regForm');if(frm)frm.style.display='block';
+        setTimeout(()=>document.getElementById('regFirstName')?.focus(),80);
+    }
+}
+function authTogglePw(id,btn){
+    const inp=document.getElementById(id);if(!inp)return;
+    const h=inp.type==='password';inp.type=h?'text':'password';
+    const icon=btn.querySelector('i');if(icon)icon.className=h?'fa-solid fa-eye-slash':'fa-solid fa-eye';
+}
+function authCheckPwStrength(pw){
+    const wrap=document.getElementById('regStrengthWrap'),fill=document.getElementById('regStrengthFill'),lbl=document.getElementById('regStrengthLabel');
+    if(!wrap||!fill||!lbl)return;
+    if(!pw){wrap.style.display='none';authCheckRegReady();return;}
+    wrap.style.display='block';
+    let s=0;
+    if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;
+    const lvls=[{pct:'20%',bg:'#ef4444',txt:'Very weak'},{pct:'40%',bg:'#f97316',txt:'Weak'},{pct:'60%',bg:'#eab308',txt:'Fair'},{pct:'80%',bg:'#22c55e',txt:'Strong'},{pct:'100%',bg:'#16a34a',txt:'Very strong'}];
+    const lvl=lvls[Math.min(s-1,4)]||lvls[0];
+    fill.style.width=lvl.pct;fill.style.background=lvl.bg;lbl.textContent=lvl.txt;lbl.style.color=lvl.bg;
+    authCheckRegReady();
+}
+function authCheckRegReady(){
+    const btn=document.getElementById('regSubmitBtn');
+    const fn=document.getElementById('regFirstName')?.value.trim(),ln=document.getElementById('regLastName')?.value.trim(),
+          em=document.getElementById('regEmail')?.value.trim(),pw=document.getElementById('regPassword')?.value,
+          cpw=document.getElementById('regConfirmPw')?.value,terms=document.getElementById('regTerms')?.checked;
+    if(!btn)return;
+    btn.classList.toggle('ready',!!(fn&&ln&&em&&pw&&pw.length>=8&&pw===cpw&&terms));
+}
+async function authSignIn(){
+    const email=document.getElementById('siEmail')?.value.trim(),pw=document.getElementById('siPassword')?.value,
+          status=document.getElementById('siStatus'),btn=document.getElementById('siSubmitBtn');
+    if(!email||!pw)return;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){if(status){status.textContent='Please enter a valid email.';status.style.color='#b62020';}return;}
+    if(btn){btn.disabled=true;btn.textContent='Signing in…';}if(status)status.textContent='';
+    try{
+        const res=await fetch(getApiUrl('signin.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
+        const data=await res.json();
+        if(data.ok){
+            const auth={isLoggedIn:true,id:data.user.id,email:data.user.email,name:data.user.first_name+' '+data.user.last_name};
+            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+            if(status){status.textContent='Signed in!';status.style.color='#16a34a';}
+            if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+            setTimeout(()=>{
+                closeAuthModal();
+                if(typeof window._authPendingAction==='function'){const fn=window._authPendingAction;window._authPendingAction=null;setTimeout(fn,200);}
+                else location.reload();
+            },800);
+        } else {if(status){status.textContent=data.message||'Sign in failed.';status.style.color='#b62020';}}
+    } catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}
+    finally{if(btn){btn.disabled=false;btn.textContent='Sign In';}}
+}
+async function authRegister(){
+    const fname=document.getElementById('regFirstName')?.value.trim(),lname=document.getElementById('regLastName')?.value.trim(),
+          email=document.getElementById('regEmail')?.value.trim(),pw=document.getElementById('regPassword')?.value,
+          cpw=document.getElementById('regConfirmPw')?.value,terms=document.getElementById('regTerms')?.checked,
+          status=document.getElementById('regStatus'),btn=document.getElementById('regSubmitBtn');
+    if(!fname||!lname||!email||!pw||!cpw)return;
+    if(pw.length<8){if(status){status.textContent='Password must be at least 8 characters.';status.style.color='#b62020';}return;}
+    if(pw!==cpw){if(status){status.textContent='Passwords do not match.';status.style.color='#b62020';}return;}
+    if(!terms){if(status){status.textContent='Please agree to the Terms.';status.style.color='#b62020';}return;}
+    if(btn){btn.disabled=true;btn.textContent='Creating…';}if(status)status.textContent='';
+    try{
+        const res=await fetch(getApiUrl('register.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({first_name:fname,last_name:lname,email,password:pw})});
+        const data=await res.json();
+        if(data.ok){
+            const auth={isLoggedIn:true,id:data.user.id,email:data.user.email,name:data.user.first_name+' '+data.user.last_name};
+            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+            if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+            document.getElementById('regForm').style.display='none';
+            document.getElementById('regSuccess').classList.add('show');
+        } else {if(status){status.textContent=data.message||'Registration failed.';status.style.color='#b62020';}}
+    } catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}
+    finally{if(btn){btn.disabled=false;btn.textContent='Create Account';authCheckRegReady();}}
+}
+function authSocial(provider){
+    const auth={isLoggedIn:true,email:provider+'_user@easynav.com',name:'Easy Navigate User',provider};
+    localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+    if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+    closeAuthModal();
+    if(typeof window._authPendingAction==='function'){const fn=window._authPendingAction;window._authPendingAction=null;setTimeout(fn,200);}
+    else setTimeout(()=>location.reload(),200);
+}
+function authForgotPassword(){
+    const email=document.getElementById('siEmail')?.value.trim(),status=document.getElementById('siStatus');
+    if(!email){if(status){status.textContent='Enter your email above first.';status.style.color='#1f3f87';}return;}
+    if(status){status.textContent='Reset link sent to '+email;status.style.color='#16a34a';}
+}
+function requireAuth(callback,message){
+    if(isSignedIn()){if(typeof callback==='function')callback();return;}
+    window._authPendingAction=callback||null;
+    openAuthModal('signin');
+    if(message){const s=document.getElementById('siStatus');if(s){s.textContent=message;s.style.color='#1f3f87';}}
+}
 
-/* ── BADGE MAP ── */
-var BADGE_CLASS = {
-    'Top Rated':   'badge-top-rated',
-    'Great Value': 'badge-great-value',
-    'Luxury Pick': 'badge-luxury-pick',
-    'Popular':     'badge-popular',
-    'Staff Pick':  'badge-staff-pick',
-};
+/* ═══════════════════════════════════════════════
+   HOTEL PAGE LOGIC
+═══════════════════════════════════════════════ */
+const BADGE_CLASS={'Top Rated':'badge-top-rated','Great Value':'badge-great-value','Luxury Pick':'badge-luxury-pick','Popular':'badge-popular','Staff Pick':'badge-staff-pick'};
 
-/* ── HOTEL DATA ── */
-var HOTELS = [
-    {id:1,name:'Admiral Hotel Manila',city:'Manila',stars:5,rating:9.2,reviews:'1,240 reviews',price:4800,badge:'Popular',
-     img:'hotel_homes/admiral_hotel_manila_1.jpg',
-     gallery:['hotel_homes/admiral_hotel_manila_1.jpg','hotel_homes/admiral_hotel_manila_2.jpg','hotel_homes/admiral_hotel_manila_3.jpg'],
-     desc:'A landmark luxury hotel in the heart of Manila, offering panoramic views of Manila Bay, world-class dining, and impeccable service.',
-     amenities:['Free Wi-Fi','Swimming Pool','Fitness Center','Restaurant','Spa','Airport Shuttle','Parking','Air Conditioning'],
-     rooms:[{name:'Deluxe Room',features:['1 King Bed','City View','32 sqm'],price:4800},{name:'Superior Suite',features:['1 King Bed','Sea View','55 sqm'],price:7500},{name:'Presidential Suite',features:['2 Bedrooms','Panoramic View','120 sqm'],price:18000}]},
-    {id:2,name:'Cauayan Island Resort',city:'El Nido',stars:5,rating:8.9,reviews:'876 reviews',price:3200,badge:'',
-     img:'hotel_homes/cauayan_island_resort_1.jpg',
-     gallery:['hotel_homes/cauayan_island_resort_1.jpg','hotel_homes/cauayan_island_resort_2.jpg','hotel_homes/cauayan_island_resort_3.jpg'],
-     desc:'Nestled between limestone cliffs and crystal-clear waters, this beachfront resort offers an unforgettable island escape in El Nido, Palawan.',
-     amenities:['Free Wi-Fi','Beach Access','Snorkeling Gear','Restaurant','Island Tours','Water Sports'],
-     rooms:[{name:'Garden View Room',features:['1 Queen Bed','Garden View','28 sqm'],price:3200},{name:'Beachfront Bungalow',features:['1 King Bed','Sea View','40 sqm'],price:5500}]},
-    {id:3,name:'Discovery Shores Boracay',city:'Boracay',stars:5,rating:8.5,reviews:'2,105 reviews',price:2900,badge:'Great Value',
-     img:'hotel_homes/discovery_shores_boracay_1.jpg',
-     gallery:['hotel_homes/discovery_shores_boracay_1.jpg','hotel_homes/discovery_shores_boracay_2.jpg','hotel_homes/discovery_shores_boracay_3.jpg'],
-     desc:'Steps from White Beach, this award-winning resort combines comfort with the vibrant energy of Boracay island.',
-     amenities:['Free Wi-Fi','Beach Access','Swimming Pool','Restaurant','Bar','Water Sports'],
-     rooms:[{name:'Standard Room',features:['2 Twin Beds','Pool View','24 sqm'],price:2900},{name:'Deluxe Beach Room',features:['1 King Bed','Beach View','32 sqm'],price:4100}]},
-    {id:4,name:'Fairmont Makati',city:'Makati',stars:5,rating:8.7,reviews:'588 reviews',price:3500,badge:'',
-     img:'hotel_homes/fairmont_makati_1.jpg',
-     gallery:['hotel_homes/fairmont_makati_1.jpg','hotel_homes/fairmont_makati_2.jpg','hotel_homes/fairmont_makati_3.jpg'],
-     desc:'Ideal for business and leisure travelers in the central business district with easy access to shopping and dining.',
-     amenities:['Free Wi-Fi','Business Center','Fitness Center','Restaurant','Conference Rooms','Parking'],
-     rooms:[{name:'Studio Suite',features:['1 Queen Bed','City View','35 sqm'],price:3500},{name:'Executive Suite',features:['1 King Bed','Skyline View','50 sqm'],price:5800}]},
-    {id:5,name:'Okada Manila',city:'Manila',stars:5,rating:9.1,reviews:'430 reviews',price:6800,badge:'Luxury Pick',
-     img:'hotel_homes/okada_manila_1.jpg',
-     gallery:['hotel_homes/okada_manila_1.jpg','hotel_homes/okada_manila_2.jpg','hotel_homes/okada_manila_3.jpg'],
-     desc:'A world-class integrated resort in Entertainment City, Manila, featuring an iconic aqua park, fine dining, and ultra-luxury accommodations.',
-     amenities:['Free Wi-Fi','Aqua Park','Fine Dining','Casino','Spa','Parking','Air Conditioning','Pool'],
-     rooms:[{name:'Deluxe Room',features:['1 King Bed','Garden View','38 sqm'],price:6800},{name:'Signature Suite',features:['1 King Bed','Ocean View','60 sqm'],price:12000}]},
-    {id:6,name:'Pangulasian Island Resort',city:'El Nido',stars:5,rating:9.3,reviews:'521 reviews',price:9500,badge:'Top Rated',
-     img:'hotel_homes/pangulasian_island_1.jpg',
-     gallery:['hotel_homes/pangulasian_island_1.jpg','hotel_homes/pangulasian_island_2.jpg','hotel_homes/pangulasian_island_3.jpg'],
-     desc:'An exclusive private island resort in El Nido, Palawan offering barefoot luxury, pristine beaches, and breathtaking sunsets.',
-     amenities:['Free Wi-Fi','Private Beach','Dive Center','Restaurant','Island Hopping','Kayaking','Snorkeling','Spa'],
-     rooms:[{name:'Villa',features:['1 King Bed','Sea View','65 sqm'],price:9500},{name:'Clifftop Villa',features:['1 King Bed','Panoramic View','80 sqm'],price:14000}]},
-    {id:7,name:'Shangri-La Mactan Resort',city:'Cebu',stars:5,rating:9.0,reviews:'1,876 reviews',price:5200,badge:'',
-     img:'hotel_homes/shangri_la_mactan_1.jpg',
-     gallery:['hotel_homes/shangri_la_mactan_1.jpg','hotel_homes/shangri_la_mactan_2.jpg','hotel_homes/shangri_la_mactan_3.jpg'],
-     desc:'A premier beachfront resort on Mactan Island, Cebu with award-winning CHI Spa, multiple pools, and exquisite dining options.',
-     amenities:['Free Wi-Fi','Private Beach','3 Swimming Pools','CHI Spa','5 Restaurants','Water Sports','Dive Center'],
-     rooms:[{name:'Deluxe Garden Room',features:['1 King Bed','Garden View','42 sqm'],price:5200},{name:'Ocean Wing Suite',features:['1 King Bed','Ocean View','75 sqm'],price:9800}]},
-    {id:8,name:'The Peninsula Manila',city:'Makati',stars:5,rating:9.4,reviews:'2,340 reviews',price:7500,badge:'Popular',
-     img:'hotel_homes/the_peninsula_manila_1.jpg',
-     gallery:['hotel_homes/the_peninsula_manila_1.jpg','hotel_homes/the_peninsula_manila_2.jpg','hotel_homes/the_peninsula_manila_3.jpg'],
-     desc:'Reigning icon of hospitality in the heart of Makati, The Peninsula Manila delivers legendary service and timeless elegance.',
-     amenities:['Free Wi-Fi','Swimming Pool','Spa','5 Restaurants','Fitness Center','Luxury Shopping','Valet Parking'],
-     rooms:[{name:'Deluxe Room',features:['1 King Bed','City View','44 sqm'],price:7500},{name:'Premier Suite',features:['2 Rooms','Skyline View','90 sqm'],price:15000}]},
-    {id:9,name:'Two Seasons Coron Island Resort',city:'Coron',stars:4,rating:8.8,reviews:'312 reviews',price:4200,badge:'Top Rated',
-     img:'hotel_homes/two_seasons_coron_1.jpg',
-     gallery:['hotel_homes/two_seasons_coron_1.jpg','hotel_homes/two_seasons_coron_2.jpg','hotel_homes/two_seasons_coron_3.jpg'],
-     desc:'A tranquil overwater resort surrounded by pristine coral reefs in Coron, ideal for diving and island-hopping adventures.',
-     amenities:['Free Wi-Fi','Dive Center','Restaurant','Island Hopping','Kayaking','Snorkeling','Overwater Villas'],
-     rooms:[{name:'Coral View Room',features:['1 Queen Bed','Sea View','30 sqm'],price:4200},{name:'Overwater Bungalow',features:['1 King Bed','Direct Sea Access','45 sqm'],price:8500}]},
+var HOTELS=[
+    {id:1,name:'Admiral Hotel Manila',city:'Manila',stars:5,rating:9.2,reviews:'1,240 reviews',price:4800,badge:'Popular',img:'hotel_homes/admiral_hotel_manila_1.jpg',gallery:['hotel_homes/admiral_hotel_manila_1.jpg','hotel_homes/admiral_hotel_manila_2.jpg','hotel_homes/admiral_hotel_manila_3.jpg'],desc:'A landmark luxury hotel in the heart of Manila, offering panoramic views of Manila Bay, world-class dining, and impeccable service.',amenities:['Free Wi-Fi','Swimming Pool','Fitness Center','Restaurant','Spa','Airport Shuttle','Parking','Air Conditioning'],rooms:[{name:'Deluxe Room',features:['1 King Bed','City View','32 sqm'],price:4800},{name:'Superior Suite',features:['1 King Bed','Sea View','55 sqm'],price:7500},{name:'Presidential Suite',features:['2 Bedrooms','Panoramic View','120 sqm'],price:18000}]},
+    {id:2,name:'Cauayan Island Resort',city:'El Nido',stars:5,rating:8.9,reviews:'876 reviews',price:3200,badge:'',img:'hotel_homes/cauayan_island_resort_1.jpg',gallery:['hotel_homes/cauayan_island_resort_1.jpg','hotel_homes/cauayan_island_resort_2.jpg','hotel_homes/cauayan_island_resort_3.jpg'],desc:'Nestled between limestone cliffs and crystal-clear waters, this beachfront resort offers an unforgettable island escape in El Nido, Palawan.',amenities:['Free Wi-Fi','Beach Access','Snorkeling Gear','Restaurant','Island Tours','Water Sports'],rooms:[{name:'Garden View Room',features:['1 Queen Bed','Garden View','28 sqm'],price:3200},{name:'Beachfront Bungalow',features:['1 King Bed','Sea View','40 sqm'],price:5500}]},
+    {id:3,name:'Discovery Shores Boracay',city:'Boracay',stars:5,rating:8.5,reviews:'2,105 reviews',price:2900,badge:'Great Value',img:'hotel_homes/discovery_shores_boracay_1.jpg',gallery:['hotel_homes/discovery_shores_boracay_1.jpg','hotel_homes/discovery_shores_boracay_2.jpg','hotel_homes/discovery_shores_boracay_3.jpg'],desc:'Steps from White Beach, this award-winning resort combines comfort with the vibrant energy of Boracay island.',amenities:['Free Wi-Fi','Beach Access','Swimming Pool','Restaurant','Bar','Water Sports'],rooms:[{name:'Standard Room',features:['2 Twin Beds','Pool View','24 sqm'],price:2900},{name:'Deluxe Beach Room',features:['1 King Bed','Beach View','32 sqm'],price:4100}]},
+    {id:4,name:'Fairmont Makati',city:'Makati',stars:5,rating:8.7,reviews:'588 reviews',price:3500,badge:'',img:'hotel_homes/fairmont_makati_1.jpg',gallery:['hotel_homes/fairmont_makati_1.jpg','hotel_homes/fairmont_makati_2.jpg','hotel_homes/fairmont_makati_3.jpg'],desc:'Ideal for business and leisure travelers in the central business district with easy access to shopping and dining.',amenities:['Free Wi-Fi','Business Center','Fitness Center','Restaurant','Conference Rooms','Parking'],rooms:[{name:'Studio Suite',features:['1 Queen Bed','City View','35 sqm'],price:3500},{name:'Executive Suite',features:['1 King Bed','Skyline View','50 sqm'],price:5800}]},
+    {id:5,name:'Okada Manila',city:'Manila',stars:5,rating:9.1,reviews:'430 reviews',price:6800,badge:'Luxury Pick',img:'hotel_homes/okada_manila_1.jpg',gallery:['hotel_homes/okada_manila_1.jpg','hotel_homes/okada_manila_2.jpg','hotel_homes/okada_manila_3.jpg'],desc:'A world-class integrated resort in Entertainment City, Manila, featuring an iconic aqua park, fine dining, and ultra-luxury accommodations.',amenities:['Free Wi-Fi','Aqua Park','Fine Dining','Casino','Spa','Parking','Air Conditioning','Pool'],rooms:[{name:'Deluxe Room',features:['1 King Bed','Garden View','38 sqm'],price:6800},{name:'Signature Suite',features:['1 King Bed','Ocean View','60 sqm'],price:12000}]},
+    {id:6,name:'Pangulasian Island Resort',city:'El Nido',stars:5,rating:9.3,reviews:'521 reviews',price:9500,badge:'Top Rated',img:'hotel_homes/pangulasian_island_1.jpg',gallery:['hotel_homes/pangulasian_island_1.jpg','hotel_homes/pangulasian_island_2.jpg','hotel_homes/pangulasian_island_3.jpg'],desc:'An exclusive private island resort in El Nido, Palawan offering barefoot luxury, pristine beaches, and breathtaking sunsets.',amenities:['Free Wi-Fi','Private Beach','Dive Center','Restaurant','Island Hopping','Kayaking','Snorkeling','Spa'],rooms:[{name:'Villa',features:['1 King Bed','Sea View','65 sqm'],price:9500},{name:'Clifftop Villa',features:['1 King Bed','Panoramic View','80 sqm'],price:14000}]},
+    {id:7,name:'Shangri-La Mactan Resort',city:'Cebu',stars:5,rating:9.0,reviews:'1,876 reviews',price:5200,badge:'',img:'hotel_homes/shangri_la_mactan_1.jpg',gallery:['hotel_homes/shangri_la_mactan_1.jpg','hotel_homes/shangri_la_mactan_2.jpg','hotel_homes/shangri_la_mactan_3.jpg'],desc:'A premier beachfront resort on Mactan Island, Cebu with award-winning CHI Spa, multiple pools, and exquisite dining options.',amenities:['Free Wi-Fi','Private Beach','3 Swimming Pools','CHI Spa','5 Restaurants','Water Sports','Dive Center'],rooms:[{name:'Deluxe Garden Room',features:['1 King Bed','Garden View','42 sqm'],price:5200},{name:'Ocean Wing Suite',features:['1 King Bed','Ocean View','75 sqm'],price:9800}]},
+    {id:8,name:'The Peninsula Manila',city:'Makati',stars:5,rating:9.4,reviews:'2,340 reviews',price:7500,badge:'Popular',img:'hotel_homes/the_peninsula_manila_1.jpg',gallery:['hotel_homes/the_peninsula_manila_1.jpg','hotel_homes/the_peninsula_manila_2.jpg','hotel_homes/the_peninsula_manila_3.jpg'],desc:'Reigning icon of hospitality in the heart of Makati, The Peninsula Manila delivers legendary service and timeless elegance.',amenities:['Free Wi-Fi','Swimming Pool','Spa','5 Restaurants','Fitness Center','Luxury Shopping','Valet Parking'],rooms:[{name:'Deluxe Room',features:['1 King Bed','City View','44 sqm'],price:7500},{name:'Premier Suite',features:['2 Rooms','Skyline View','90 sqm'],price:15000}]},
+    {id:9,name:'Two Seasons Coron Island Resort',city:'Coron',stars:4,rating:8.8,reviews:'312 reviews',price:4200,badge:'Top Rated',img:'hotel_homes/two_seasons_coron_1.jpg',gallery:['hotel_homes/two_seasons_coron_1.jpg','hotel_homes/two_seasons_coron_2.jpg','hotel_homes/two_seasons_coron_3.jpg'],desc:'A tranquil overwater resort surrounded by pristine coral reefs in Coron, ideal for diving and island-hopping adventures.',amenities:['Free Wi-Fi','Dive Center','Restaurant','Island Hopping','Kayaking','Snorkeling','Overwater Villas'],rooms:[{name:'Coral View Room',features:['1 Queen Bed','Sea View','30 sqm'],price:4200},{name:'Overwater Bungalow',features:['1 King Bed','Direct Sea Access','45 sqm'],price:8500}]},
 ];
+var _allHotels=HOTELS.slice(),_currentHotelId=null;
 
-var _allHotels = HOTELS.slice();
-
-/* ── MISC UI ── */
-function toggleDropdown(id, event) {
-    if (event) event.stopPropagation();
-    var menu = document.getElementById(id), was = menu.classList.contains('open');
-    document.querySelectorAll('.dropdown-menu.open').forEach(function(m){ m.classList.remove('open'); });
-    if (!was) menu.classList.add('open');
+function toggleDropdown(id,event){
+    if(event)event.stopPropagation();
+    const menu=document.getElementById(id),was=menu.classList.contains('open');
+    document.querySelectorAll('.dropdown-menu.open').forEach(m=>m.classList.remove('open'));
+    if(!was)menu.classList.add('open');
 }
-function toggleCheck(label){ label.querySelector('.custom-checkbox').classList.toggle('checked'); }
-function selectFindBooking(tab) {
+function toggleCheck(label){label.querySelector('.custom-checkbox').classList.toggle('checked');}
+function selectFindBooking(tab){
     document.getElementById('findBookingsMenu').classList.remove('open');
-    var pages = {hotel:'hotel & homes.html',car:'car-rental.html',flights:'flights.html',attractions:'attractions.html',taxi:'airport-taxis.html'};
-    if (pages[tab]) window.location.href = pages[tab];
+    const pages={hotel:'hotel & homes.html',car:'car-rental.html',flights:'flights.html',attractions:'attractions.html',taxi:'airport-taxis.html'};
+    if(pages[tab])window.location.href=pages[tab];
 }
 
-var hotelOcc = { adults:2, children:0, infants:0, rooms:1 };
-function updateHotelOccupancy(type, change) {
-    hotelOcc[type] = Math.max(type === 'adults' || type === 'rooms' ? 1 : 0, Math.min(30, hotelOcc[type] + change));
-    document.getElementById('hotelAdults').textContent   = hotelOcc.adults;
-    document.getElementById('hotelChildren').textContent = hotelOcc.children;
-    document.getElementById('hotelInfants').textContent  = hotelOcc.infants;
-    document.getElementById('hotelRooms').textContent    = hotelOcc.rooms;
-    var p = [hotelOcc.adults + ' Adult' + (hotelOcc.adults > 1 ? 's' : '')];
-    if (hotelOcc.children > 0) p.push(hotelOcc.children + ' Child' + (hotelOcc.children > 1 ? 'ren' : ''));
-    if (hotelOcc.infants  > 0) p.push(hotelOcc.infants  + ' Infant' + (hotelOcc.infants  > 1 ? 's'   : ''));
-    document.getElementById('hotelGuestsLabel').textContent = p.join(' + ');
-    document.getElementById('hotelRoomsLabel').textContent  = hotelOcc.rooms + ' Room' + (hotelOcc.rooms > 1 ? 's' : '');
+var hotelOcc={adults:2,children:0,infants:0,rooms:1};
+function updateHotelOccupancy(type,change){
+    hotelOcc[type]=Math.max(type==='adults'||type==='rooms'?1:0,Math.min(30,hotelOcc[type]+change));
+    document.getElementById('hotelAdults').textContent=hotelOcc.adults;
+    document.getElementById('hotelChildren').textContent=hotelOcc.children;
+    document.getElementById('hotelInfants').textContent=hotelOcc.infants;
+    document.getElementById('hotelRooms').textContent=hotelOcc.rooms;
+    const parts=[hotelOcc.adults+' Adult'+(hotelOcc.adults>1?'s':'')];
+    if(hotelOcc.children>0)parts.push(hotelOcc.children+' Child'+(hotelOcc.children>1?'ren':''));
+    if(hotelOcc.infants>0)parts.push(hotelOcc.infants+' Infant'+(hotelOcc.infants>1?'s':''));
+    document.getElementById('hotelGuestsLabel').textContent=parts.join(' + ');
+    document.getElementById('hotelRoomsLabel').textContent=hotelOcc.rooms+' Room'+(hotelOcc.rooms>1?'s':'');
+    const mins={hotelAdultsMinus:hotelOcc.adults<=1,hotelChildrenMinus:hotelOcc.children<=0,hotelInfantsMinus:hotelOcc.infants<=0,hotelRoomsMinus:hotelOcc.rooms<=1};
+    Object.entries(mins).forEach(([id,grey])=>{const b=document.getElementById(id);if(b)b.style.color=grey?'#c4cce0':'';});
 }
 
-/* ── RENDER ── */
-function renderHotels(list) {
-    var container = document.getElementById('hotelResultsList');
-    var meta      = document.getElementById('hotelResultsMeta');
-    var title     = document.getElementById('hotelResultsTitle');
-    var cityParam = new URLSearchParams(window.location.search).get('city');
-    if (cityParam) title.textContent = 'Hotels in ' + cityParam;
-    meta.textContent = list.length + (list.length === 1 ? ' stay' : ' stays') + ' available';
-    if (!list.length) {
-        container.innerHTML = '<div class="no-results"><i class="fas fa-hotel"></i><h3>No stays found</h3><p>Try adjusting your search or filters.</p></div>';
-        return;
-    }
-    container.innerHTML = list.map(function(h) {
-        var stars = '';
-        for (var i = 0; i < h.stars; i++) stars += '★';
-        for (var j = h.stars; j < 5; j++) stars += '☆';
-        var badgeHtml = h.badge
-            ? '<span class="hotel-card-badge ' + (BADGE_CLASS[h.badge] || 'badge-popular') + '">' + h.badge + '</span>'
-            : '';
-        return '<div class="hotel-card" onclick="openHotelModal(' + h.id + ')">'
-            + '<div class="hotel-card-img-wrap">'
-            + badgeHtml
-            + '<img class="hotel-card-img" src="' + h.img + '" alt="' + h.name + '"'
-            + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
-            + '<div class="hotel-card-img-placeholder" style="display:none"><i class="fas fa-hotel"></i></div>'
-            + '</div>'
-            + '<div class="hotel-card-body">'
-            + '<div class="hotel-card-top"><h3 class="hotel-card-name">' + h.name + '</h3><span class="hotel-card-stars">' + stars + '</span></div>'
-            + '<div class="hotel-card-location"><i class="fas fa-map-marker-alt"></i>' + h.city + ', Philippines</div>'
-            + '<div class="hotel-card-amenities">' + h.amenities.slice(0,4).map(function(a){ return '<span class="amenity-tag">' + a + '</span>'; }).join('') + '</div>'
-            + '<div class="hotel-card-footer">'
-            + '<div><div class="hotel-card-price-label">From</div><div class="hotel-card-price">PHP ' + h.price.toLocaleString() + '</div><div class="hotel-card-price-night">per night</div></div>'
-            + '<div style="display:flex;align-items:center;gap:10px">'
-            + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="hotel-card-score">' + h.rating + '</span><span class="hotel-card-reviews">' + h.reviews + '</span></div>'
-            + '<button class="check-avail-btn" onclick="onCheckAvail(event,' + h.id + ')"><i class="fas fa-calendar-check"></i> Check Availability</button>'
-            + '</div>'
-            + '</div>'
-            + '</div>'
-            + '</div>';
+function renderHotels(list){
+    const container=document.getElementById('hotelResultsList'),meta=document.getElementById('hotelResultsMeta'),title=document.getElementById('hotelResultsTitle');
+    const cityParam=new URLSearchParams(window.location.search).get('city');
+    if(cityParam)title.textContent='Hotels in '+cityParam;
+    meta.textContent=list.length+(list.length===1?' stay':' stays')+' available';
+    if(!list.length){container.innerHTML='<div class="no-results"><i class="fa-solid fa-hotel"></i><h3>No stays found</h3><p>Try adjusting your search or filters.</p></div>';return;}
+    container.innerHTML=list.map(function(h){
+        var stars='';for(var i=0;i<h.stars;i++)stars+='★';for(var j=h.stars;j<5;j++)stars+='☆';
+        var badge=h.badge?'<span class="hotel-card-badge '+(BADGE_CLASS[h.badge]||'badge-popular')+'">'+h.badge+'</span>':'';
+        return '<div class="hotel-card" onclick="openHotelModal('+h.id+')">'
+            +'<div class="hotel-card-img-wrap">'+badge
+            +'<img class="hotel-card-img" src="'+h.img+'" alt="'+h.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+            +'<div class="hotel-card-img-placeholder" style="display:none"><i class="fa-solid fa-hotel"></i></div></div>'
+            +'<div class="hotel-card-body">'
+            +'<div class="hotel-card-top"><h3 class="hotel-card-name">'+h.name+'</h3><span class="hotel-card-stars">'+stars+'</span></div>'
+            +'<div class="hotel-card-location"><i class="fa-solid fa-location-dot"></i>'+h.city+', Philippines</div>'
+            +'<div class="hotel-card-amenities">'+h.amenities.slice(0,4).map(a=>'<span class="amenity-tag">'+a+'</span>').join('')+'</div>'
+            +'<div class="hotel-card-footer">'
+            +'<div><div class="hotel-card-price-label">From</div><div class="hotel-card-price">PHP '+h.price.toLocaleString()+'</div><div class="hotel-card-price-night">per night</div></div>'
+            +'<div style="display:flex;align-items:center;gap:10px;">'
+            +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;"><span class="hotel-card-score">'+h.rating+'</span><span class="hotel-card-reviews">'+h.reviews+'</span></div>'
+            +'<button class="check-avail-btn" onclick="onCheckAvail(event,'+h.id+')"><i class="fa-solid fa-calendar-check"></i> Check Availability</button>'
+            +'</div></div></div></div>';
     }).join('');
 }
 
-/* ── CHECK AVAILABILITY — gated by requireAuth from auth-modal.js ── */
-function onCheckAvail(event, hotelId) {
-    event.stopPropagation();
-    window.requireAuth(function(){ openHotelModal(hotelId); }, 'Sign in to check availability');
-}
+function onCheckAvail(event,hotelId){event.stopPropagation();requireAuth(function(){openHotelModal(hotelId);},'Sign in to check availability');}
 
-/* ── GALLERY ── */
-var _galleryIndex = 0;
-var _galleryTotal = 0;
+var _galleryIndex=0,_galleryTotal=0;
+function gallerySlide(dir){_galleryIndex=(_galleryIndex+dir+_galleryTotal)%_galleryTotal;_galleryApplySlide();updateGalleryDots();}
+function _galleryApplySlide(){var g=document.getElementById('hotelModalGallery');document.getElementById('hotelModalGalleryInner').style.transform='translateX(-'+(_galleryIndex*(g?g.offsetWidth:0))+'px)';}
+function updateGalleryDots(){document.querySelectorAll('.gallery-dot').forEach((d,i)=>d.classList.toggle('active',i===_galleryIndex));}
+function galleryGoTo(idx){_galleryIndex=idx;_galleryApplySlide();updateGalleryDots();}
 
-function gallerySlide(dir) {
-    _galleryIndex = (_galleryIndex + dir + _galleryTotal) % _galleryTotal;
-    _galleryApplySlide();
-    updateGalleryDots();
-}
-function _galleryApplySlide() {
-    var gallery = document.getElementById('hotelModalGallery');
-    var slideWidth = gallery ? gallery.offsetWidth : 0;
-    document.getElementById('hotelModalGalleryInner').style.transform = 'translateX(-' + (_galleryIndex * slideWidth) + 'px)';
-}
-function updateGalleryDots() {
-    document.querySelectorAll('.gallery-dot').forEach(function(d, i){
-        d.classList.toggle('active', i === _galleryIndex);
-    });
-}
-function galleryGoTo(idx) {
-    _galleryIndex = idx;
-    _galleryApplySlide();
-    updateGalleryDots();
-}
-
-/* ── OPEN HOTEL MODAL ── */
-function openHotelModal(hotelId) {
-    var h = _allHotels.find(function(x){ return x.id === hotelId; });
-    _currentHotelId = hotelId;
-    var stars = '';
-    for (var i = 0; i < h.stars; i++) stars += '★';
-    for (var j = h.stars; j < 5; j++) stars += '☆';
-
-    var gallery = h.gallery || [h.img];
-    _galleryTotal = gallery.length;
-    _galleryIndex = 0;
-    var inner = document.getElementById('hotelModalGalleryInner');
-    inner.style.transition = 'none';
-    inner.style.transform  = 'translateX(0)';
-    setTimeout(function(){ inner.style.transition = ''; }, 50);
-    inner.innerHTML = gallery.map(function(src){
-        return '<div class="hotel-modal-gallery-slide">'
-            + '<img src="' + src + '" alt="' + h.name + '"'
-            + ' onerror="this.parentElement.style.background=\'#e8eaf0\';this.style.display=\'none\'">'
-            + '</div>';
-    }).join('');
-
-    var dotsEl = document.getElementById('galleryDots');
-    dotsEl.innerHTML = gallery.map(function(_, i){
-        return '<button class="gallery-dot' + (i === 0 ? ' active' : '') + '" onclick="galleryGoTo(' + i + ')"></button>';
-    }).join('');
-
-    document.getElementById('galleryPrev').style.display = gallery.length > 1 ? 'flex' : 'none';
-    document.getElementById('galleryNext').style.display = gallery.length > 1 ? 'flex' : 'none';
-
-    document.getElementById('hotelModalName').textContent     = h.name;
-    document.getElementById('hotelModalStars').textContent    = stars;
-    document.getElementById('hotelModalScore').textContent    = h.rating;
-    document.getElementById('hotelModalReviews').textContent  = h.reviews;
-    document.getElementById('hotelModalLocation').textContent = h.city + ', Philippines';
-    document.getElementById('hotelModalDesc').textContent     = h.desc;
-    document.getElementById('hotelModalAmenities').innerHTML  = h.amenities.map(function(a){
-        return '<span class="hotel-modal-amenity"><i class="fas fa-check"></i>' + a + '</span>';
-    }).join('');
-
-    document.getElementById('hotelModalRooms').innerHTML = h.rooms.map(function(r){
-        return '<div class="room-card">'
-            + '<div class="room-card-info">'
-            +   '<div class="room-card-name">' + r.name + '</div>'
-            +   '<div class="room-card-features">'
-            +     r.features.map(function(f){ return '<span class="room-card-feature">' + f + '</span>'; }).join('')
-            +   '</div>'
-            + '</div>'
-            + '<div class="room-card-right">'
-            +   '<div class="room-card-price-block">'
-            +     '<div class="room-card-price">PHP ' + r.price.toLocaleString() + '</div>'
-            +     '<div class="room-card-price-sub">per night</div>'
-            +   '</div>'
-            +   '<button class="reserve-room-btn" onclick="onReserveRoom(event,\'' + r.name + '\',' + r.price + ')">'
-            +     '<i class="fas fa-check"></i> Reserve'
-            +   '</button>'
-            + '</div>'
-            + '</div>';
-    }).join('');
-
+function openHotelModal(hotelId){
+    var h=_allHotels.find(x=>x.id===hotelId);if(!h)return;
+    _currentHotelId=hotelId;
+    var stars='';for(var i=0;i<h.stars;i++)stars+='★';for(var j=h.stars;j<5;j++)stars+='☆';
+    var gallery=h.gallery||[h.img];_galleryTotal=gallery.length;_galleryIndex=0;
+    var inner=document.getElementById('hotelModalGalleryInner');
+    inner.style.transition='none';inner.style.transform='translateX(0)';
+    setTimeout(()=>inner.style.transition='',50);
+    inner.innerHTML=gallery.map(src=>'<div class="hotel-modal-gallery-slide"><img src="'+src+'" alt="'+h.name+'" onerror="this.parentElement.style.background=\'#e8eaf0\';this.style.display=\'none\'"></div>').join('');
+    document.getElementById('galleryDots').innerHTML=gallery.map((_,i)=>'<button class="gallery-dot'+(i===0?' active':'')+'" onclick="galleryGoTo('+i+')"></button>').join('');
+    document.getElementById('galleryPrev').style.display=gallery.length>1?'flex':'none';
+    document.getElementById('galleryNext').style.display=gallery.length>1?'flex':'none';
+    document.getElementById('hotelModalName').textContent=h.name;
+    document.getElementById('hotelModalStars').textContent=stars;
+    document.getElementById('hotelModalScore').textContent=h.rating;
+    document.getElementById('hotelModalReviews').textContent=h.reviews;
+    document.getElementById('hotelModalLocation').textContent=h.city+', Philippines';
+    document.getElementById('hotelModalDesc').textContent=h.desc;
+    document.getElementById('hotelModalAmenities').innerHTML=h.amenities.map(a=>'<span class="hotel-modal-amenity"><i class="fa-solid fa-check"></i>'+a+'</span>').join('');
+    document.getElementById('hotelModalRooms').innerHTML=h.rooms.map(r=>
+        '<div class="room-card">'
+        +'<div style="flex:1;min-width:0;"><div class="room-card-name">'+r.name+'</div>'
+        +'<div class="room-card-features">'+r.features.map(f=>'<span class="room-card-feature">'+f+'</span>').join('')+'</div></div>'
+        +'<div class="room-card-right">'
+        +'<div><div class="room-card-price">PHP '+r.price.toLocaleString()+'</div><div class="room-card-price-sub">per night</div></div>'
+        +'<button class="reserve-room-btn" onclick="onReserveRoom(event,\''+r.name.replace(/'/g,"\\'")+'\','+r.price+')"><i class="fa-solid fa-check"></i> Reserve</button>'
+        +'</div></div>'
+    ).join('');
     document.getElementById('hotelModalBackdrop').classList.add('open');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow='hidden';
 }
 
-function closeHotelModal() {
+function closeHotelModal(){
     document.getElementById('hotelModalBackdrop').classList.remove('open');
-    // Only restore scroll if auth modal is also closed
-    if (!document.getElementById('authModal') || !document.getElementById('authModal').classList.contains('open')) {
-        document.body.style.overflow = '';
-    }
+    if(!document.getElementById('authModal')?.classList.contains('open'))document.body.style.overflow='';
 }
 
-/* ── RESERVE ROOM — gated by requireAuth ── */
-function onReserveRoom(event, roomName, price) {
+function onReserveRoom(event,roomName,price){
     event.stopPropagation();
-    window.requireAuth(function(){
-        var h = _allHotels.find(function(x){ return x.id === _currentHotelId; });
-        if (!h) return;
-
-        var params = new URLSearchParams({
-            hotel:   h.name,
-            city:    h.city,
-            stars:   h.stars,
-            score:   h.rating,
-            reviews: h.reviews.replace(/[^0-9]/g,''),
-            price:   price,
-            room:    roomName,
-            image:   encodeURIComponent(h.img)
-        });
-
-        window.location.href = 'hotel-booking.html?' + params.toString();
-    }, 'Sign in to reserve a room');
+    requireAuth(function(){
+        var h=_allHotels.find(x=>x.id===_currentHotelId);if(!h)return;
+        var params=new URLSearchParams({hotel:h.name,city:h.city,stars:h.stars,score:h.rating,reviews:h.reviews.replace(/[^0-9]/g,''),price,room:roomName,image:encodeURIComponent(h.img)});
+        window.location.href='hotel-booking.html?'+params.toString();
+    },'Sign in to reserve a room');
 }
 
-/* ── SEARCH ── */
-function searchHotels() {
-    var city = document.getElementById('hotelDestInput').value.trim().toLowerCase();
-    var result = _allHotels.filter(function(h){
-        return !city || h.city.toLowerCase().includes(city) || h.name.toLowerCase().includes(city);
-    });
-    renderHotels(result);
+function searchHotels(){
+    var city=document.getElementById('hotelDestInput').value.trim().toLowerCase();
+    renderHotels(_allHotels.filter(h=>!city||h.city.toLowerCase().includes(city)||h.name.toLowerCase().includes(city)));
 }
-
-/* ── FILTERS ── */
-document.querySelectorAll('.filter-price-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-        document.querySelectorAll('.filter-price-btn').forEach(function(b){ b.classList.remove('active'); });
-        btn.classList.add('active');
-    });
-});
-function applyFilters() {
-    var stars = Array.from(document.querySelectorAll('input[name=stars]:checked')).map(function(c){ return parseInt(c.value); });
-    var ap   = document.querySelector('.filter-price-btn.active');
-    var minP = ap ? parseFloat(ap.dataset.min) : 0;
-    var maxP = ap ? parseFloat(ap.dataset.max) : Infinity;
-    renderHotels(_allHotels.filter(function(h){
-        return (!stars.length || stars.includes(h.stars)) && h.price >= minP && h.price <= maxP;
-    }));
+function applyFilters(){
+    var stars=Array.from(document.querySelectorAll('input[name=stars]:checked')).map(c=>parseInt(c.value));
+    var ap=document.querySelector('.filter-price-btn.active');
+    var minP=ap?parseFloat(ap.dataset.min):0,maxP=ap?parseFloat(ap.dataset.max):Infinity;
+    renderHotels(_allHotels.filter(h=>(!stars.length||stars.includes(h.stars))&&h.price>=minP&&h.price<=maxP));
 }
-function clearFilters() {
-    document.querySelectorAll('input[name=stars]').forEach(function(c){ c.checked = false; });
-    document.querySelectorAll('.filter-price-btn').forEach(function(b){ b.classList.remove('active'); });
+function clearFilters(){
+    document.querySelectorAll('input[name=stars]').forEach(c=>c.checked=false);
+    document.querySelectorAll('.filter-price-btn').forEach(b=>b.classList.remove('active'));
     renderHotels(_allHotels);
 }
 
-/* ── INIT ── */
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('hotelModalBackdrop').addEventListener('click', function(e){
-        if (e.target === this) closeHotelModal();
-    });
-    document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape') closeHotelModal();
-    });
-    document.addEventListener('click', function(e){
-        if (!e.target.closest('.dropdown-menu') && !e.target.closest('.selector-pill'))
-            document.querySelectorAll('.dropdown-menu.open').forEach(function(m){ m.classList.remove('open'); });
-    });
-    if (window.flatpickr) {
-        document.querySelectorAll('.date-picker, input[type=date]').forEach(function(inp){
-            flatpickr(inp, { dateFormat:'Y-m-d', altInput:true, altFormat:'D, M j', showMonths:2, monthSelectorType:'static', disableMobile:true });
+async function loadHotels(){
+    try{
+        var res=await fetch(getApiUrl('get_hotels.php'),{headers:{'Accept':'application/json'}});
+        if(!res.ok)throw 0;
+        var data=await res.json();
+        if(data.ok&&Array.isArray(data.hotels)&&data.hotels.length)_allHotels=data.hotels;
+    }catch(_){}
+    var cityParam=new URLSearchParams(window.location.search).get('city');
+    renderHotels(cityParam?_allHotels.filter(h=>(h.city||'').toLowerCase().includes(cityParam.toLowerCase())):_allHotels.slice());
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+    /* Auth modal close */
+    document.getElementById('authModalCloseBtn').addEventListener('click',closeAuthModal);
+    document.getElementById('authModal').addEventListener('click',function(e){if(e.target===this)closeAuthModal();});
+    document.querySelector('.auth-modal-shell').addEventListener('click',e=>e.stopPropagation());
+
+    /* Real-time sign-in button enable */
+    ['siEmail','siPassword'].forEach(id=>{
+        document.getElementById(id)?.addEventListener('input',()=>{
+            const ok=document.getElementById('siEmail')?.value.trim()&&document.getElementById('siPassword')?.value;
+            document.getElementById('siSubmitBtn')?.classList.toggle('ready',!!ok);
         });
+    });
+    /* Real-time register validation */
+    ['regFirstName','regLastName','regEmail','regConfirmPw'].forEach(id=>document.getElementById(id)?.addEventListener('input',authCheckRegReady));
+
+    /* Price filter */
+    document.querySelectorAll('.filter-price-btn').forEach(btn=>btn.addEventListener('click',function(){
+        document.querySelectorAll('.filter-price-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+    }));
+
+    /* Hotel detail modal backdrop */
+    document.getElementById('hotelModalBackdrop').addEventListener('click',function(e){if(e.target===this)closeHotelModal();});
+
+    /* Global dropdown close */
+    document.addEventListener('click',function(e){
+        if(!e.target.closest('.dropdown-menu')&&!e.target.closest('.selector-pill')&&!e.target.closest('.support-btn'))
+            document.querySelectorAll('.dropdown-menu.open').forEach(m=>m.classList.remove('open'));
+    });
+
+    /* Escape closes both modals */
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAuthModal();closeHotelModal();}});
+
+    /* Flatpickr */
+    if(window.flatpickr){
+        document.querySelectorAll('.date-picker,input[type=date]').forEach(inp=>
+            flatpickr(inp,{dateFormat:'Y-m-d',altInput:true,altFormat:'D, M j',showMonths:2,monthSelectorType:'static',disableMobile:true})
+        );
     }
+
+    /* Initial minus-button grey state */
+    ['hotelAdultsMinus','hotelChildrenMinus','hotelInfantsMinus','hotelRoomsMinus'].forEach(id=>{
+        const b=document.getElementById(id);if(b)b.style.color='#c4cce0';
+    });
+
     loadHotels();
 });
-
-/* ── LOAD HOTELS (API with static fallback) ── */
-function getApiUrl(path) {
-    if (window.location.protocol === 'file:')
-        return 'http://localhost/platform-technologies-proj-v1-main/api/' + path;
-    var href = window.location.href.split('?')[0];
-    return href.substring(0, href.lastIndexOf('/') + 1) + 'api/' + path;
-}
-async function loadHotels() {
-    try {
-        var res = await fetch(getApiUrl('get_hotels.php'), { headers:{ 'Accept':'application/json' } });
-        if (!res.ok) throw 0;
-        var data = await res.json();
-        if (data.ok && Array.isArray(data.hotels) && data.hotels.length) _allHotels = data.hotels;
-    } catch(_){}
-    var cityParam = new URLSearchParams(window.location.search).get('city');
-    var list = cityParam
-        ? _allHotels.filter(function(h){ return (h.city||'').toLowerCase().includes(cityParam.toLowerCase()); })
-        : _allHotels.slice();
-    renderHotels(list);
-}
 </script>
 </body>
 </html>
