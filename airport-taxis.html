@@ -5,1760 +5,887 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Airport Taxis - Easy Navigate</title>
     <link rel="icon" type="image/png" href="assets/web-icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-solid-900.woff2"   as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-brands-400.woff2"  as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/regular.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="styles.css">
 
     <style>
-        /* ══════════════════════════════════════════════════════
-           AUTH MODAL
-           ══════════════════════════════════════════════════════ */
-        .auth-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,.55);z-index:9000;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s,visibility .24s}
+        .fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands { font-display: block; }
+
+        /* ══ AUTH MODAL — identical to index.html ══ */
+        .auth-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(17,24,39,.55);z-index:2000;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s,visibility .24s}
         .auth-modal.open{opacity:1;visibility:visible;pointer-events:auto}
-        .auth-modal-shell{width:min(980px,100%);height:min(734px,calc(100vh - 40px));background:#fff;border-radius:12px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;transform:translateY(18px) scale(.98);transition:transform .26s,opacity .26s;opacity:.9}
+        .auth-modal-shell{width:min(960px,100%);max-height:min(730px,calc(100vh - 40px));background:#fff;border-radius:16px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;position:relative;transform:translateY(18px) scale(.98);opacity:.9;transition:transform .26s,opacity .26s;box-shadow:0 24px 64px rgba(0,0,0,.22)}
         .auth-modal.open .auth-modal-shell{transform:translateY(0) scale(1);opacity:1}
-        .auth-modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid #d5dae2;border-radius:50%;background:#fff;color:#364152;cursor:pointer;font-size:16px;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .15s}
-        .auth-modal-close:hover{background:#f5f6fa}
-        .auth-modal-panel{display:flex;justify-content:center;align-items:stretch;background:#fff}
-        .auth-modal-inner{width:min(380px,100%);padding:36px 0 28px;display:flex;flex-direction:column;overflow-y:auto;box-sizing:border-box}
-        .auth-modal-inner::-webkit-scrollbar{width:0}
-        .auth-modal-logo{width:160px;height:auto;margin:0 auto 20px;display:block}
-        .auth-modal-divider{height:1px;background:#e0e2ea;margin-bottom:16px}
-        .auth-tabs{display:flex;border-bottom:2px solid #e8eaf0;margin-bottom:18px}
-        .auth-tab-btn{flex:1;padding:10px 0;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#8892aa;background:none;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;cursor:pointer;transition:color .18s,border-color .18s}
+        .auth-modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid #dde1f0;border-radius:50%;background:#fff;color:#364152;cursor:pointer;font-size:15px;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .15s}
+        .auth-modal-close:hover{background:#f7f8fc}
+        .auth-modal-panel{display:flex;justify-content:center;align-items:stretch;background:#fff;overflow-y:auto}
+        .auth-modal-panel::-webkit-scrollbar{width:0}
+        .auth-modal-inner{width:min(360px,100%);padding:32px 0 28px;display:flex;flex-direction:column;box-sizing:border-box}
+        .auth-modal-logo{width:148px;height:auto;margin:0 auto 18px;display:block}
+        .auth-modal-divider{height:1px;background:#dde1f0;margin-bottom:16px}
+        .auth-tabs{display:flex;border-bottom:2px solid #eef0f8;margin-bottom:18px}
+        .auth-tab-btn{flex:1;padding:10px 0;font-size:13.5px;font-weight:700;color:#9ba5c0;background:none;border:none;border-bottom:2.5px solid transparent;margin-bottom:-2px;cursor:pointer;transition:color .18s,border-color .18s;font-family:'Inter',sans-serif}
         .auth-tab-btn.active{color:#282D9E;border-bottom-color:#282D9E}
-        .auth-tab-btn:hover:not(.active){color:#1a2140}
-        .auth-form-panel{display:none;flex-direction:column;gap:0}
-        .auth-form-panel.active{display:flex}
-        .auth-field-group{display:flex;flex-direction:column;gap:10px}
-        .auth-modal-input{width:100%;border-radius:4px;border:1px solid #d5dae2;min-height:45px;font-family:'Inter',sans-serif;font-size:15px;padding:0 16px;color:#273142;outline:none;background:#fff;box-sizing:border-box;transition:border-color .15s}
+        .auth-form-panel{display:none}
+        .auth-form-panel.active{display:flex;flex-direction:column;gap:10px}
+        .auth-modal-input{width:100%;border-radius:8px;border:1.5px solid #dde1f0;min-height:44px;font-size:14.5px;padding:0 14px;color:#273142;outline:none;background:#fff;box-sizing:border-box;transition:border-color .15s;font-family:'Inter',sans-serif}
         .auth-modal-input:focus{border-color:#282D9E}
-        .auth-modal-input::placeholder{color:#a5acb7}
-        .auth-modal-btn{width:100%;border-radius:4px;border:1px solid #d5dae2;min-height:45px;font-family:'Inter',sans-serif;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s;box-sizing:border-box}
-        .auth-modal-or-row{margin:18px 0 14px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
-        .auth-modal-or-line{height:1px;background:#d7dce5}
-        .auth-modal-or-text{color:#a5acb7;font-weight:600;font-size:18px;line-height:1}
-        .auth-modal-social{display:grid;gap:10px}
+        .auth-modal-input::placeholder{color:#c4cce0}
+        .auth-modal-btn{width:100%;border-radius:8px;border:1px solid #dde1f0;min-height:44px;font-size:14.5px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,opacity .15s;box-sizing:border-box;font-family:'Inter',sans-serif}
+        .auth-modal-or-row{margin:12px 0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+        .auth-modal-or-line{height:1px;background:#dde1f0}
+        .auth-modal-or-text{color:#c4cce0;font-weight:600;font-size:18px;line-height:1}
+        .auth-modal-social{display:grid;gap:8px}
         .auth-modal-btn-google{background:#4b82e0;border-color:#4b82e0;color:#fff}
         .auth-modal-btn-google:hover{background:#3a6ec0}
         .auth-modal-btn-social{background:#fff;color:#252b36}
-        .auth-modal-btn-social:hover{background:#f5f6fa}
-        .auth-modal-icon{width:22px;display:inline-flex;justify-content:center;align-items:center;font-size:22px}
-        .auth-fb-icon{color:#1e78df}
-        .auth-modal-terms{margin:16px 0 0;color:#515864;font-size:12px;line-height:1.4}
-        .auth-modal-status{min-height:18px;margin-top:8px;font-size:13px;color:#1f3f87}
+        .auth-modal-btn-social:hover{background:#f7f8fc}
+        .auth-modal-icon{width:22px;display:inline-flex;justify-content:center;align-items:center;font-size:20px}
+        .auth-modal-facebook-icon{color:#1e78df}
+        .auth-modal-terms{color:#515864;font-size:11.5px;line-height:1.45;margin-top:4px}
+        .auth-modal-status{min-height:18px;font-size:12.5px;color:#1f3f87}
         .auth-pw-wrap{position:relative}
-        .auth-pw-wrap .auth-modal-input{padding-right:44px}
-        .auth-pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#8892aa;font-size:14px;padding:0;display:flex;align-items:center;transition:color .15s}
+        .auth-pw-wrap .auth-modal-input{padding-right:42px}
+        .auth-pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ba5c0;font-size:14px;padding:0;display:flex;align-items:center;transition:color .15s}
         .auth-pw-toggle:hover{color:#282D9E}
         .auth-name-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
         .auth-strength-wrap{margin-top:-4px}
-        .auth-strength-bar{height:3px;border-radius:2px;background:#e8eaf0;overflow:hidden;margin-bottom:4px}
+        .auth-strength-bar{height:3px;border-radius:2px;background:#eef0f8;overflow:hidden;margin-bottom:4px}
         .auth-strength-fill{height:100%;border-radius:2px;width:0%;transition:width .3s,background .3s}
-        .auth-strength-label{font-size:11px;color:#8892aa}
-        .auth-forgot{display:block;text-align:right;margin-top:-4px;font-size:12px;font-weight:600;color:#282D9E;cursor:pointer;text-decoration:none;transition:opacity .15s}
-        .auth-forgot:hover{opacity:.7}
-        .auth-terms-check{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#515864;line-height:1.4;cursor:pointer;margin-top:2px}
-        .auth-terms-check input{width:14px;height:14px;margin-top:1px;accent-color:#282D9E;flex-shrink:0;cursor:pointer}
-        .auth-submit-btn{background:#282D9E;border-color:#282D9E;color:#fff;opacity:.42;pointer-events:none}
-        .auth-submit-btn.ready{opacity:1;pointer-events:auto}
-        .auth-submit-btn:hover{background:#1f2480;border-color:#1f2480}
+        .auth-strength-label{font-size:11px;color:#9ba5c0}
+        .auth-forgot{text-align:right;font-size:12px;font-weight:600;color:#282D9E;cursor:pointer;text-decoration:none;transition:opacity .15s;display:block;margin-top:-4px}
+        .auth-forgot:hover{opacity:.75}
+        .auth-terms-check{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#515864;line-height:1.4;cursor:pointer}
+        .auth-terms-check input[type="checkbox"]{width:14px;height:14px;margin-top:2px;accent-color:#282D9E;flex-shrink:0;cursor:pointer}
+        .auth-modal-btn-submit{background:#282D9E;border-color:#282D9E;color:#fff;opacity:.42;pointer-events:none}
+        .auth-modal-btn-submit.ready{opacity:1;pointer-events:auto}
+        .auth-modal-btn-submit:hover{background:#1f237e;border-color:#1f237e}
         .auth-success-box{display:none;flex-direction:column;align-items:center;gap:10px;padding:28px 0 12px;text-align:center}
         .auth-success-box.show{display:flex}
         .auth-success-icon{font-size:44px;color:#16a34a}
-        .auth-success-title{font-size:18px;font-weight:800;color:#1a2140}
-        .auth-success-sub{font-size:13px;color:#8892aa}
-        .auth-modal-hero{position:relative;background:center/cover no-repeat url('assets/airport-taxis-bg.jpg')}
-        .auth-modal-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.28) 100%)}
-        .auth-modal-hero-logo{position:absolute;right:26px;bottom:24px;width:148px;z-index:1}
+        .auth-success-title{font-size:17px;font-weight:800;color:#111827}
+        .auth-success-sub{font-size:13px;color:#9ba5c0}
+        .auth-modal-hero{position:relative;background:center/cover no-repeat url('assets/attractions-and-tours-bg.jpg');min-height:300px}
+        .auth-modal-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.3) 100%)}
+        .auth-modal-hero-logo{position:absolute;right:24px;bottom:22px;width:144px;z-index:1}
         @media(max-width:860px){
-            .auth-modal-shell{grid-template-columns:1fr;overflow-y:auto}
-            .auth-modal-hero{min-height:200px;order:-1}
-            .auth-modal-inner{width:min(440px,calc(100% - 32px));padding-top:24px}
+            .auth-modal-shell{grid-template-columns:1fr;overflow-y:auto;max-height:calc(100vh - 40px)}
+            .auth-modal-hero{min-height:180px;order:-1}
+            .auth-modal-inner{width:min(420px,calc(100% - 32px));padding-top:24px;margin:0 auto}
         }
 
-        /* ── AUTH GATE TOAST ── */
-        .auth-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:#1a2140;color:#fff;padding:13px 22px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;z-index:9100;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.25);display:flex;align-items:center;gap:14px}
-        .auth-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
-        .auth-toast-btn{background:#282D9E;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .15s}
-        .auth-toast-btn:hover{background:#1f2480}
+        /* ── PASSENGER DROPDOWN ── */
+        .passenger-dropdown{min-width:300px;padding:8px 16px}
+        .passenger-note{font-size:12px;color:#9ba5c0;margin-bottom:12px;line-height:1.4}
+        .passenger-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #eef0f8}
+        .passenger-row:last-child{border-bottom:none}
+        .passenger-label{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+        .passenger-type{font-size:14px;font-weight:700;color:#111827}
+        .passenger-age{font-size:12px;color:#9ba5c0}
+        .passenger-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+        .pax-btn{background:none;border:none;cursor:pointer;padding:0;font-size:22px;color:#c4cce0;display:flex;align-items:center;transition:color .2s;line-height:1}
+        .pax-btn:hover{color:#282D9E}
+        .pax-value{font-size:16px;font-weight:700;color:#111827;min-width:22px;text-align:center}
 
-        /* ══════════════════════════════════════════════════════
-           TAXI AIRPORT SECTION
-           ══════════════════════════════════════════════════════ */
+        /* ══ TAXI AIRPORTS SECTION ══ */
+        .taxi-airports-section{max-width:1280px;margin:40px auto 0;padding:0 28px 60px}
+        .taxi-airports-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+        .taxi-airports-title{font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-0.3px;margin:0}
+        .taxi-airports-sub{font-size:13.5px;color:var(--gray-500);margin:4px 0 0;font-weight:400}
+        .taxi-airports-count{font-size:13px;font-weight:600;color:var(--gray-500);white-space:nowrap}
+        .taxi-airports-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+        .taxi-airport-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:14px;cursor:pointer;transition:box-shadow .22s,transform .22s,border-color .18s;opacity:0;transform:translateY(8px);font-family:'Inter',sans-serif}
+        .taxi-airport-card--enter{animation:taxiCardIn .35s cubic-bezier(.22,1,.36,1) forwards}
+        @keyframes taxiCardIn{to{opacity:1;transform:translateY(0)}}
+        .taxi-airport-card:hover{border-color:rgba(40,45,158,.3);box-shadow:0 6px 28px rgba(40,45,158,.10);transform:translateY(-2px)}
+        .taxi-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .taxi-card-icon{width:48px;height:48px;border-radius:12px;background:#eef0ff;display:flex;align-items:center;justify-content:center;color:#282D9E;font-size:20px;flex-shrink:0}
+        .taxi-card-iata{font-family:'Inter',sans-serif;font-size:28px;font-weight:800;color:var(--text);letter-spacing:-0.5px;line-height:1}
+        .taxi-card-city{font-size:16px;font-weight:700;color:var(--text);line-height:1.25;margin:0}
+        .taxi-card-terminal{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--gray-500);background:var(--gray-100);border-radius:20px;padding:3px 10px;margin-top:4px;width:fit-content}
+        .taxi-card-terminal i{font-size:10px;color:#282D9E;opacity:.8}
+        .taxi-card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:12px;border-top:1px solid var(--gray-100)}
+        .taxi-card-flights{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--gray-600)}
+        .taxi-card-flights i{color:#282D9E;font-size:11px;opacity:.7}
+        .taxi-card-select-btn{display:inline-flex;align-items:center;gap:5px;background:#282D9E;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12.5px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:background .15s,transform .15s;white-space:nowrap;box-shadow:0 2px 10px rgba(40,45,158,.2)}
+        .taxi-card-select-btn:hover{background:#1f237e;transform:scale(1.04)}
+        .taxi-loading{display:flex;flex-direction:column;align-items:center;gap:14px;padding:56px 24px;color:var(--gray-500);font-size:14px;font-family:'Inter',sans-serif}
+        .taxi-loading-spinner{width:36px;height:36px;border:2.5px solid var(--gray-100);border-top-color:#282D9E;border-radius:50%;animation:taxiSpin .7s linear infinite}
+        @keyframes taxiSpin{to{transform:rotate(360deg)}}
+        .taxi-empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:56px 24px;text-align:center;background:#fff;border-radius:16px;border:1px solid var(--gray-200)}
+        .taxi-empty-icon{width:52px;height:52px;border-radius:14px;background:var(--gray-100);display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:22px;margin-bottom:4px}
+        .taxi-empty-title{font-size:15px;font-weight:700;color:var(--text)}
+        .taxi-empty-sub{font-size:13px;color:var(--gray-500)}
+        .taxi-card-airlines{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 0 2px;border-top:1px solid var(--gray-100)}
+        .taxi-airline-logo{height:28px;width:auto;max-width:72px;object-fit:contain;border-radius:5px;border:1px solid var(--gray-100);background:#fff;padding:2px 5px;flex-shrink:0;transition:opacity .15s}
+        .taxi-airline-logo:hover{opacity:.8}
+        .taxi-airline-abbr{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 8px;border-radius:5px;background:var(--gray-100);color:var(--gray-600);font-size:10px;font-weight:800;letter-spacing:.5px;flex-shrink:0}
+        @media(max-width:700px){.taxi-airports-section{padding:0 16px 40px}.taxi-airports-grid{grid-template-columns:1fr 1fr}}
+        @media(max-width:480px){.taxi-airports-grid{grid-template-columns:1fr}}
 
-        .taxi-airports-section {
-            max-width: 1280px;
-            margin: 40px auto 0;
-            padding: 0 28px 60px;
-        }
-
-        .taxi-airports-header {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .taxi-airports-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text);
-            letter-spacing: -0.3px;
-            margin: 0;
-        }
-
-        .taxi-airports-sub {
-            font-size: 13.5px;
-            color: var(--gray-500);
-            margin: 4px 0 0;
-            font-weight: 400;
-        }
-
-        .taxi-airports-count {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--gray-500);
-            white-space: nowrap;
-        }
-
-        /* ── Grid ── */
-        .taxi-airports-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-
-        /* ── Airport Card ── */
-        .taxi-airport-card {
-            background: #fff;
-            border: 1px solid var(--gray-200);
-            border-radius: 16px;
-            padding: 20px 20px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            cursor: pointer;
-            transition: box-shadow 0.22s ease, transform 0.22s ease, border-color 0.18s;
-            opacity: 0;
-            transform: translateY(8px);
-            font-family: 'Inter', sans-serif;
-        }
-
-        .taxi-airport-card--enter {
-            animation: taxiCardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        @keyframes taxiCardIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .taxi-airport-card:hover {
-            border-color: rgba(40, 45, 158, 0.3);
-            box-shadow: 0 6px 28px rgba(40, 45, 158, 0.10);
-            transform: translateY(-2px);
-        }
-
-        /* ── Card top row: icon + IATA ── */
-        .taxi-card-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .taxi-card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: var(--blue-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--blue);
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .taxi-card-iata {
-            font-family: 'Inter', sans-serif;
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text);
-            letter-spacing: -0.5px;
-            line-height: 1;
-        }
-
-        /* ── Card body ── */
-        .taxi-card-city {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-            line-height: 1.25;
-            margin: 0;
-        }
-
-        .taxi-card-terminal {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gray-500);
-            background: var(--gray-100);
-            border-radius: 20px;
-            padding: 3px 10px;
-            margin-top: 4px;
-            width: fit-content;
-        }
-
-        .taxi-card-terminal i {
-            font-size: 10px;
-            color: var(--blue);
-            opacity: 0.8;
-        }
-
-        /* ── Card footer ── */
-        .taxi-card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding-top: 12px;
-            border-top: 1px solid var(--gray-100);
-        }
-
-        .taxi-card-flights {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--gray-600);
-        }
-
-        .taxi-card-flights i {
-            color: var(--blue);
-            font-size: 11px;
-            opacity: 0.7;
-        }
-
-        .taxi-card-select-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--blue);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 7px 14px;
-            font-size: 12.5px;
-            font-weight: 700;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.15s;
-            white-space: nowrap;
-            box-shadow: 0 2px 10px rgba(40, 45, 158, 0.2);
-        }
-
-        .taxi-card-select-btn:hover {
-            background: var(--blue-dark);
-            transform: scale(1.04);
-        }
-
-        /* ── Loading state ── */
-        .taxi-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            padding: 56px 24px;
-            color: var(--gray-500);
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .taxi-loading-spinner {
-            width: 36px;
-            height: 36px;
-            border: 2.5px solid var(--gray-100);
-            border-top-color: var(--blue);
-            border-radius: 50%;
-            animation: taxiSpin 0.7s linear infinite;
-        }
-
-        @keyframes taxiSpin { to { transform: rotate(360deg); } }
-
-        /* ── Empty state ── */
-        .taxi-empty {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 56px 24px;
-            text-align: center;
-            background: #fff;
-            border-radius: 16px;
-            border: 1px solid var(--gray-200);
-        }
-
-        .taxi-empty-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            background: var(--gray-100);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-400);
-            font-size: 22px;
-            margin-bottom: 4px;
-        }
-
-        .taxi-empty-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .taxi-empty-sub {
-            font-size: 13px;
-            color: var(--gray-500);
-        }
-
-        /* ── Airline logos strip on card ── */
-        .taxi-card-airlines {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-            padding: 10px 0 2px;
-            border-top: 1px solid var(--gray-100);
-        }
-
-        .taxi-airline-logo {
-            height: 28px;
-            width: auto;
-            max-width: 72px;
-            object-fit: contain;
-            border-radius: 5px;
-            border: 1px solid var(--gray-100);
-            background: #fff;
-            padding: 2px 5px;
-            flex-shrink: 0;
-            transition: opacity 0.15s;
-        }
-
-        .taxi-airline-logo:hover { opacity: 0.8; }
-
-        .taxi-airline-abbr {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 28px;
-            padding: 0 8px;
-            border-radius: 5px;
-            background: var(--gray-100);
-            color: var(--gray-600);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            flex-shrink: 0;
-        }
-
-        @media (max-width: 700px) {
-            .taxi-airports-section { padding: 0 16px 40px; }
-            .taxi-airports-grid { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 480px) {
-            .taxi-airports-grid { grid-template-columns: 1fr; }
-        }
-
-        /* ══════════════════════════════════════════════════════
-           TAXI BOOKING MODAL
-           ══════════════════════════════════════════════════════ */
-
-        .txm-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 20, 60, 0.52);
-            z-index: 9999;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 24px 16px;
-            backdrop-filter: blur(3px);
-            overflow-y: auto;
-        }
-        .txm-overlay.open { display: flex; }
-
-        .txm-box {
-            background: #fff;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 960px;
-            margin: 0 auto;
-            box-shadow: 0 24px 72px rgba(20, 30, 100, 0.22);
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            overflow: hidden;
-            animation: txmIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-        }
-        @keyframes txmIn {
-            from { opacity: 0; transform: translateY(16px) scale(0.98); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* ── Close button ── */
-        .txm-close {
-            position: absolute;
-            top: 16px; right: 18px;
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            border: 1.5px solid var(--gray-200);
-            background: #fff;
-            font-size: 18px;
-            color: var(--gray-500);
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 10;
-            transition: background 0.15s, color 0.15s;
-        }
-        .txm-close:hover { background: var(--gray-100); color: var(--text); }
-
-        /* ── LEFT ── */
-        .txm-left {
-            padding: 28px 28px 24px;
-            overflow-y: auto;
-            max-height: 88vh;
-        }
-        .txm-left::-webkit-scrollbar { width: 4px; }
-        .txm-left::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
-
-        .txm-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--text);
-            margin: 0 0 4px;
-            padding-right: 36px;
-            letter-spacing: -0.2px;
-        }
-        .txm-route {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12.5px;
-            color: var(--gray-500);
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-        .txm-route i { color: var(--blue); font-size: 11px; }
-
-        /* Vehicle type cards */
-        .txm-vehicles {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 22px;
-        }
-        .txm-vehicle {
-            border: 1.5px solid var(--gray-200);
-            border-radius: 12px;
-            padding: 14px 16px;
-            cursor: pointer;
-            transition: border-color 0.18s, box-shadow 0.18s;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .txm-vehicle:hover { border-color: var(--blue); }
-        .txm-vehicle.selected {
-            border-color: var(--blue);
-            background: #f0f4ff;
-            box-shadow: 0 0 0 3px rgba(40,45,158,0.08);
-        }
-        .txm-vehicle-radio {
-            width: 18px; height: 18px;
-            border-radius: 50%;
-            border: 2px solid var(--gray-300);
-            flex-shrink: 0;
-            position: relative;
-            transition: border-color 0.15s;
-        }
-        .txm-vehicle.selected .txm-vehicle-radio {
-            border-color: var(--blue);
-        }
-        .txm-vehicle.selected .txm-vehicle-radio::after {
-            content: '';
-            position: absolute;
-            inset: 3px;
-            border-radius: 50%;
-            background: var(--blue);
-        }
-        .txm-vehicle-icon {
-            width: 48px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-        .txm-vehicle-info { flex: 1; min-width: 0; }
-        .txm-vehicle-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .txm-vehicle-caps {
-            font-size: 12px;
-            color: var(--gray-500);
-            margin-top: 2px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .txm-vehicle-caps span { display: flex; align-items: center; gap: 4px; }
-        .txm-vehicle-caps i   { font-size: 10px; color: var(--blue); opacity: 0.7; }
-        .txm-vehicle-price {
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--blue);
-            flex-shrink: 0;
-        }
-        .txm-badge-instant {
-            font-size: 10px;
-            font-weight: 700;
-            background: #dcfce7;
-            color: #15803d;
-            border-radius: 20px;
-            padding: 2px 7px;
-        }
-
-        /* Section label */
-        .txm-section-label {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--gray-500);
-            text-transform: uppercase;
-            letter-spacing: 0.7px;
-            margin: 0 0 10px;
-        }
-
-        /* Trip details card */
-        .txm-trip-details {
-            background: var(--gray-50);
-            border: 1.5px solid var(--gray-200);
-            border-radius: 12px;
-            padding: 16px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 22px;
-        }
-
-        .txm-trip-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text);
-        }
-
-        .txm-trip-row-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            flex-shrink: 0;
-        }
-
-        .txm-trip-row-icon.blue   { background: #dbeafe; color: #1d4ed8; }
-        .txm-trip-row-icon.green  { background: #dcfce7; color: #15803d; }
-        .txm-trip-row-icon.amber  { background: #fef3c7; color: #92400e; }
-        .txm-trip-row-icon.purple { background: #ede9fe; color: #6d28d9; }
-
-        .txm-trip-row-content {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            min-width: 0;
-        }
-
-        .txm-trip-row-label {
-            font-size: 10.5px;
-            font-weight: 700;
-            color: var(--gray-400);
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .txm-trip-row-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Confirm button */
-        .txm-confirm-btn {
-            width: 100%;
-            padding: 13px;
-            background: var(--blue);
-            color: #fff; border: none; border-radius: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14.5px; font-weight: 800;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-            box-shadow: 0 4px 14px rgba(40,45,158,0.28);
-            margin-top: 4px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .txm-confirm-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
-        .txm-confirm-btn:active { transform: translateY(0); }
-        .txm-confirm-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
-        .txm-spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: txmSpin .7s linear infinite; }
-        .txm-confirm-btn.loading .txm-spinner { display: block; }
-        .txm-confirm-btn.loading .txm-btn-text { opacity: 0.6; }
-        @keyframes txmSpin { to { transform: rotate(360deg); } }
-
-        .txm-trust-row {
-            display: flex; justify-content: center; gap: 20px;
-            margin-top: 12px; font-size: 11.5px; color: var(--gray-500); font-weight: 600;
-        }
-        .txm-trust-row span { display: flex; align-items: center; gap: 5px; }
-        .txm-trust-row i { color: var(--blue); font-size: 10px; }
-
-        /* ── RIGHT: Price summary ── */
-        .txm-right {
-            background: var(--gray-50);
-            border-left: 1px solid var(--gray-200);
-            padding: 28px 22px;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .txm-right-title {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 16px;
-        }
-
-        .txm-route-summary {
-            background: #fff;
-            border: 1px solid var(--gray-200);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 16px;
-        }
-        .txm-rs-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            font-size: 12.5px;
-            color: var(--gray-700);
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
-        .txm-rs-row:last-child { margin-bottom: 0; }
-        .txm-rs-icon {
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            font-size: 10px;
-        }
-        .txm-rs-icon.blue   { background: #dbeafe; color: #1d4ed8; }
-        .txm-rs-icon.green  { background: #dcfce7; color: #15803d; }
-        .txm-rs-icon.orange { background: #fef3c7; color: #92400e; }
-        .txm-rs-text { font-size: 12px; line-height: 1.4; }
-        .txm-rs-label { font-size: 10.5px; color: var(--gray-400); font-weight: 500; display: block; }
-
-        .txm-connector {
-            width: 1px; height: 12px;
-            background: var(--gray-200);
-            margin: 2px 0 2px 11px;
-        }
-
-        /* Price rows */
-        .txm-price-section { margin-top: 4px; }
-        .txm-pr-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12.5px;
-            color: var(--gray-600);
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-        .txm-pr-row.fee { color: var(--gray-500); }
-        .txm-pr-row.free-item { color: #16a34a; font-weight: 600; }
-        .txm-pr-divider { height: 1px; background: var(--gray-200); margin: 10px 0; }
-        .txm-pr-total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .txm-pr-total span:last-child { color: var(--blue); }
-        .txm-pr-note {
-            font-size: 11px;
-            color: var(--gray-400);
-            margin-top: 8px;
-            line-height: 1.5;
-        }
-        .txm-pr-note i { color: var(--blue); font-size: 10px; margin-right: 4px; }
-
-        /* Includes block */
-        .txm-includes {
-            margin-top: 18px;
-            padding-top: 16px;
-            border-top: 1px solid var(--gray-200);
-        }
-        .txm-includes-title { font-size: 11px; font-weight: 800; color: var(--text); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .txm-include-item {
-            display: flex; align-items: center; gap: 7px;
-            font-size: 12px; color: var(--gray-600); font-weight: 500;
-            margin-bottom: 7px;
-        }
-        .txm-include-item i { color: #16a34a; font-size: 11px; width: 14px; }
-
-        @media (max-width: 700px) {
-            .txm-box { grid-template-columns: 1fr; }
-            .txm-right { border-left: none; border-top: 1px solid var(--gray-200); }
-        }
+        /* ══ TAXI BOOKING MODAL ══ */
+        .txm-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,60,.52);z-index:9999;align-items:flex-start;justify-content:center;padding:24px 16px;backdrop-filter:blur(3px);overflow-y:auto}
+        .txm-overlay.open{display:flex}
+        .txm-box{background:#fff;border-radius:20px;width:100%;max-width:960px;margin:0 auto;box-shadow:0 24px 72px rgba(20,30,100,.22);display:grid;grid-template-columns:1fr 320px;overflow:hidden;animation:txmIn .28s cubic-bezier(.22,1,.36,1);position:relative}
+        @keyframes txmIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .txm-close{position:absolute;top:16px;right:18px;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--gray-200);background:#fff;font-size:18px;color:var(--gray-500);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .15s,color .15s}
+        .txm-close:hover{background:var(--gray-100);color:var(--text)}
+        .txm-left{padding:28px 28px 24px;overflow-y:auto;max-height:88vh}
+        .txm-left::-webkit-scrollbar{width:4px}
+        .txm-left::-webkit-scrollbar-thumb{background:var(--gray-200);border-radius:4px}
+        .txm-title{font-size:1.15rem;font-weight:800;color:var(--text);margin:0 0 4px;padding-right:36px;letter-spacing:-0.2px}
+        .txm-route{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--gray-500);font-weight:500;margin-bottom:20px}
+        .txm-route i{color:#282D9E;font-size:11px}
+        .txm-vehicles{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+        .txm-vehicle{border:1.5px solid var(--gray-200);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .18s,box-shadow .18s;display:flex;align-items:center;gap:14px}
+        .txm-vehicle:hover{border-color:#282D9E}
+        .txm-vehicle.selected{border-color:#282D9E;background:#f0f4ff;box-shadow:0 0 0 3px rgba(40,45,158,.08)}
+        .txm-vehicle-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--gray-300);flex-shrink:0;position:relative;transition:border-color .15s}
+        .txm-vehicle.selected .txm-vehicle-radio{border-color:#282D9E}
+        .txm-vehicle.selected .txm-vehicle-radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#282D9E}
+        .txm-vehicle-icon{width:48px;height:36px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+        .txm-vehicle-info{flex:1;min-width:0}
+        .txm-vehicle-name{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+        .txm-vehicle-caps{font-size:12px;color:var(--gray-500);margin-top:2px;display:flex;align-items:center;gap:12px}
+        .txm-vehicle-caps span{display:flex;align-items:center;gap:4px}
+        .txm-vehicle-caps i{font-size:10px;color:#282D9E;opacity:.7}
+        .txm-vehicle-price{font-size:15px;font-weight:800;color:#282D9E;flex-shrink:0}
+        .txm-badge-instant{font-size:10px;font-weight:700;background:#dcfce7;color:#15803d;border-radius:20px;padding:2px 7px}
+        .txm-section-label{font-size:10px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.7px;margin:0 0 10px}
+        .txm-trip-details{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+        .txm-trip-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)}
+        .txm-trip-row-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+        .txm-trip-row-icon.blue{background:#dbeafe;color:#1d4ed8}
+        .txm-trip-row-icon.green{background:#dcfce7;color:#15803d}
+        .txm-trip-row-icon.amber{background:#fef3c7;color:#92400e}
+        .txm-trip-row-icon.purple{background:#ede9fe;color:#6d28d9}
+        .txm-trip-row-content{display:flex;flex-direction:column;gap:1px;min-width:0}
+        .txm-trip-row-label{font-size:10.5px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px}
+        .txm-trip-row-value{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .txm-confirm-btn{width:100%;padding:13px;background:#282D9E;color:#fff;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(40,45,158,.28);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
+        .txm-confirm-btn:hover{background:#1f237e;transform:translateY(-1px)}
+        .txm-confirm-btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
+        .txm-spinner{display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:txmSpin2 .7s linear infinite}
+        .txm-confirm-btn.loading .txm-spinner{display:block}
+        .txm-confirm-btn.loading .txm-btn-text{opacity:.6}
+        @keyframes txmSpin2{to{transform:rotate(360deg)}}
+        .txm-trust-row{display:flex;justify-content:center;gap:20px;margin-top:12px;font-size:11.5px;color:var(--gray-500);font-weight:600}
+        .txm-trust-row span{display:flex;align-items:center;gap:5px}
+        .txm-trust-row i{color:#282D9E;font-size:10px}
+        .txm-right{background:var(--gray-50);border-left:1px solid var(--gray-200);padding:28px 22px;display:flex;flex-direction:column;gap:0}
+        .txm-right-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:16px}
+        .txm-route-summary{background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:14px;margin-bottom:16px}
+        .txm-rs-row{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--gray-700);font-weight:500;margin-bottom:10px}
+        .txm-rs-row:last-child{margin-bottom:0}
+        .txm-rs-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px}
+        .txm-rs-icon.blue{background:#dbeafe;color:#1d4ed8}
+        .txm-rs-icon.green{background:#dcfce7;color:#15803d}
+        .txm-rs-icon.orange{background:#fef3c7;color:#92400e}
+        .txm-rs-text{font-size:12px;line-height:1.4}
+        .txm-rs-label{font-size:10.5px;color:var(--gray-400);font-weight:500;display:block}
+        .txm-connector{width:1px;height:12px;background:var(--gray-200);margin:2px 0 2px 11px}
+        .txm-price-section{margin-top:4px}
+        .txm-pr-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--gray-600);font-weight:500;margin-bottom:8px}
+        .txm-pr-row.free-item{color:#16a34a;font-weight:600}
+        .txm-pr-divider{height:1px;background:var(--gray-200);margin:10px 0}
+        .txm-pr-total{display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--text)}
+        .txm-pr-total span:last-child{color:#282D9E}
+        .txm-pr-note{font-size:11px;color:var(--gray-400);margin-top:8px;line-height:1.5}
+        .txm-pr-note i{color:#282D9E;font-size:10px;margin-right:4px}
+        .txm-includes{margin-top:18px;padding-top:16px;border-top:1px solid var(--gray-200)}
+        .txm-includes-title{font-size:11px;font-weight:800;color:var(--text);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+        .txm-include-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--gray-600);font-weight:500;margin-bottom:7px}
+        .txm-include-item i{color:#16a34a;font-size:11px;width:14px}
+        @media(max-width:700px){.txm-box{grid-template-columns:1fr}.txm-right{border-left:none;border-top:1px solid var(--gray-200)}}
     </style>
 </head>
-
-<script src="service-search-suggestions.js"></script>
-
 <body class="service-page service-taxi">
 
-    <!-- ══ AUTH MODAL ══ -->
-    <div class="auth-modal" id="authModal" aria-hidden="true">
-        <div class="auth-modal-shell" role="dialog" aria-modal="true">
-            <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close"><i class="fas fa-times"></i></button>
-            <section class="auth-modal-panel">
-                <div class="auth-modal-inner">
-                    <img class="auth-modal-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
-                    <div class="auth-modal-divider"></div>
-                    <div class="auth-tabs" role="tablist">
-                        <button class="auth-tab-btn active" id="authTabSignin"   onclick="authSwitchTab('signin')"   role="tab" aria-selected="true">Sign In</button>
-                        <button class="auth-tab-btn"        id="authTabRegister" onclick="authSwitchTab('register')" role="tab" aria-selected="false">Create Account</button>
+<!-- ══ AUTH MODAL — identical to index.html ══ -->
+<div class="auth-modal" id="authModal" aria-hidden="true">
+    <div class="auth-modal-shell" role="dialog" aria-modal="true">
+        <button class="auth-modal-close" id="authModalCloseBtn" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        <section class="auth-modal-panel">
+            <div class="auth-modal-inner">
+                <img class="auth-modal-logo" src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
+                <div class="auth-modal-divider"></div>
+                <div class="auth-tabs" role="tablist">
+                    <button class="auth-tab-btn active" id="authTabSignin" role="tab" aria-selected="true" onclick="authSwitchTab('signin')">Sign In</button>
+                    <button class="auth-tab-btn" id="authTabRegister" role="tab" aria-selected="false" onclick="authSwitchTab('register')">Create Account</button>
+                </div>
+                <!-- SIGN IN -->
+                <div class="auth-form-panel active" id="authPanelSignin" role="tabpanel">
+                    <input id="siEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
+                    <div class="auth-pw-wrap">
+                        <input id="siPassword" type="password" class="auth-modal-input" placeholder="Password" autocomplete="current-password">
+                        <button type="button" class="auth-pw-toggle" onclick="authTogglePw('siPassword',this)" aria-label="Show/hide password"><i class="fa-solid fa-eye"></i></button>
                     </div>
-                    <!-- SIGN IN -->
-                    <div class="auth-form-panel active" id="authPanelSignin" role="tabpanel">
-                        <div class="auth-field-group">
-                            <input id="siEmail"    type="email"    class="auth-modal-input" placeholder="Email address"  autocomplete="email">
-                            <div class="auth-pw-wrap">
-                                <input id="siPassword" type="password" class="auth-modal-input" placeholder="Password" autocomplete="current-password">
-                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('siPassword',this)" aria-label="Show/hide password"><i class="fas fa-eye"></i></button>
-                            </div>
-                            <a class="auth-forgot" onclick="authForgotPassword()">Forgot password?</a>
-                            <button type="button" id="siSubmitBtn" class="auth-modal-btn auth-submit-btn" onclick="authSignIn()">Sign In</button>
-                        </div>
-                        <div class="auth-modal-or-row"><span class="auth-modal-or-line"></span><span class="auth-modal-or-text">or</span><span class="auth-modal-or-line"></span></div>
-                        <div class="auth-modal-social">
-                            <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="authSocial('google')"><span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span><span>Continue with Google</span></button>
-                            <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')"><span class="auth-modal-icon"><i class="fa-brands fa-microsoft"></i></span><span>Continue with Microsoft</span></button>
-                            <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('facebook')"><span class="auth-modal-icon auth-fb-icon"><i class="fa-brands fa-facebook-f"></i></span><span>Continue with Facebook</span></button>
-                        </div>
-                        <p class="auth-modal-terms">By signing in you agree to Easy Navigate's <a href="#" style="color:#282D9E;">Terms</a> &amp; <a href="#" style="color:#282D9E;">Privacy Policy</a>.</p>
-                        <p id="siStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
+                    <a class="auth-forgot" onclick="authForgotPassword()">Forgot password?</a>
+                    <button type="button" id="siSubmitBtn" class="auth-modal-btn auth-modal-btn-submit" onclick="authSignIn()">Sign In</button>
+                    <div class="auth-modal-or-row" aria-hidden="true">
+                        <span class="auth-modal-or-line"></span><span class="auth-modal-or-text">or</span><span class="auth-modal-or-line"></span>
                     </div>
-                    <!-- REGISTER -->
-                    <div class="auth-form-panel" id="authPanelRegister" role="tabpanel">
-                        <div class="auth-success-box" id="regSuccess">
-                            <div class="auth-success-icon"><i class="fas fa-circle-check"></i></div>
-                            <div class="auth-success-title">Account Created!</div>
-                            <div class="auth-success-sub">Welcome to Easy Navigate.<br>You can now sign in.</div>
-                            <button type="button" class="auth-modal-btn auth-submit-btn ready" style="margin-top:10px;" onclick="authSwitchTab('signin')">Go to Sign In</button>
-                        </div>
-                        <div id="regForm" class="auth-field-group">
+                    <div class="auth-modal-social">
+                        <!-- signInWithGoogle() defined in firebase-config.js which loads first -->
+                        <button type="button" class="auth-modal-btn auth-modal-btn-google" onclick="signInWithGoogle()">
+                            <span class="auth-modal-icon"><i class="fa-brands fa-google"></i></span>
+                            <span>Continue with Google</span>
+                        </button>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('microsoft')">
+                            <span class="auth-modal-icon"><i class="fa-brands fa-microsoft"></i></span>
+                            <span>Continue with Microsoft</span>
+                        </button>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-social" onclick="authSocial('facebook')">
+                            <span class="auth-modal-icon auth-modal-facebook-icon"><i class="fa-brands fa-facebook-f"></i></span>
+                            <span>Continue with Facebook</span>
+                        </button>
+                    </div>
+                    <p class="auth-modal-terms">By signing in you agree to Easy Navigate's <a href="#" style="color:#282D9E;">Terms</a> &amp; <a href="#" style="color:#282D9E;">Privacy Policy</a>.</p>
+                    <p id="siStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
+                </div>
+                <!-- REGISTER -->
+                <div class="auth-form-panel" id="authPanelRegister" role="tabpanel">
+                    <div class="auth-success-box" id="regSuccess">
+                        <div class="auth-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="auth-success-title">Account Created!</div>
+                        <div class="auth-success-sub">Welcome to Easy Navigate.<br>You can now sign in.</div>
+                        <button type="button" class="auth-modal-btn auth-modal-btn-submit ready" style="margin-top:8px;" onclick="authSwitchTab('signin')">Go to Sign In</button>
+                    </div>
+                    <div id="regForm">
+                        <div style="display:flex;flex-direction:column;gap:10px;">
                             <div class="auth-name-row">
-                                <input id="regFirstName" type="text"     class="auth-modal-input" placeholder="First name" autocomplete="given-name">
-                                <input id="regLastName"  type="text"     class="auth-modal-input" placeholder="Last name"  autocomplete="family-name">
+                                <input id="regFirstName" type="text" class="auth-modal-input" placeholder="First name" autocomplete="given-name">
+                                <input id="regLastName"  type="text" class="auth-modal-input" placeholder="Last name"  autocomplete="family-name">
                             </div>
                             <input id="regEmail" type="email" class="auth-modal-input" placeholder="Email address" autocomplete="email">
                             <div class="auth-pw-wrap">
                                 <input id="regPassword" type="password" class="auth-modal-input" placeholder="Password (min. 8 characters)" autocomplete="new-password" oninput="authCheckPwStrength(this.value)">
-                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regPassword',this)" aria-label="Show/hide"><i class="fas fa-eye"></i></button>
+                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regPassword',this)"><i class="fa-solid fa-eye"></i></button>
                             </div>
-                            <div class="auth-strength-wrap" id="regStrengthWrap" style="display:none">
+                            <div class="auth-strength-wrap" id="regStrengthWrap" style="display:none;">
                                 <div class="auth-strength-bar"><div class="auth-strength-fill" id="regStrengthFill"></div></div>
                                 <span class="auth-strength-label" id="regStrengthLabel"></span>
                             </div>
                             <div class="auth-pw-wrap">
                                 <input id="regConfirmPw" type="password" class="auth-modal-input" placeholder="Confirm password" autocomplete="new-password">
-                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regConfirmPw',this)" aria-label="Show/hide"><i class="fas fa-eye"></i></button>
+                                <button type="button" class="auth-pw-toggle" onclick="authTogglePw('regConfirmPw',this)"><i class="fa-solid fa-eye"></i></button>
                             </div>
                             <label class="auth-terms-check">
                                 <input type="checkbox" id="regTerms" onchange="authCheckRegReady()">
                                 I agree to Easy Navigate's <a href="#" style="color:#282D9E;margin-left:3px;">Terms &amp; Privacy Policy</a>
                             </label>
-                            <button type="button" id="regSubmitBtn" class="auth-modal-btn auth-submit-btn" onclick="authRegister()">Create Account</button>
+                            <button type="button" id="regSubmitBtn" class="auth-modal-btn auth-modal-btn-submit" onclick="authRegister()">Create Account</button>
                         </div>
-                        <p id="regStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
                     </div>
+                    <p id="regStatus" class="auth-modal-status" role="status" aria-live="polite"></p>
                 </div>
-            </section>
-            <section class="auth-modal-hero" aria-hidden="true">
-                <div class="auth-modal-hero-overlay"></div>
-                <img class="auth-modal-hero-logo" src="assets/easy-navigate-logo-white.png" alt="">
-            </section>
+            </div>
+        </section>
+        <section class="auth-modal-hero" aria-hidden="true">
+            <div class="auth-modal-hero-overlay"></div>
+            <img class="auth-modal-hero-logo" src="assets/easy-navigate-logo-white.png" alt="">
+        </section>
+    </div>
+</div>
+
+<!-- ══ TAXI BOOKING MODAL ══ -->
+<div class="txm-overlay" id="txmOverlay" onclick="closeTaxiModal(event)">
+    <div class="txm-box" id="txmBox">
+        <button class="txm-close" onclick="closeTaxiModalBtn()">&times;</button>
+        <!-- LEFT -->
+        <div class="txm-left">
+            <div class="txm-title" id="txmTitle">Book Your Taxi Transfer</div>
+            <div class="txm-route" id="txmRoute">
+                <i class="fa-solid fa-plane-arrival"></i>
+                <span id="txmRouteText">–</span>
+            </div>
+            <div class="txm-section-label">Choose your vehicle</div>
+            <div class="txm-vehicles" id="txmVehicles"></div>
+            <div class="txm-section-label" style="margin-top:2px;">Trip details</div>
+            <div class="txm-trip-details">
+                <div class="txm-trip-row">
+                    <div class="txm-trip-row-icon blue"><i class="fa-solid fa-plane-arrival"></i></div>
+                    <div class="txm-trip-row-content"><span class="txm-trip-row-label">Pick-up</span><span class="txm-trip-row-value" id="txmDetailPickup">–</span></div>
+                </div>
+                <div class="txm-trip-row">
+                    <div class="txm-trip-row-icon green"><i class="fa-solid fa-location-dot"></i></div>
+                    <div class="txm-trip-row-content"><span class="txm-trip-row-label">Drop-off</span><span class="txm-trip-row-value" id="txmDetailDropoff">–</span></div>
+                </div>
+                <div class="txm-trip-row">
+                    <div class="txm-trip-row-icon amber"><i class="fa-solid fa-calendar"></i></div>
+                    <div class="txm-trip-row-content"><span class="txm-trip-row-label">Date &amp; Time</span><span class="txm-trip-row-value" id="txmDetailDate">–</span></div>
+                </div>
+                <div class="txm-trip-row">
+                    <div class="txm-trip-row-icon purple"><i class="fa-solid fa-user"></i></div>
+                    <div class="txm-trip-row-content"><span class="txm-trip-row-label">Passengers</span><span class="txm-trip-row-value" id="txmDetailPax">–</span></div>
+                </div>
+            </div>
+            <button class="txm-confirm-btn" id="txmConfirmBtn" onclick="goToBookingPage()">
+                <span class="txm-spinner"></span>
+                <span class="txm-btn-text"><i class="fa-solid fa-taxi"></i> Book Now</span>
+            </button>
+            <div class="txm-trust-row">
+                <span><i class="fa-solid fa-bolt"></i> Instant confirmation</span>
+                <span><i class="fa-solid fa-shield-halved"></i> Secure booking</span>
+                <span><i class="fa-solid fa-clock"></i> Free waiting time</span>
+            </div>
+        </div>
+        <!-- RIGHT -->
+        <div class="txm-right">
+            <div class="txm-right-title">Price Details</div>
+            <div class="txm-route-summary">
+                <div class="txm-rs-row"><div class="txm-rs-icon blue"><i class="fa-solid fa-plane-arrival"></i></div><div class="txm-rs-text"><span class="txm-rs-label">Pick-up</span><span id="txmSummaryPickup">–</span></div></div>
+                <div class="txm-connector"></div>
+                <div class="txm-rs-row"><div class="txm-rs-icon green"><i class="fa-solid fa-location-dot"></i></div><div class="txm-rs-text"><span class="txm-rs-label">Drop-off</span><span id="txmSummaryDropoff">–</span></div></div>
+                <div class="txm-connector"></div>
+                <div class="txm-rs-row"><div class="txm-rs-icon orange"><i class="fa-solid fa-calendar"></i></div><div class="txm-rs-text"><span class="txm-rs-label">Date &amp; time</span><span id="txmSummaryDate">–</span></div></div>
+            </div>
+            <div class="txm-price-section" id="txmPriceBlock"></div>
+            <div class="txm-includes">
+                <div class="txm-includes-title">What's included</div>
+                <div class="txm-include-item"><i class="fa-solid fa-circle-check"></i> Airport meet &amp; greet</div>
+                <div class="txm-include-item"><i class="fa-solid fa-circle-check"></i> Free unlimited waiting time</div>
+                <div class="txm-include-item"><i class="fa-solid fa-circle-check"></i> Flight tracking</div>
+                <div class="txm-include-item"><i class="fa-solid fa-circle-check"></i> Door-to-door transfer</div>
+                <div class="txm-include-item"><i class="fa-solid fa-circle-check"></i> Free cancellation (24h)</div>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- ══ AUTH GATE TOAST ══ -->
-    <div class="auth-toast" id="authToast">
-        <span id="authToastMsg">Please sign in to continue</span>
-        <button class="auth-toast-btn" onclick="openAuthModal('signin')">Sign In</button>
-    </div>
-
-    <!-- ══ HEADER ══ -->
-    <header class="header">
-        <div class="nav-container">
-            <div class="top-nav">
-                <a class="logo" href="index.html">
-                    <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
-                </a>
-                <div class="top-right">
-                    <button class="currency-btn">
-                        PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon">
-                    </button>
-                    <button class="support-btn">
-                        Customer Support <i class="fas fa-chevron-down" style="font-size:10px"></i>
-                    </button>
-                    <div class="relative">
-                        <button class="support-btn" onclick="toggleDropdown('findBookingsMenu', event)">
-                            Find Bookings <i class="fas fa-chevron-down" style="font-size:10px"></i>
-                        </button>
-                        <div class="dropdown-menu" id="findBookingsMenu">
-                            <div class="dropdown-item" onclick="selectFindBooking('hotel')">
-                                <i class="fas fa-bed fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Hotel &amp; Homes</span>
-                                    <span class="fb-desc">Book hotels, rooms, and homes for your stay.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('car')">
-                                <i class="fas fa-car fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Car Rental</span>
-                                    <span class="fb-desc">Find and reserve cars for flexible local travel.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('flights')">
-                                <i class="fas fa-plane fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Flights</span>
-                                    <span class="fb-desc">Search flights and manage your air bookings fast.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('attractions')">
-                                <i class="fas fa-ticket-alt fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Attraction &amp; Tours</span>
-                                    <span class="fb-desc">Discover tickets, tours, and activities in one place.</span>
-                                </div>
-                            </div>
-                            <div class="dropdown-item" onclick="selectFindBooking('taxi')">
-                                <i class="fas fa-taxi fb-icon"></i>
-                                <div class="fb-content">
-                                    <span class="fb-title">Airport Taxis</span>
-                                    <span class="fb-desc">Pre-book airport transfers and private taxi rides.</span>
-                                </div>
-                            </div>
-                        </div>
+<!-- ══ HEADER ══ -->
+<header class="header">
+    <div class="nav-container">
+        <div class="top-nav">
+            <a class="logo" href="index.html">
+                <img src="assets/easy-navigate-logo-white.png" alt="EasyNavigate" class="logo-image">
+            </a>
+            <div class="top-right">
+                <button class="currency-btn">PHP <img src="assets/PH-icon-flag.png" alt="Philippines" class="flag-icon"></button>
+                <button class="support-btn">Customer Support <i class="fa-solid fa-chevron-down" style="font-size:10px"></i></button>
+                <div class="relative">
+                    <button class="support-btn" onclick="toggleDropdown('findBookingsMenu', event)">Find Bookings <i class="fa-solid fa-chevron-down" style="font-size:10px"></i></button>
+                    <div class="dropdown-menu" id="findBookingsMenu">
+                        <div class="dropdown-item" onclick="selectFindBooking('hotel')"><i class="fa-solid fa-bed fb-icon"></i><div class="fb-content"><span class="fb-title">Hotel &amp; Homes</span><span class="fb-desc">Book hotels, rooms, and homes for your stay.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('car')"><i class="fa-solid fa-car fb-icon"></i><div class="fb-content"><span class="fb-title">Car Rental</span><span class="fb-desc">Find and reserve cars for flexible local travel.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('flights')"><i class="fa-solid fa-plane fb-icon"></i><div class="fb-content"><span class="fb-title">Flights</span><span class="fb-desc">Search flights and manage your air bookings fast.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('attractions')"><i class="fa-solid fa-ticket fb-icon"></i><div class="fb-content"><span class="fb-title">Attraction &amp; Tours</span><span class="fb-desc">Discover tickets, tours, and activities in one place.</span></div></div>
+                        <div class="dropdown-item" onclick="selectFindBooking('taxi')"><i class="fa-solid fa-taxi fb-icon"></i><div class="fb-content"><span class="fb-title">Airport Taxis</span><span class="fb-desc">Pre-book airport transfers and private taxi rides.</span></div></div>
                     </div>
-                    <button class="btn-signin" id="openAuthModalBtn">Sign In / Register</button>
                 </div>
+                <button class="btn-signin" id="openAuthModalBtn" onclick="openAuthModal('signin')">Sign In / Register</button>
             </div>
-        </div>
-    </header>
-
-    <!-- ══ HERO + SEARCH ══ -->
-    <section class="hero">
-        <div class="hero-container">
-            <h1>Airport Taxis</h1>
-            <p>Reliable transfers to and from airports...</p>
-            <div class="search-card">
-                <div class="search-panel active" id="panel-taxi">
-                    <div class="search-row">
-                        <div class="search-field" style="flex:2">
-                            <div style="width:100%">
-                                <span class="field-label">Pick-up</span>
-                                <input type="text" id="taxi-pickup" placeholder="Airport or address">
-                            </div>
-                        </div>
-                        <div class="search-field" style="flex:2">
-                            <div style="width:100%">
-                                <span class="field-label">Drop-off</span>
-                                <input type="text" id="taxi-dropoff" placeholder="Hotel or address">
-                            </div>
-                        </div>
-                        <div class="fl-date-box" style="flex:1.6;min-width:240px;">
-                            <div class="fl-date-half">
-                                <span class="field-label">Date</span>
-                                <input type="date" class="date-picker">
-                            </div>
-                            <div class="fl-date-line"></div>
-                            <div class="fl-date-half">
-                                <span class="field-label">Time</span>
-                                <input type="text" class="time-picker" placeholder="Select time" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="extras-row">
-                        <div class="extras-left">
-                            <div class="taxi-passenger-note">
-                                <i class="fas fa-circle-info"></i>
-                                <span>Maximum 3 adults with 2 children, depending on selected option</span>
-                            </div>
-                        </div>
-                        <div class="extras-right">
-                            <div class="relative">
-                                <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('taxiPassengerPicker', event)">
-                                    <i class="fas fa-user" style="font-size:12px;"></i>
-                                    <span id="taxiPassengerLabel">1 Adult</span>
-                                    <i class="fas fa-chevron-down" style="font-size:10px"></i>
-                                </button>
-                                <div class="dropdown-menu passenger-dropdown" id="taxiPassengerPicker">
-                                    <p class="passenger-note">Please select the exact number of passengers for your taxi ride</p>
-                                    <div class="passenger-row">
-                                        <div class="passenger-label">
-                                            <span class="passenger-type">Adults</span>
-                                            <span class="passenger-age">12+ years old</span>
-                                        </div>
-                                        <div class="passenger-controls">
-                                            <button class="pax-btn" id="taxiAdultsMinus" onclick="updateTaxiPax('adults', -1)">
-                                                <i class="fas fa-minus-circle"></i>
-                                            </button>
-                                            <span class="pax-value" id="taxiAdults">1</span>
-                                            <button class="pax-btn" onclick="updateTaxiPax('adults', 1)">
-                                                <i class="fas fa-plus-circle"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="passenger-row">
-                                        <div class="passenger-label">
-                                            <span class="passenger-type">Children</span>
-                                            <span class="passenger-age">2–11 years old</span>
-                                        </div>
-                                        <div class="passenger-controls">
-                                            <button class="pax-btn" id="taxiChildrenMinus" onclick="updateTaxiPax('children', -1)">
-                                                <i class="fas fa-minus-circle"></i>
-                                            </button>
-                                            <span class="pax-value" id="taxiChildren">0</span>
-                                            <button class="pax-btn" onclick="updateTaxiPax('children', 1)">
-                                                <i class="fas fa-plus-circle"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="passenger-row">
-                                        <div class="passenger-label">
-                                            <span class="passenger-type">Infants</span>
-                                            <span class="passenger-age">Under 2 years old</span>
-                                        </div>
-                                        <div class="passenger-controls">
-                                            <button class="pax-btn" id="taxiInfantsMinus" onclick="updateTaxiPax('infants', -1)">
-                                                <i class="fas fa-minus-circle"></i>
-                                            </button>
-                                            <span class="pax-value" id="taxiInfants">0</span>
-                                            <button class="pax-btn" onclick="updateTaxiPax('infants', 1)">
-                                                <i class="fas fa-plus-circle"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="search-btn" onclick="filterAirports()"><i class="fas fa-search"></i> Search</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ══ AVAILABLE AIRPORTS ══ -->
-    <section class="taxi-airports-section">
-        <div class="taxi-airports-header">
-            <div>
-                <h2 class="taxi-airports-title">Available Pick-up Airports</h2>
-                <p class="taxi-airports-sub">Select an airport to book your taxi transfer</p>
-            </div>
-            <span class="taxi-airports-count" id="taxiAirportCount"></span>
-        </div>
-        <div id="taxiAirportGrid" class="taxi-airports-grid">
-            <!-- Populated by JS -->
-        </div>
-    </section>
-
-    <!-- ══ BENEFITS ══ -->
-    <section class="benefits">
-        <div class="benefits-container">
-            <h2>Why book taxis with Easy Navigate?</h2>
-            <div class="cards">
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-handshake"></i></div>
-                    <h3>Professional meet and greet</h3>
-                    <p>Friendly drivers waiting for you on arrival</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-coins"></i></div>
-                    <h3>Fixed fares</h3>
-                    <p>No surge pricing, even during peak hours</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-hourglass-half"></i></div>
-                    <h3>Free waiting time</h3>
-                    <p>Extra pickup buffer included at airports</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-plane-arrival"></i></div>
-                    <h3>Flight tracking included</h3>
-                    <p>Pickup adjusts automatically for flight delays</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ══ ADS ══ -->
-    <section class="service-ads">
-        <div class="service-ads-carousel">
-            <button class="service-ads-arrow service-ads-prev" type="button" aria-label="Previous advertisements"><i class="fas fa-chevron-left"></i></button>
-            <div class="service-ads-viewport">
-                <div class="service-ads-track">
-                    <div class="service-ad-item"><img src="assets/ad1.png" alt="Advertisement 1" class="service-ad-image"></div>
-                    <div class="service-ad-item"><img src="assets/ad2.png" alt="Advertisement 2" class="service-ad-image"></div>
-                    <div class="service-ad-item"><img src="assets/ad3.png" alt="Advertisement 3" class="service-ad-image"></div>
-                    <div class="service-ad-item"><img src="assets/ad4.png" alt="Advertisement 4" class="service-ad-image"></div>
-                    <div class="service-ad-item"><img src="assets/ad5.png" alt="Advertisement 5" class="service-ad-image"></div>
-                    <div class="service-ad-item"><img src="assets/ad6.png" alt="Advertisement 6" class="service-ad-image"></div>
-                </div>
-            </div>
-            <button class="service-ads-arrow service-ads-next" type="button" aria-label="Next advertisements"><i class="fas fa-chevron-right"></i></button>
-        </div>
-    </section>
-
-    <!-- ══ FOOTER ══ -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-content">
-                <div class="footer-columns">
-                    <div class="footer-column">
-                        <h4>Contact Us</h4>
-                        <ul>
-                            <li><a href="#">Customer Support</a></li>
-                            <li><a href="#">Service Guarantee</a></li>
-                            <li><a href="#">More Service Info</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>About</h4>
-                        <ul>
-                            <li><a href="#">About Easy Navigate</a></li>
-                            <li><a href="#">News</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Terms &amp; Condition</a></li>
-                            <li><a href="#">Privacy Statement</a></li>
-                            <li><a href="#">Accessibility Statement</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-column">
-                        <h4>Other Services</h4>
-                        <ul>
-                            <li><a href="#">Investor Relations</a></li>
-                            <li><a href="#">Affiliate Program</a></li>
-                            <li><a href="#">List Your Property</a></li>
-                            <li><a href="#">Become Supplier</a></li>
-                            <li><a href="#">Security</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="footer-logo">
-                    <img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate">
-                </div>
-            </div>
-            <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved Site Operator: Easy Navigate Travel</p>
-        </div>
-    </footer>
-
-    <!-- ══ TAXI BOOKING MODAL ══ -->
-    <div class="txm-overlay" id="txmOverlay" onclick="closeTaxiModal(event)">
-        <div class="txm-box" id="txmBox">
-
-            <button class="txm-close" onclick="closeTaxiModalBtn()">&times;</button>
-
-            <!-- LEFT: Details + Book Now -->
-            <div class="txm-left">
-                <div class="txm-title" id="txmTitle">Book Your Taxi Transfer</div>
-                <div class="txm-route" id="txmRoute">
-                    <i class="fas fa-plane-arrival"></i>
-                    <span id="txmRouteText">–</span>
-                </div>
-
-                <!-- Vehicle selection -->
-                <div class="txm-section-label">Choose your vehicle</div>
-                <div class="txm-vehicles" id="txmVehicles">
-                    <!-- populated by JS -->
-                </div>
-
-                <!-- Trip details -->
-                <div class="txm-section-label" style="margin-top: 2px;">Trip details</div>
-                <div class="txm-trip-details">
-                    <div class="txm-trip-row">
-                        <div class="txm-trip-row-icon blue">
-                            <i class="fas fa-plane-arrival"></i>
-                        </div>
-                        <div class="txm-trip-row-content">
-                            <span class="txm-trip-row-label">Pick-up</span>
-                            <span class="txm-trip-row-value" id="txmDetailPickup">–</span>
-                        </div>
-                    </div>
-                    <div class="txm-trip-row">
-                        <div class="txm-trip-row-icon green">
-                            <i class="fas fa-location-dot"></i>
-                        </div>
-                        <div class="txm-trip-row-content">
-                            <span class="txm-trip-row-label">Drop-off</span>
-                            <span class="txm-trip-row-value" id="txmDetailDropoff">–</span>
-                        </div>
-                    </div>
-                    <div class="txm-trip-row">
-                        <div class="txm-trip-row-icon amber">
-                            <i class="fas fa-calendar"></i>
-                        </div>
-                        <div class="txm-trip-row-content">
-                            <span class="txm-trip-row-label">Date &amp; Time</span>
-                            <span class="txm-trip-row-value" id="txmDetailDate">–</span>
-                        </div>
-                    </div>
-                    <div class="txm-trip-row">
-                        <div class="txm-trip-row-icon purple">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="txm-trip-row-content">
-                            <span class="txm-trip-row-label">Passengers</span>
-                            <span class="txm-trip-row-value" id="txmDetailPax">–</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book Now button -->
-                <button class="txm-confirm-btn" id="txmConfirmBtn" onclick="goToBookingPage()">
-                    <span class="txm-spinner"></span>
-                    <span class="txm-btn-text"><i class="fas fa-taxi"></i> Book Now</span>
-                </button>
-
-                <div class="txm-trust-row">
-                    <span><i class="fas fa-bolt"></i> Instant confirmation</span>
-                    <span><i class="fas fa-shield-alt"></i> Secure booking</span>
-                    <span><i class="fas fa-clock"></i> Free waiting time</span>
-                </div>
-            </div>
-
-            <!-- RIGHT: Price summary -->
-            <div class="txm-right">
-                <div class="txm-right-title">Price Details</div>
-
-                <div class="txm-route-summary">
-                    <div class="txm-rs-row">
-                        <div class="txm-rs-icon blue"><i class="fas fa-plane-arrival"></i></div>
-                        <div class="txm-rs-text">
-                            <span class="txm-rs-label">Pick-up</span>
-                            <span id="txmSummaryPickup">–</span>
-                        </div>
-                    </div>
-                    <div class="txm-connector"></div>
-                    <div class="txm-rs-row">
-                        <div class="txm-rs-icon green"><i class="fas fa-location-dot"></i></div>
-                        <div class="txm-rs-text">
-                            <span class="txm-rs-label">Drop-off</span>
-                            <span id="txmSummaryDropoff">–</span>
-                        </div>
-                    </div>
-                    <div class="txm-connector"></div>
-                    <div class="txm-rs-row">
-                        <div class="txm-rs-icon orange"><i class="fas fa-calendar"></i></div>
-                        <div class="txm-rs-text">
-                            <span class="txm-rs-label">Date &amp; time</span>
-                            <span id="txmSummaryDate">–</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dynamic price rows -->
-                <div class="txm-price-section" id="txmPriceBlock">
-                    <!-- populated by JS -->
-                </div>
-
-                <div class="txm-includes">
-                    <div class="txm-includes-title">What's included</div>
-                    <div class="txm-include-item"><i class="fas fa-circle-check"></i> Airport meet &amp; greet</div>
-                    <div class="txm-include-item"><i class="fas fa-circle-check"></i> Free unlimited waiting time</div>
-                    <div class="txm-include-item"><i class="fas fa-circle-check"></i> Flight tracking</div>
-                    <div class="txm-include-item"><i class="fas fa-circle-check"></i> Door-to-door transfer</div>
-                    <div class="txm-include-item"><i class="fas fa-circle-check"></i> Free cancellation (24h)</div>
-                </div>
-            </div>
-
         </div>
     </div>
+</header>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="auth-header.js"></script>
-    <script src="db-search-tracker.js"></script>
-    <script src="service-panels.js"></script>
-    <script src="service-ads-carousel.js"></script>
+<!-- ══ HERO ══ -->
+<section class="hero">
+    <div class="hero-container">
+        <h1>Airport Taxis</h1>
+        <p>Reliable transfers to and from airports...</p>
+        <div class="search-card">
+            <div class="search-panel active" id="panel-taxi">
+                <div class="search-row">
+                    <div class="search-field" style="flex:2">
+                        <div style="width:100%">
+                            <span class="field-label">Pick-up</span>
+                            <input type="text" id="taxi-pickup" placeholder="Airport or address">
+                        </div>
+                    </div>
+                    <div class="search-field" style="flex:2">
+                        <div style="width:100%">
+                            <span class="field-label">Drop-off</span>
+                            <input type="text" id="taxi-dropoff" placeholder="Hotel or address">
+                        </div>
+                    </div>
+                    <div class="fl-date-box" style="flex:1.6;min-width:240px;">
+                        <div class="fl-date-half">
+                            <span class="field-label">Date</span>
+                            <input type="date" class="date-picker">
+                        </div>
+                        <div class="fl-date-line"></div>
+                        <div class="fl-date-half">
+                            <span class="field-label">Time</span>
+                            <input type="text" class="time-picker" placeholder="Select time" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="extras-row">
+                    <div class="extras-left">
+                        <div class="taxi-passenger-note">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>Maximum 3 adults with 2 children, depending on selected option</span>
+                        </div>
+                    </div>
+                    <div class="extras-right">
+                        <div class="relative">
+                            <button class="dropdown-pill-bordless selector-pill" onclick="toggleDropdown('taxiPassengerPicker', event)">
+                                <i class="fa-solid fa-user" style="font-size:12px;"></i>
+                                <span id="taxiPassengerLabel">1 Adult</span>
+                                <i class="fa-solid fa-chevron-down" style="font-size:10px"></i>
+                            </button>
+                            <div class="dropdown-menu passenger-dropdown" id="taxiPassengerPicker">
+                                <p class="passenger-note">Select the exact number of passengers for your taxi ride</p>
+                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Adults</span><span class="passenger-age">12+ years old</span></div><div class="passenger-controls"><button class="pax-btn" id="taxiAdultsMinus" onclick="updateTaxiPax('adults',-1)"><i class="fa-solid fa-circle-minus"></i></button><span class="pax-value" id="taxiAdults">1</span><button class="pax-btn" onclick="updateTaxiPax('adults',1)"><i class="fa-solid fa-circle-plus"></i></button></div></div>
+                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Children</span><span class="passenger-age">2–11 years old</span></div><div class="passenger-controls"><button class="pax-btn" id="taxiChildrenMinus" onclick="updateTaxiPax('children',-1)"><i class="fa-solid fa-circle-minus"></i></button><span class="pax-value" id="taxiChildren">0</span><button class="pax-btn" onclick="updateTaxiPax('children',1)"><i class="fa-solid fa-circle-plus"></i></button></div></div>
+                                <div class="passenger-row"><div class="passenger-label"><span class="passenger-type">Infants</span><span class="passenger-age">Under 2 years old</span></div><div class="passenger-controls"><button class="pax-btn" id="taxiInfantsMinus" onclick="updateTaxiPax('infants',-1)"><i class="fa-solid fa-circle-minus"></i></button><span class="pax-value" id="taxiInfants">0</span><button class="pax-btn" onclick="updateTaxiPax('infants',1)"><i class="fa-solid fa-circle-plus"></i></button></div></div>
+                            </div>
+                        </div>
+                        <button class="search-btn" onclick="filterAirports()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <script>
-    /* ══════════════════════════════════════════════════════
-       AUTH CORE  (same pattern as hotel & homes page)
-       ══════════════════════════════════════════════════════ */
+<!-- ══ AVAILABLE AIRPORTS ══ -->
+<section class="taxi-airports-section">
+    <div class="taxi-airports-header">
+        <div>
+            <h2 class="taxi-airports-title">Available Pick-up Airports</h2>
+            <p class="taxi-airports-sub">Select an airport to book your taxi transfer</p>
+        </div>
+        <span class="taxi-airports-count" id="taxiAirportCount"></span>
+    </div>
+    <div id="taxiAirportGrid" class="taxi-airports-grid"></div>
+</section>
 
-    function isSignedIn() {
-    try { var a = JSON.parse(localStorage.getItem('easyNavigateAuth')); return !!(a && a.isLoggedIn); } catch(_){ return false; }
+<!-- ══ BENEFITS ══ -->
+<section style="background:#f8f9fd;padding:48px 0;margin-top:32px;">
+    <div style="max-width:1100px;margin:0 auto;padding:0 24px;">
+        <h2 style="text-align:center;font-size:22px;font-weight:800;color:#1a2140;margin:0 0 28px;">Why book taxis with Easy Navigate?</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-handshake"></i></div><h3>Professional meet and greet</h3><p>Friendly drivers waiting for you on arrival</p></div>
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-coins"></i></div><h3>Fixed fares</h3><p>No surge pricing, even during peak hours</p></div>
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-hourglass-half"></i></div><h3>Free waiting time</h3><p>Extra pickup buffer included at airports</p></div>
+            <div class="card"><div class="card-icon"><i class="fa-solid fa-plane-arrival"></i></div><h3>Flight tracking included</h3><p>Pickup adjusts automatically for flight delays</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-content">
+            <div class="footer-columns">
+                <div class="footer-column"><h4>Contact Us</h4><ul><li><a href="#">Customer Support</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">More Service Info</a></li></ul></div>
+                <div class="footer-column"><h4>About</h4><ul><li><a href="#">About Easy Navigate</a></li><li><a href="#">News</a></li><li><a href="#">Careers</a></li><li><a href="#">Terms &amp; Condition</a></li><li><a href="#">Privacy Statement</a></li><li><a href="#">Accessibility Statement</a></li></ul></div>
+                <div class="footer-column"><h4>Other Services</h4><ul><li><a href="#">Investor Relations</a></li><li><a href="#">Affiliate Program</a></li><li><a href="#">List Your Property</a></li><li><a href="#">Become Supplier</a></li><li><a href="#">Security</a></li></ul></div>
+            </div>
+            <div class="footer-logo"><img src="assets/easy-navigate-logo-blue.png" alt="EasyNavigate"></div>
+        </div>
+        <p class="footer-copy">Copyright &copy; 2025 Easy Navigate. All rights reserved</p>
+    </div>
+</footer>
+
+<!-- SCRIPT ORDER — MUST NOT CHANGE
+     1. Firebase SDKs
+     2. firebase-config.js  → defines window.signInWithGoogle() BEFORE page script
+     3. flatpickr
+     4. db-search-tracker.js
+     5. Inline script — auth + taxi logic
+     auth-modal.js, auth-header.js, service-panels.js, service-ads-carousel.js
+     are NOT loaded. Everything inlined to eliminate race conditions. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="db-search-tracker.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════
+   AUTH HELPERS — identical to all other pages
+   signInWithGoogle() comes from firebase-config.js
+═══════════════════════════════════════════════ */
+function getApiUrl(path){
+    if(window.location.protocol==='file:') return 'http://localhost/platform-technologies-proj-v1-main/api/'+path;
+    const href=window.location.href.split('?')[0];
+    return href.substring(0,href.lastIndexOf('/')+1)+'api/'+path;
 }
-
-    function getApiUrl(path) {
-        if (window.location.protocol === 'file:')
-            return 'http://localhost/platform-technologies-proj-v1-main/api/' + path;
-        var href = window.location.href.split('?')[0];
-        return href.substring(0, href.lastIndexOf('/') + 1) + 'api/' + path;
-    }
-
-    function openAuthModal(tab) {
-        var m = document.getElementById('authModal');
-        var sw = window.innerWidth - document.documentElement.clientWidth;
-        document.body.style.overflow = 'hidden';
-        if (sw > 0) document.body.style.paddingRight = sw + 'px';
-        m.setAttribute('aria-hidden', 'false');
-        m.classList.add('open');
-        authSwitchTab(tab || 'signin');
-        document.getElementById('siStatus').textContent = '';
-        document.getElementById('regStatus').textContent = '';
-    }
-
-    function closeAuthModal() {
-        var m = document.getElementById('authModal');
-        m.classList.remove('open');
-        m.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-    }
-
-    function authSwitchTab(tab) {
-        var siT = document.getElementById('authTabSignin'), regT = document.getElementById('authTabRegister');
-        var siP = document.getElementById('authPanelSignin'), regP = document.getElementById('authPanelRegister');
-        if (tab === 'signin') {
-            siT.classList.add('active'); siT.setAttribute('aria-selected', 'true');
-            regT.classList.remove('active'); regT.setAttribute('aria-selected', 'false');
-            siP.classList.add('active'); regP.classList.remove('active');
-            setTimeout(function(){ document.getElementById('siEmail').focus(); }, 80);
-        } else {
-            regT.classList.add('active'); regT.setAttribute('aria-selected', 'true');
-            siT.classList.remove('active'); siT.setAttribute('aria-selected', 'false');
-            regP.classList.add('active'); siP.classList.remove('active');
-            document.getElementById('regSuccess').classList.remove('show');
-            document.getElementById('regForm').style.display = 'flex';
-            setTimeout(function(){ document.getElementById('regFirstName').focus(); }, 80);
-        }
-    }
-
-    function authTogglePw(id, btn) {
-        var inp = document.getElementById(id), h = inp.type === 'password';
-        inp.type = h ? 'text' : 'password';
-        btn.querySelector('i').className = h ? 'fas fa-eye-slash' : 'fas fa-eye';
-    }
-
-    function authCheckPwStrength(pw) {
-        var wrap = document.getElementById('regStrengthWrap'), fill = document.getElementById('regStrengthFill'), lbl = document.getElementById('regStrengthLabel');
-        if (!pw){ wrap.style.display = 'none'; authCheckRegReady(); return; }
-        wrap.style.display = 'block';
-        var s = 0;
-        if(pw.length>=8)s++; if(pw.length>=12)s++; if(/[A-Z]/.test(pw))s++; if(/[0-9]/.test(pw))s++; if(/[^A-Za-z0-9]/.test(pw))s++;
-        var lvls = [{p:'20%',b:'#ef4444',t:'Very weak'},{p:'40%',b:'#f97316',t:'Weak'},{p:'60%',b:'#eab308',t:'Fair'},{p:'80%',b:'#22c55e',t:'Strong'},{p:'100%',b:'#16a34a',t:'Very strong'}];
-        var l = lvls[Math.min(s-1,4)] || lvls[0];
-        fill.style.width = l.p; fill.style.background = l.b; lbl.textContent = l.t; lbl.style.color = l.b;
-        authCheckRegReady();
-    }
-
-    function authCheckRegReady() {
-        var ok = document.getElementById('regFirstName').value.trim() &&
-                 document.getElementById('regLastName').value.trim() &&
-                 document.getElementById('regEmail').value.trim() &&
-                 document.getElementById('regPassword').value.length >= 8 &&
-                 document.getElementById('regPassword').value === document.getElementById('regConfirmPw').value &&
-                 document.getElementById('regTerms').checked;
-        document.getElementById('regSubmitBtn').classList.toggle('ready', !!ok);
-    }
-
-    async function authSignIn() {
-        var email = document.getElementById('siEmail').value.trim(), pw = document.getElementById('siPassword').value;
-        var status = document.getElementById('siStatus'), btn = document.getElementById('siSubmitBtn');
-        if (!email || !pw) return;
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ status.style.color='#b62020'; status.textContent='Please enter a valid email.'; return; }
-        btn.disabled = true; btn.textContent = 'Signing in…'; status.textContent = '';
-        try {
-            var res = await fetch(getApiUrl('signin.php'), {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
-            var data = await res.json();
-            if (data.ok) {
-                var auth = {isLoggedIn:true, email:data.user.email, name:data.user.first_name+' '+data.user.last_name, id:data.user.id};
-                localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
-                status.style.color = '#16a34a'; status.textContent = 'Signed in!';
-                if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
-                updateHeaderBtn(auth);
-                setTimeout(function(){
-                    closeAuthModal();
-                    if (typeof window._pendingAuthAction === 'function'){ var fn = window._pendingAuthAction; window._pendingAuthAction = null; setTimeout(fn, 150); }
-                }, 800);
-            } else { status.style.color='#b62020'; status.textContent = data.message || 'Sign in failed.'; }
-        } catch(_){ status.style.color='#b62020'; status.textContent='Could not connect. Try again.'; }
-        finally { btn.disabled = false; btn.textContent = 'Sign In'; }
-    }
-
-    async function authRegister() {
-        var fname = document.getElementById('regFirstName').value.trim(), lname = document.getElementById('regLastName').value.trim();
-        var email = document.getElementById('regEmail').value.trim(), pw = document.getElementById('regPassword').value;
-        var cpw = document.getElementById('regConfirmPw').value, terms = document.getElementById('regTerms').checked;
-        var status = document.getElementById('regStatus'), btn = document.getElementById('regSubmitBtn');
-        if (!fname||!lname||!email||!pw||!cpw) return;
-        if (pw.length<8){ status.style.color='#b62020'; status.textContent='Password min 8 chars.'; return; }
-        if (pw!==cpw){ status.style.color='#b62020'; status.textContent='Passwords do not match.'; return; }
-        if (!terms){ status.style.color='#b62020'; status.textContent='Please agree to Terms.'; return; }
-        btn.disabled = true; btn.textContent = 'Creating…'; status.textContent = '';
-        try {
-            var res = await fetch(getApiUrl('register.php'), {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({first_name:fname,last_name:lname,email,password:pw})});
-            var data = await res.json();
-            if (data.ok) {
-                var auth = {isLoggedIn:true, email:data.user.email, name:data.user.first_name+' '+data.user.last_name, id:data.user.id};
-                localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
-                if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
-                updateHeaderBtn(auth);
-                document.getElementById('regForm').style.display = 'none';
-                document.getElementById('regSuccess').classList.add('show');
-            } else { status.style.color='#b62020'; status.textContent = data.message||'Registration failed.'; }
-        } catch(_){ status.style.color='#b62020'; status.textContent='Could not connect. Try again.'; }
-        finally { btn.disabled = false; btn.textContent = 'Create Account'; authCheckRegReady(); }
-    }
-
-    function authSocial(provider) {
-        var auth = {isLoggedIn:true, email:provider+'_user@easynav.com', name:'Easy Navigate User', provider};
-        localStorage.setItem('easyNavigateAuth', JSON.stringify(auth));
-        if (typeof window.updateHeaderForAuth === 'function') window.updateHeaderForAuth(auth);
-        updateHeaderBtn(auth);
-        closeAuthModal();
-        if (typeof window._pendingAuthAction === 'function'){ var fn = window._pendingAuthAction; window._pendingAuthAction = null; setTimeout(fn, 150); }
-    }
-
-    function authForgotPassword() {
-        var email = document.getElementById('siEmail').value.trim(), s = document.getElementById('siStatus');
-        if (!email){ s.style.color='#1f3f87'; s.textContent='Enter your email above first.'; return; }
-        s.style.color = '#16a34a'; s.textContent = 'Reset link sent to ' + email;
-    }
-
-    function updateHeaderBtn(auth) {
-    var btn = document.getElementById('openAuthModalBtn');
-    if (!btn) return;
-    if (auth && auth.isLoggedIn) {
-        btn.classList.add('profile-icon-btn');
-        btn.innerHTML = '<i class="fas fa-user-circle"></i>';
-        btn.setAttribute('aria-label', 'Profile');
-        btn.onclick = function() { window.location.href = 'profile.html'; };
+function isSignedIn(){
+    try{const a=JSON.parse(localStorage.getItem('easyNavigateAuth'));return!!(a&&a.isLoggedIn);}catch(_){return false;}
+}
+function openAuthModal(tab){
+    const m=document.getElementById('authModal');if(!m)return;
+    const sw=window.innerWidth-document.documentElement.clientWidth;
+    document.body.style.overflow='hidden';
+    if(sw>0)document.body.style.paddingRight=sw+'px';
+    m.classList.add('open');m.setAttribute('aria-hidden','false');
+    authSwitchTab(tab||'signin');
+    const si=document.getElementById('siStatus'),re=document.getElementById('regStatus');
+    if(si)si.textContent='';if(re)re.textContent='';
+}
+function closeAuthModal(){
+    const m=document.getElementById('authModal');if(!m)return;
+    m.classList.remove('open');m.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';document.body.style.paddingRight='';
+}
+function authSwitchTab(tab){
+    const st=document.getElementById('authTabSignin'),rt=document.getElementById('authTabRegister'),
+          sp=document.getElementById('authPanelSignin'),rp=document.getElementById('authPanelRegister');
+    if(!st||!sp)return;
+    if(tab==='signin'){
+        st.classList.add('active');st.setAttribute('aria-selected','true');
+        rt.classList.remove('active');rt.setAttribute('aria-selected','false');
+        sp.classList.add('active');rp.classList.remove('active');
+        setTimeout(()=>document.getElementById('siEmail')?.focus(),80);
     } else {
-        btn.classList.remove('profile-icon-btn');
-        btn.removeAttribute('aria-label');
-        btn.innerHTML = 'Sign In / Register';
-        btn.onclick = function() { openAuthModal('signin'); };
+        rt.classList.add('active');rt.setAttribute('aria-selected','true');
+        st.classList.remove('active');st.setAttribute('aria-selected','false');
+        rp.classList.add('active');sp.classList.remove('active');
+        document.getElementById('regSuccess')?.classList.remove('show');
+        const frm=document.getElementById('regForm');if(frm)frm.style.display='block';
+        setTimeout(()=>document.getElementById('regFirstName')?.focus(),80);
+    }
+}
+function authTogglePw(id,btn){
+    const inp=document.getElementById(id);if(!inp)return;
+    const h=inp.type==='password';inp.type=h?'text':'password';
+    const icon=btn.querySelector('i');if(icon)icon.className=h?'fa-solid fa-eye-slash':'fa-solid fa-eye';
+}
+function authCheckPwStrength(pw){
+    const wrap=document.getElementById('regStrengthWrap'),fill=document.getElementById('regStrengthFill'),lbl=document.getElementById('regStrengthLabel');
+    if(!wrap||!fill||!lbl)return;
+    if(!pw){wrap.style.display='none';authCheckRegReady();return;}
+    wrap.style.display='block';
+    let s=0;
+    if(pw.length>=8)s++;if(pw.length>=12)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;
+    const lvls=[{pct:'20%',bg:'#ef4444',txt:'Very weak'},{pct:'40%',bg:'#f97316',txt:'Weak'},{pct:'60%',bg:'#eab308',txt:'Fair'},{pct:'80%',bg:'#22c55e',txt:'Strong'},{pct:'100%',bg:'#16a34a',txt:'Very strong'}];
+    const lvl=lvls[Math.min(s-1,4)]||lvls[0];
+    fill.style.width=lvl.pct;fill.style.background=lvl.bg;lbl.textContent=lvl.txt;lbl.style.color=lvl.bg;
+    authCheckRegReady();
+}
+function authCheckRegReady(){
+    const btn=document.getElementById('regSubmitBtn');
+    const fn=document.getElementById('regFirstName')?.value.trim(),ln=document.getElementById('regLastName')?.value.trim(),
+          em=document.getElementById('regEmail')?.value.trim(),pw=document.getElementById('regPassword')?.value,
+          cpw=document.getElementById('regConfirmPw')?.value,terms=document.getElementById('regTerms')?.checked;
+    if(!btn)return;
+    btn.classList.toggle('ready',!!(fn&&ln&&em&&pw&&pw.length>=8&&pw===cpw&&terms));
+}
+async function authSignIn(){
+    const email=document.getElementById('siEmail')?.value.trim(),pw=document.getElementById('siPassword')?.value,
+          status=document.getElementById('siStatus'),btn=document.getElementById('siSubmitBtn');
+    if(!email||!pw)return;
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){if(status){status.textContent='Please enter a valid email.';status.style.color='#b62020';}return;}
+    if(btn){btn.disabled=true;btn.textContent='Signing in…';}if(status)status.textContent='';
+    try{
+        const res=await fetch(getApiUrl('signin.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});
+        const data=await res.json();
+        if(data.ok){
+            const auth={isLoggedIn:true,id:data.user.id,email:data.user.email,name:data.user.first_name+' '+data.user.last_name};
+            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+            if(status){status.textContent='Signed in!';status.style.color='#16a34a';}
+            if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+            setTimeout(()=>{
+                closeAuthModal();
+                if(typeof window._authPendingAction==='function'){const fn=window._authPendingAction;window._authPendingAction=null;setTimeout(fn,200);}
+                else location.reload();
+            },800);
+        } else {if(status){status.textContent=data.message||'Sign in failed.';status.style.color='#b62020';}}
+    }catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}
+    finally{if(btn){btn.disabled=false;btn.textContent='Sign In';}}
+}
+async function authRegister(){
+    const fname=document.getElementById('regFirstName')?.value.trim(),lname=document.getElementById('regLastName')?.value.trim(),
+          email=document.getElementById('regEmail')?.value.trim(),pw=document.getElementById('regPassword')?.value,
+          cpw=document.getElementById('regConfirmPw')?.value,terms=document.getElementById('regTerms')?.checked,
+          status=document.getElementById('regStatus'),btn=document.getElementById('regSubmitBtn');
+    if(!fname||!lname||!email||!pw||!cpw)return;
+    if(pw.length<8){if(status){status.textContent='Password must be at least 8 characters.';status.style.color='#b62020';}return;}
+    if(pw!==cpw){if(status){status.textContent='Passwords do not match.';status.style.color='#b62020';}return;}
+    if(!terms){if(status){status.textContent='Please agree to the Terms.';status.style.color='#b62020';}return;}
+    if(btn){btn.disabled=true;btn.textContent='Creating…';}if(status)status.textContent='';
+    try{
+        const res=await fetch(getApiUrl('register.php'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({first_name:fname,last_name:lname,email,password:pw})});
+        const data=await res.json();
+        if(data.ok){
+            const auth={isLoggedIn:true,id:data.user.id,email:data.user.email,name:data.user.first_name+' '+data.user.last_name};
+            localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+            if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+            document.getElementById('regForm').style.display='none';
+            document.getElementById('regSuccess').classList.add('show');
+        } else {if(status){status.textContent=data.message||'Registration failed.';status.style.color='#b62020';}}
+    }catch(_){if(status){status.textContent='Could not connect. Try again.';status.style.color='#b62020';}}
+    finally{if(btn){btn.disabled=false;btn.textContent='Create Account';authCheckRegReady();}}
+}
+function authSocial(provider){
+    const auth={isLoggedIn:true,email:provider+'_user@easynav.com',name:'Easy Navigate User',provider};
+    localStorage.setItem('easyNavigateAuth',JSON.stringify(auth));
+    if(typeof window.updateHeaderForAuth==='function')window.updateHeaderForAuth(auth);
+    closeAuthModal();
+    if(typeof window._authPendingAction==='function'){const fn=window._authPendingAction;window._authPendingAction=null;setTimeout(fn,200);}
+    else setTimeout(()=>location.reload(),200);
+}
+function authForgotPassword(){
+    const email=document.getElementById('siEmail')?.value.trim(),status=document.getElementById('siStatus');
+    if(!email){if(status){status.textContent='Enter your email above first.';status.style.color='#1f3f87';}return;}
+    if(status){status.textContent='Reset link sent to '+email;status.style.color='#16a34a';}
+}
+function requireAuth(callback,message){
+    if(isSignedIn()){if(typeof callback==='function')callback();return;}
+    window._authPendingAction=callback||null;
+    openAuthModal('signin');
+    if(message){const s=document.getElementById('siStatus');if(s){s.textContent=message;s.style.color='#1f3f87';}}
+}
+
+/* ═══════════════════════════════════════════════
+   PAGE HELPERS
+═══════════════════════════════════════════════ */
+function toggleDropdown(id,event){
+    if(event)event.stopPropagation();
+    const menu=document.getElementById(id),was=menu.classList.contains('open');
+    document.querySelectorAll('.dropdown-menu.open').forEach(m=>m.classList.remove('open'));
+    if(!was)menu.classList.add('open');
+}
+function selectFindBooking(tab){
+    document.getElementById('findBookingsMenu').classList.remove('open');
+    const pages={hotel:'hotel & homes.html',car:'car-rental.html',flights:'flights.html',attractions:'attractions.html',taxi:'airport-taxis.html'};
+    if(pages[tab])window.location.href=pages[tab];
+}
+
+/* Taxi passenger counter */
+var taxiPax={adults:1,children:0,infants:0};
+function updateTaxiPax(type,change){
+    taxiPax[type]=Math.max(type==='adults'?1:0,Math.min(9,taxiPax[type]+change));
+    document.getElementById('taxiAdults').textContent=taxiPax.adults;
+    document.getElementById('taxiChildren').textContent=taxiPax.children;
+    document.getElementById('taxiInfants').textContent=taxiPax.infants;
+    const parts=[taxiPax.adults+' Adult'+(taxiPax.adults>1?'s':'')];
+    if(taxiPax.children>0)parts.push(taxiPax.children+' Child'+(taxiPax.children>1?'ren':''));
+    if(taxiPax.infants>0)parts.push(taxiPax.infants+' Infant'+(taxiPax.infants>1?'s':''));
+    document.getElementById('taxiPassengerLabel').textContent=parts.join(' + ');
+    const mins={taxiAdultsMinus:taxiPax.adults<=1,taxiChildrenMinus:taxiPax.children<=0,taxiInfantsMinus:taxiPax.infants<=0};
+    Object.entries(mins).forEach(([id,grey])=>{const b=document.getElementById(id);if(b)b.style.color=grey?'#c4cce0':'';});
+}
+
+/* ═══════════════════════════════════════════════
+   AIRPORT LISTING
+═══════════════════════════════════════════════ */
+let allAirports=[];
+
+function getApiUrlLocal(file){
+    const href=window.location.href.split('?')[0];
+    const base=href.substring(0,href.lastIndexOf('/')+1);
+    if(window.location.protocol==='file:'){
+        const idx=base.toLowerCase().indexOf('htdocs/');
+        if(idx!==-1){const folder=base.substring(idx+7);return'http://localhost/'+folder+'api/'+file;}
+        const noProto=base.replace('file:///','').replace(/^[A-Za-z]:\//,'');
+        return'http://localhost/'+noProto+'api/'+file;
+    }
+    return base+'api/'+file;
+}
+
+async function loadAirports(){
+    const grid=document.getElementById('taxiAirportGrid'),countEl=document.getElementById('taxiAirportCount');
+    if(!grid)return;
+    grid.innerHTML=`<div class="taxi-loading" style="grid-column:1/-1;"><div class="taxi-loading-spinner"></div><span>Loading available airports…</span></div>`;
+    try{
+        const res=await fetch(getApiUrlLocal('search_taxi_airports.php'),{headers:{Accept:'application/json'}});
+        const text=await res.text();
+        const data=JSON.parse(text);
+        if(data.ok&&Array.isArray(data.airports)){allAirports=data.airports;}
+        else throw new Error(data.message||'Could not load airports');
+        renderAirports(allAirports);
+    }catch(err){
+        grid.innerHTML=`<div class="taxi-empty" style="grid-column:1/-1;"><div class="taxi-empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="taxi-empty-title">Could not load airports</div><div class="taxi-empty-sub">${err.message}</div></div>`;
+        if(countEl)countEl.textContent='';
     }
 }
 
-    var _toastTimer;
-    function showAuthToast(msg) {
-        var t = document.getElementById('authToast'), m = document.getElementById('authToastMsg');
-        if (m) m.textContent = msg || 'Please sign in to continue';
-        t.classList.add('show');
-        clearTimeout(_toastTimer);
-        _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 4000);
+function renderAirports(airports){
+    const grid=document.getElementById('taxiAirportGrid'),countEl=document.getElementById('taxiAirportCount');
+    if(!grid)return;
+    if(countEl)countEl.textContent=airports.length?`${airports.length} airport${airports.length>1?'s':''} available`:'';
+    if(!airports.length){
+        grid.innerHTML=`<div class="taxi-empty" style="grid-column:1/-1;"><div class="taxi-empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div><div class="taxi-empty-title">No airports found</div><div class="taxi-empty-sub">Try a different search term.</div></div>`;
+        return;
     }
-
-    function requireAuth(callback, msg) {
-        if (isSignedIn()){ if (typeof callback === 'function') callback(); return; }
-        window._pendingAuthAction = callback || null;
-        showAuthToast(msg || 'Please sign in to continue');
-        setTimeout(function(){ openAuthModal('signin'); }, 250);
-    }
-
-    /* ══════════════════════════════════════════════════════
-       MAIN TAXI PAGE LOGIC
-       ══════════════════════════════════════════════════════ */
-    (function () {
-
-        /* ── API URL helper ── */
-        function getApiUrlLocal(file) {
-            var href = window.location.href.split('?')[0];
-            var base = href.substring(0, href.lastIndexOf('/') + 1);
-            if (window.location.protocol === 'file:') {
-                var idx = base.toLowerCase().indexOf('htdocs/');
-                if (idx !== -1) {
-                    var folder = base.substring(idx + 7);
-                    return 'http://localhost/' + folder + 'api/' + file;
-                }
-                var noProto = base.replace('file:///', '').replace(/^[A-Za-z]:\//, '');
-                return 'http://localhost/' + noProto + 'api/' + file;
-            }
-            return base + 'api/' + file;
-        }
-
-        let allAirports = [];
-
-        /* ── Load airports from API ── */
-        async function loadAirports() {
-            const grid    = document.getElementById('taxiAirportGrid');
-            const countEl = document.getElementById('taxiAirportCount');
-            if (!grid) return;
-
-            grid.innerHTML = `
-                <div class="taxi-loading" style="grid-column:1/-1;">
-                    <div class="taxi-loading-spinner"></div>
-                    <span>Loading available airports…</span>
-                </div>`;
-
-            try {
-                const res  = await fetch(getApiUrlLocal('search_taxi_airports.php'), {
-                    headers: { Accept: 'application/json' }
-                });
-                const text = await res.text();
-                const data = JSON.parse(text);
-
-                if (data.ok && Array.isArray(data.airports)) {
-                    allAirports = data.airports;
-                } else {
-                    throw new Error(data.message || 'Could not load airports');
-                }
-
-                renderAirports(allAirports);
-
-            } catch (err) {
-                grid.innerHTML = `
-                    <div class="taxi-empty" style="grid-column:1/-1;">
-                        <div class="taxi-empty-icon"><i class="fas fa-triangle-exclamation"></i></div>
-                        <div class="taxi-empty-title">Could not load airports</div>
-                        <div class="taxi-empty-sub">${err.message}</div>
-                    </div>`;
-                if (countEl) countEl.textContent = '';
-            }
-        }
-
-        /* ── Render airport cards ── */
-        function renderAirports(airports) {
-            const grid    = document.getElementById('taxiAirportGrid');
-            const countEl = document.getElementById('taxiAirportCount');
-            if (!grid) return;
-
-            if (countEl) countEl.textContent = airports.length
-                ? `${airports.length} airport${airports.length > 1 ? 's' : ''} available`
-                : '';
-
-            if (!airports.length) {
-                grid.innerHTML = `
-                    <div class="taxi-empty" style="grid-column:1/-1;">
-                        <div class="taxi-empty-icon"><i class="fas fa-magnifying-glass"></i></div>
-                        <div class="taxi-empty-title">No airports found</div>
-                        <div class="taxi-empty-sub">Try a different search term.</div>
-                    </div>`;
-                return;
-            }
-
-            grid.innerHTML = airports.map((ap, i) => {
-                const logos = (ap.airlines || []).map(a => a.logo
-                    ? `<img src="${a.logo}" alt="${a.name}" class="taxi-airline-logo" title="${a.name}"
-                            onerror="this.style.display='none'">`
-                    : `<span class="taxi-airline-abbr">${(a.name||'').substring(0,3).toUpperCase()}</span>`
-                ).join('');
-
-                return `
-                <div class="taxi-airport-card" data-index="${i}" onclick="selectAirport('${ap.iata}', '${ap.city}', '${ap.terminal || ''}')">
-
-                    <div class="taxi-card-top">
-                        <div class="taxi-card-icon">
-                            <i class="fas fa-plane-arrival"></i>
-                        </div>
-                        <div class="taxi-card-iata">${ap.iata}</div>
-                    </div>
-
-                    <div>
-                        <div class="taxi-card-city">${ap.city}</div>
-                        ${ap.terminal ? `
-                        <div class="taxi-card-terminal">
-                            <i class="fas fa-building"></i>
-                            Terminal ${ap.terminal}
-                        </div>` : ''}
-                    </div>
-
-                    ${logos ? `
-                    <div class="taxi-card-airlines">
-                        ${logos}
-                    </div>` : ''}
-
-                    <div class="taxi-card-footer">
-                        <div class="taxi-card-flights">
-                            <i class="fas fa-plane"></i>
-                            ${ap.flight_count} flight${ap.flight_count !== 1 ? 's' : ''} available
-                        </div>
-                        <button class="taxi-card-select-btn">
-                            Book taxi
-                            <i class="fas fa-arrow-right" style="font-size:10px;"></i>
-                        </button>
-                    </div>
-
-                </div>`;
-            }).join('');
-
-            requestAnimationFrame(() => {
-                grid.querySelectorAll('.taxi-airport-card').forEach((card, i) => {
-                    card.style.animationDelay = `${i * 50}ms`;
-                    card.classList.add('taxi-airport-card--enter');
-                });
-            });
-        }
-
-        /* ── Filter when Search is clicked ── */
-        window.filterAirports = function () {
-            const query = (document.getElementById('taxi-pickup')?.value || '').trim().toLowerCase();
-            if (!query) {
-                renderAirports(allAirports);
-                return;
-            }
-            const filtered = allAirports.filter(ap =>
-                ap.iata.toLowerCase().includes(query) ||
-                ap.city.toLowerCase().includes(query) ||
-                (ap.terminal || '').toLowerCase().includes(query)
-            );
-            renderAirports(filtered);
-        };
-
-        /* ── Select airport → auth gate → open modal ── */
-        window.selectAirport = function (iata, city, terminal) {
-            requireAuth(function() {
-                openTaxiModal(iata, city, terminal);
-            }, 'Sign in to book a taxi transfer');
-        };
-
-        /* ══════════════════════════════════════════
-           TAXI BOOKING MODAL LOGIC
-           ══════════════════════════════════════════ */
-
-        const VEHICLES = [
-            { id:'economy',  icon:'🚕', name:'Economy',         seats:3, bags:2, price:1200, badge:'' },
-            { id:'comfort',  icon:'🚙', name:'Comfort',         seats:4, bags:3, price:1800, badge:'Instant confirmation' },
-            { id:'premium',  icon:'🚗', name:'Premium Elite',   seats:4, bags:3, price:2800, badge:'Instant confirmation' },
-            { id:'van',      icon:'🚐', name:'Minivan / MPV',   seats:7, bags:5, price:2200, badge:'' },
-            { id:'business', icon:'🚘', name:'Business Class',  seats:3, bags:3, price:3500, badge:'Instant confirmation' },
-        ];
-
-        let selectedVehicleId = 'comfort';
-        let currentAirport    = {};
-
-        function getVehiclePrice(vehicleId) {
-            return (VEHICLES.find(v => v.id === vehicleId) || VEHICLES[0]).price;
-        }
-
-        function fmtModal(v) {
-            return new Intl.NumberFormat('en-PH', {
-                style:'currency', currency:'PHP',
-                minimumFractionDigits:2, maximumFractionDigits:2
-            }).format(Number(v));
-        }
-
-        function renderVehicles() {
-            const el = document.getElementById('txmVehicles');
-            if (!el) return;
-            el.innerHTML = VEHICLES.map(v => `
-            <div class="txm-vehicle ${selectedVehicleId === v.id ? 'selected' : ''}"
-                 onclick="selectVehicle('${v.id}')">
-                <div class="txm-vehicle-radio"></div>
-                <div class="txm-vehicle-icon">${v.icon}</div>
-                <div class="txm-vehicle-info">
-                    <div class="txm-vehicle-name">
-                        ${v.name}
-                        ${v.badge ? `<span class="txm-badge-instant">${v.badge}</span>` : ''}
-                    </div>
-                    <div class="txm-vehicle-caps">
-                        <span><i class="fas fa-user"></i> Max. ${v.seats}</span>
-                        <span><i class="fas fa-suitcase"></i> ${v.bags}</span>
-                    </div>
-                </div>
-                <div class="txm-vehicle-price">${fmtModal(v.price)}</div>
-            </div>`).join('');
-        }
-
-        function renderModalPrice() {
-            const price = getVehiclePrice(selectedVehicleId);
-            const total = price;
-            const el    = document.getElementById('txmPriceBlock');
-            if (!el) return;
-            el.innerHTML = `
-                <div class="txm-pr-row">
-                    <span>Airport transfer fee</span>
-                    <span>${fmtModal(price)}</span>
-                </div>
-                <div class="txm-pr-row free-item">
-                    <span>Airport meet &amp; greet</span>
-                    <span>PHP 0.00</span>
-                </div>
-                <div class="txm-pr-divider"></div>
-                <div class="txm-pr-total">
-                    <span>Total</span>
-                    <span>${fmtModal(total)}</span>
-                </div>
-                <div class="txm-pr-note">
-                    <i class="fas fa-clock"></i> Free unlimited waiting time after landing<br>
-                    <i class="fas fa-ban"></i> Free cancellation available 24h before pickup
-                </div>`;
-        }
-
-        window.selectVehicle = function (id) {
-            selectedVehicleId = id;
-            renderVehicles();
-            renderModalPrice();
-        };
-
-        window.openTaxiModal = function (iata, city, terminal) {
-            currentAirport = { iata, city, terminal };
-
-            /* Title & route */
-            document.getElementById('txmTitle').textContent    = `Book Your Taxi — ${city}`;
-            document.getElementById('txmRouteText').textContent =
-                terminal ? `${city} – Terminal ${terminal} (${iata})` : `${city} (${iata})`;
-
-            /* Build values */
-            const pickup  = terminal ? `${city} – Terminal ${terminal} (${iata})` : `${city} (${iata})`;
-            const dropoff = (document.getElementById('taxi-dropoff')?.value || '').trim() || 'Your destination';
-            const dateVal = document.querySelector('#panel-taxi input[type="date"]')?.value || '';
-            const timeVal = document.querySelector('#panel-taxi .time-picker')?.value || '';
-
-            /* RIGHT sidebar summary */
-            document.getElementById('txmSummaryPickup').textContent  = pickup;
-            document.getElementById('txmSummaryDropoff').textContent = dropoff;
-            document.getElementById('txmSummaryDate').textContent    =
-                dateVal ? `${dateVal}${timeVal ? ' at ' + timeVal : ''}` : 'Select date in search';
-
-            /* LEFT trip detail rows */
-            document.getElementById('txmDetailPickup').textContent  = pickup;
-            document.getElementById('txmDetailDropoff').textContent = dropoff;
-            document.getElementById('txmDetailDate').textContent    =
-                dateVal ? `${dateVal}${timeVal ? ' at ' + timeVal : ''}` : 'Not selected';
-
-            /* Passengers */
-            const adults   = document.getElementById('taxiAdults')?.textContent   || '1';
-            const children = document.getElementById('taxiChildren')?.textContent || '0';
-            const infants  = document.getElementById('taxiInfants')?.textContent  || '0';
-            const paxParts = [];
-            if (+adults)   paxParts.push(`${adults} Adult${+adults > 1 ? 's' : ''}`);
-            if (+children) paxParts.push(`${children} Child${+children > 1 ? 'ren' : ''}`);
-            if (+infants)  paxParts.push(`${infants} Infant${+infants > 1 ? 's' : ''}`);
-            document.getElementById('txmDetailPax').textContent = paxParts.join(', ') || '1 Adult';
-
-            /* Render vehicles + price */
-            renderVehicles();
-            renderModalPrice();
-
-            /* Show modal */
-            document.getElementById('txmOverlay').classList.add('open');
-            document.body.style.overflow = 'hidden';
-        };
-
-        window.closeTaxiModal = function (e) {
-            if (e && e.target !== document.getElementById('txmOverlay')) return;
-            doCloseTaxiModal();
-        };
-        window.closeTaxiModalBtn = function () { doCloseTaxiModal(); };
-
-        function doCloseTaxiModal() {
-            document.getElementById('txmOverlay').classList.remove('open');
-            document.body.style.overflow = '';
-        }
-
-        /* ── Book Now → go to booking page with all params ── */
-        window.goToBookingPage = function () {
-            const pickup  = document.getElementById('txmDetailPickup').textContent;
-            const dropoff = document.getElementById('txmDetailDropoff').textContent;
-            const date    = document.getElementById('txmDetailDate').textContent;
-            const pax     = document.getElementById('txmDetailPax').textContent;
-
-            const p = new URLSearchParams({
-                iata:     currentAirport.iata     || '',
-                city:     currentAirport.city     || '',
-                terminal: currentAirport.terminal || '',
-                vehicle:  selectedVehicleId,
-                price:    getVehiclePrice(selectedVehicleId),
-                pickup,
-                dropoff,
-                date,
-                pax,
-            });
-            window.location.href = 'taxi-booking.html?' + p.toString();
-        };
-
-        /* ── Init ── */
-        document.addEventListener('DOMContentLoaded', function () {
-            loadAirports();
-
-            /* Auth modal setup */
-            document.getElementById('authModalCloseBtn').addEventListener('click', closeAuthModal);
-            document.getElementById('authModal').addEventListener('click', function(e){ if(e.target===this) closeAuthModal(); });
-            document.querySelector('.auth-modal-shell').addEventListener('click', function(e){ e.stopPropagation(); });
-            document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeAuthModal(); });
-
-            /* Register form live validation */
-            ['regFirstName','regLastName','regEmail','regConfirmPw'].forEach(function(id){
-                document.getElementById(id).addEventListener('input', authCheckRegReady);
-            });
-            ['siEmail','siPassword'].forEach(function(id){
-                document.getElementById(id).addEventListener('input', function(){
-                    var ok = document.getElementById('siEmail').value.trim() && document.getElementById('siPassword').value;
-                    document.getElementById('siSubmitBtn').classList.toggle('ready', !!ok);
-                });
-            });
-
-            /* Restore signed-in header state */
-            try {
-                var saved = JSON.parse(localStorage.getItem('easyNavigateAuth'));
-                if (saved) updateHeaderBtn(saved);
-            } catch(_){}
-
-            const pickupEl = document.getElementById('taxi-pickup');
-            if (pickupEl) {
-                pickupEl.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter') filterAirports();
-                });
-                pickupEl.addEventListener('input', function () {
-                    const q = this.value.trim().toLowerCase();
-                    if (!q) { renderAirports(allAirports); return; }
-                    renderAirports(allAirports.filter(ap =>
-                        ap.iata.toLowerCase().includes(q) ||
-                        ap.city.toLowerCase().includes(q) ||
-                        (ap.terminal || '').toLowerCase().includes(q)
-                    ));
-                });
-            }
+    grid.innerHTML=airports.map((ap,i)=>{
+        const logos=(ap.airlines||[]).map(a=>a.logo
+            ?`<img src="${a.logo}" alt="${a.name}" class="taxi-airline-logo" title="${a.name}" onerror="this.style.display='none'">`
+            :`<span class="taxi-airline-abbr">${(a.name||'').substring(0,3).toUpperCase()}</span>`
+        ).join('');
+        return `<div class="taxi-airport-card" data-index="${i}" onclick="selectAirport('${ap.iata}','${ap.city}','${ap.terminal||''}')">
+            <div class="taxi-card-top">
+                <div class="taxi-card-icon"><i class="fa-solid fa-plane-arrival"></i></div>
+                <div class="taxi-card-iata">${ap.iata}</div>
+            </div>
+            <div>
+                <div class="taxi-card-city">${ap.city}</div>
+                ${ap.terminal?`<div class="taxi-card-terminal"><i class="fa-solid fa-building"></i> Terminal ${ap.terminal}</div>`:''}
+            </div>
+            ${logos?`<div class="taxi-card-airlines">${logos}</div>`:''}
+            <div class="taxi-card-footer">
+                <div class="taxi-card-flights"><i class="fa-solid fa-plane"></i> ${ap.flight_count} flight${ap.flight_count!==1?'s':''} available</div>
+                <button class="taxi-card-select-btn">Book taxi <i class="fa-solid fa-arrow-right" style="font-size:10px;"></i></button>
+            </div>
+        </div>`;
+    }).join('');
+    requestAnimationFrame(()=>{
+        grid.querySelectorAll('.taxi-airport-card').forEach((card,i)=>{
+            card.style.animationDelay=`${i*50}ms`;
+            card.classList.add('taxi-airport-card--enter');
         });
+    });
+}
 
-    })();
-    </script>
+function filterAirports(){
+    const q=(document.getElementById('taxi-pickup')?.value||'').trim().toLowerCase();
+    renderAirports(q?allAirports.filter(ap=>ap.iata.toLowerCase().includes(q)||ap.city.toLowerCase().includes(q)||(ap.terminal||'').toLowerCase().includes(q)):allAirports);
+}
 
+function selectAirport(iata,city,terminal){
+    requireAuth(function(){openTaxiModal(iata,city,terminal);},'Sign in to book a taxi transfer');
+}
+
+/* ═══════════════════════════════════════════════
+   TAXI BOOKING MODAL
+═══════════════════════════════════════════════ */
+const VEHICLES=[
+    {id:'economy', icon:'🚕',name:'Economy',       seats:3,bags:2,price:1200,badge:''},
+    {id:'comfort', icon:'🚙',name:'Comfort',       seats:4,bags:3,price:1800,badge:'Instant confirmation'},
+    {id:'premium', icon:'🚗',name:'Premium Elite', seats:4,bags:3,price:2800,badge:'Instant confirmation'},
+    {id:'van',     icon:'🚐',name:'Minivan / MPV', seats:7,bags:5,price:2200,badge:''},
+    {id:'business',icon:'🚘',name:'Business Class',seats:3,bags:3,price:3500,badge:'Instant confirmation'},
+];
+let selectedVehicleId='comfort',currentAirport={};
+
+function fmtModal(v){return new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(v));}
+function getVehiclePrice(id){return(VEHICLES.find(v=>v.id===id)||VEHICLES[0]).price;}
+
+function renderVehicles(){
+    const el=document.getElementById('txmVehicles');if(!el)return;
+    el.innerHTML=VEHICLES.map(v=>`
+    <div class="txm-vehicle ${selectedVehicleId===v.id?'selected':''}" onclick="selectVehicle('${v.id}')">
+        <div class="txm-vehicle-radio"></div>
+        <div class="txm-vehicle-icon">${v.icon}</div>
+        <div class="txm-vehicle-info">
+            <div class="txm-vehicle-name">${v.name}${v.badge?`<span class="txm-badge-instant">${v.badge}</span>`:''}</div>
+            <div class="txm-vehicle-caps"><span><i class="fa-solid fa-user"></i> Max. ${v.seats}</span><span><i class="fa-solid fa-suitcase"></i> ${v.bags}</span></div>
+        </div>
+        <div class="txm-vehicle-price">${fmtModal(v.price)}</div>
+    </div>`).join('');
+}
+
+function renderModalPrice(){
+    const price=getVehiclePrice(selectedVehicleId),el=document.getElementById('txmPriceBlock');if(!el)return;
+    el.innerHTML=`
+        <div class="txm-pr-row"><span>Airport transfer fee</span><span>${fmtModal(price)}</span></div>
+        <div class="txm-pr-row free-item"><span>Airport meet &amp; greet</span><span>PHP 0.00</span></div>
+        <div class="txm-pr-divider"></div>
+        <div class="txm-pr-total"><span>Total</span><span>${fmtModal(price)}</span></div>
+        <div class="txm-pr-note">
+            <i class="fa-solid fa-clock"></i> Free unlimited waiting time after landing<br>
+            <i class="fa-solid fa-ban"></i> Free cancellation available 24h before pickup
+        </div>`;
+}
+
+function selectVehicle(id){selectedVehicleId=id;renderVehicles();renderModalPrice();}
+
+function openTaxiModal(iata,city,terminal){
+    currentAirport={iata,city,terminal};
+    document.getElementById('txmTitle').textContent=`Book Your Taxi — ${city}`;
+    document.getElementById('txmRouteText').textContent=terminal?`${city} – Terminal ${terminal} (${iata})`:`${city} (${iata})`;
+    const pickup=terminal?`${city} – Terminal ${terminal} (${iata})`:`${city} (${iata})`;
+    const dropoff=(document.getElementById('taxi-dropoff')?.value||'').trim()||'Your destination';
+    const dateVal=document.querySelector('#panel-taxi input[type="date"]')?.value||'';
+    const timeVal=document.querySelector('#panel-taxi .time-picker')?.value||'';
+    document.getElementById('txmSummaryPickup').textContent=pickup;
+    document.getElementById('txmSummaryDropoff').textContent=dropoff;
+    document.getElementById('txmSummaryDate').textContent=dateVal?`${dateVal}${timeVal?' at '+timeVal:''}`:'Select date in search';
+    document.getElementById('txmDetailPickup').textContent=pickup;
+    document.getElementById('txmDetailDropoff').textContent=dropoff;
+    document.getElementById('txmDetailDate').textContent=dateVal?`${dateVal}${timeVal?' at '+timeVal:''}`:'Not selected';
+    const parts=[taxiPax.adults+' Adult'+(taxiPax.adults>1?'s':'')];
+    if(taxiPax.children>0)parts.push(taxiPax.children+' Child'+(taxiPax.children>1?'ren':''));
+    if(taxiPax.infants>0)parts.push(taxiPax.infants+' Infant'+(taxiPax.infants>1?'s':''));
+    document.getElementById('txmDetailPax').textContent=parts.join(', ')||'1 Adult';
+    renderVehicles();renderModalPrice();
+    document.getElementById('txmOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+}
+
+function closeTaxiModal(e){if(e&&e.target!==document.getElementById('txmOverlay'))return;doCloseTaxiModal();}
+function closeTaxiModalBtn(){doCloseTaxiModal();}
+function doCloseTaxiModal(){
+    document.getElementById('txmOverlay').classList.remove('open');
+    if(!document.getElementById('authModal')?.classList.contains('open'))document.body.style.overflow='';
+}
+
+function goToBookingPage(){
+    const pickup=document.getElementById('txmDetailPickup').textContent;
+    const dropoff=document.getElementById('txmDetailDropoff').textContent;
+    const date=document.getElementById('txmDetailDate').textContent;
+    const pax=document.getElementById('txmDetailPax').textContent;
+    const p=new URLSearchParams({iata:currentAirport.iata||'',city:currentAirport.city||'',terminal:currentAirport.terminal||'',vehicle:selectedVehicleId,price:getVehiclePrice(selectedVehicleId),pickup,dropoff,date,pax});
+    window.location.href='taxi-booking.html?'+p.toString();
+}
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',function(){
+    /* Auth modal close */
+    document.getElementById('authModalCloseBtn').addEventListener('click',closeAuthModal);
+    document.getElementById('authModal').addEventListener('click',function(e){if(e.target===this)closeAuthModal();});
+    document.querySelector('.auth-modal-shell').addEventListener('click',e=>e.stopPropagation());
+
+    /* Real-time sign-in enable */
+    ['siEmail','siPassword'].forEach(id=>{
+        document.getElementById(id)?.addEventListener('input',()=>{
+            const ok=document.getElementById('siEmail')?.value.trim()&&document.getElementById('siPassword')?.value;
+            document.getElementById('siSubmitBtn')?.classList.toggle('ready',!!ok);
+        });
+    });
+    /* Real-time register validation */
+    ['regFirstName','regLastName','regEmail','regConfirmPw'].forEach(id=>document.getElementById(id)?.addEventListener('input',authCheckRegReady));
+
+    /* Global dropdown close */
+    document.addEventListener('click',function(e){
+        if(!e.target.closest('.dropdown-menu')&&!e.target.closest('.selector-pill')&&!e.target.closest('.support-btn'))
+            document.querySelectorAll('.dropdown-menu.open').forEach(m=>m.classList.remove('open'));
+    });
+
+    /* Escape key */
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAuthModal();doCloseTaxiModal();}});
+
+    /* Flatpickr */
+    if(window.flatpickr){
+        document.querySelectorAll('.date-picker,input[type=date]').forEach(inp=>
+            flatpickr(inp,{dateFormat:'Y-m-d',altInput:true,altFormat:'D, M j',showMonths:2,monthSelectorType:'static',disableMobile:true})
+        );
+    }
+
+    /* Initial pax minus state */
+    ['taxiAdultsMinus','taxiChildrenMinus','taxiInfantsMinus'].forEach(id=>{
+        const b=document.getElementById(id);if(b)b.style.color='#c4cce0';
+    });
+
+    /* Live search filter */
+    const pickupEl=document.getElementById('taxi-pickup');
+    if(pickupEl){
+        pickupEl.addEventListener('keydown',e=>{if(e.key==='Enter')filterAirports();});
+        pickupEl.addEventListener('input',()=>{
+            const q=pickupEl.value.trim().toLowerCase();
+            renderAirports(q?allAirports.filter(ap=>ap.iata.toLowerCase().includes(q)||ap.city.toLowerCase().includes(q)||(ap.terminal||'').toLowerCase().includes(q)):allAirports);
+        });
+    }
+
+    loadAirports();
+});
+</script>
 </body>
 </html>
